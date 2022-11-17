@@ -1,2 +1,3 @@
 # vReqs
-Visualizing Course and Major Requirements to Alleviate Curriculum Planning
+
+A tool for visualizing college course and major requirements
