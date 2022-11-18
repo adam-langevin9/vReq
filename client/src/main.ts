@@ -10,12 +10,18 @@ import PrimeVue from "primevue/config";
 import "primevue/resources/themes/lara-light-teal/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
+import "primeflex/primeflex.css";
 
 // Components
-import InputText from "primevue/inputtext";
+import InputMask from "primevue/inputmask";
+import Button from "primevue/button";
+import Card from "primevue/card";
 
 const app = createApp(App);
 
 app.use(createPinia()).use(router).use(PrimeVue);
-app.component("InputText", InputText);
+app
+  .component("Button", Button)
+  .component("InputMask", InputMask)
+  .component("Card", Card);
 app.mount("#app");
