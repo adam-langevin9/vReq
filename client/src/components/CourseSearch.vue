@@ -2,17 +2,26 @@
 export default {
   data() {
     return {
-      search: {
+      input: {
         subject: "",
         number: "",
       },
-      search_results: {
-        subject: "",
-        number: "",
+      results: {
         title: "",
-        description: "Search a course to see its description",
+        hours: "3",
+        description:
+          "This is a course to test if my application work. Here is the description",
       },
+      is_new: true,
     };
+  },
+  computed: {
+    is_valid_search() {
+      return this.results.title;
+    },
+    is_invalid_search() {
+      return !this.is_new && !this.is_valid_search;
+    },
   },
 };
 </script>
@@ -20,7 +29,7 @@ export default {
 <template>
   <div
     id="course-search"
-    class="flex justify-content-center flex-wrap card-container"
+    class="flex justify-content-center flex-wrap card-container mt-5"
   >
     <div style="max-width: 575px" class="grid p-fluid">
       <div class="col-4 p-2">
@@ -28,7 +37,7 @@ export default {
           <InputMask
             id="subject"
             class="max-w-12rem"
-            v-model="search.subject"
+            v-model="input.subject"
             mask="aaa?a"
             slotChar=""
             style="text-transform: uppercase"
@@ -42,7 +51,7 @@ export default {
           <InputMask
             id="number"
             class="max-w-12rem"
-            v-model="search.number"
+            v-model="input.number"
             mask="999"
             slotChar=""
           />
@@ -59,15 +68,41 @@ export default {
         />
       </div>
 
-      <Card class="m-2 flex-grow-1">
+      <Card class="m-2 flex-grow-1" v-if="is_valid_search">
         <template #title>
-          {{ search_results.subject }} {{ search_results.number }}</template
-        >
+          {{ results.title }}
+        </template>
 
-        <template #subtitle> {{ search_results.title }} </template>
+        <template #subtitle> Credit Hours: {{ results.hours }} </template>
 
         <template #content>
-          {{ search_results.description }}
+          {{ results.description }}
+        </template>
+      </Card>
+      <Card class="m-2 flex-grow-1" v-if="is_invalid_search">
+        <template #content>
+          <em>
+            That course could not be located. Please try a different course.
+          </em>
+        </template>
+      </Card>
+      <Card class="m-2 flex-grow-1" v-if="is_new">
+        <template #content>
+          To get started, enter a course's subject and number into the fields
+          above.
+          <br /><br />
+          Then you can select:
+          <ul>
+            <li>
+              <strong><em>Search</em></strong> to load the course's description
+              or
+            </li>
+            <br />
+            <li>
+              <strong><em>Add Course(s)</em></strong> to add the course and its
+              requirements to the visualization below
+            </li>
+          </ul>
         </template>
       </Card>
       <Button label="Add Course(s)" icon="pi" iconPos="right" class="m-2" />
