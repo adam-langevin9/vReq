@@ -1,14 +1,23 @@
 {
   "name": "client",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Vue.js Curriculum Visualization App",
+  "main": "src/main.ts",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "nodejs",
+    "vuejs"
+  ],
+  "author": "Adam Langevin",
+  "license": "ISC",
   "dependencies": {
     "pinia": "^2.0.23",
     "primeflex": "^3.3.0",
