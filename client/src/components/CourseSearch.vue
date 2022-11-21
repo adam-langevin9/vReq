@@ -1,4 +1,7 @@
 <script lang="ts">
+import CourseDataService from "../services/CourseDataService.js";
+import ListingDataService from "../services/ListingDataService";
+
 export default {
   data() {
     return {
@@ -6,21 +9,50 @@ export default {
         subject: "",
         number: "",
       },
-      results: {
+      response: {
+        id: 0,
         title: "",
-        hours: "3",
-        description:
-          "This is a course to test if my application work. Here is the description",
+        hours: "",
+        description: "",
       },
       is_new: true,
     };
   },
   computed: {
     is_valid_search() {
-      return this.results.title;
+      return this.response.id;
     },
     is_invalid_search() {
       return !this.is_new && !this.is_valid_search;
+    },
+  },
+  methods: {
+    retrieveCourse() {
+      ListingDataService.getByListing(this.input.subject, +this.input.number)
+        .then((response) => {
+          const course_id = response.data.find((i) => i)?.course_id;
+          if (course_id) {
+            CourseDataService.getByID(course_id).then((response) => {
+              const course = response.data;
+              if (course) {
+                if (this.is_new) {
+                  this.is_new = false;
+                }
+                this.response.id = course.course_id;
+                this.response.title = course.course_title;
+                this.response.hours = course.course_hours;
+                this.response.description = course.course_descr;
+              } else {
+                this.response.id = 0;
+              }
+            });
+          } else {
+            this.response.id = 0;
+          }
+        })
+        .catch((e: Error) => {
+          this.response.id = 0;
+        });
     },
   },
 };
@@ -61,6 +93,7 @@ export default {
 
       <div class="col-4 p-2">
         <Button
+          @click="retrieveCourse"
           label="Search"
           icon="pi pi-search"
           iconPos="right"
@@ -70,13 +103,13 @@ export default {
 
       <Card class="m-2 flex-grow-1" v-if="is_valid_search">
         <template #title>
-          {{ results.title }}
+          {{ response.title }}
         </template>
 
-        <template #subtitle> Credit Hours: {{ results.hours }} </template>
+        <template #subtitle> Credit Hours: {{ response.hours }} </template>
 
         <template #content>
-          {{ results.description }}
+          {{ response.description }}
         </template>
       </Card>
       <Card class="m-2 flex-grow-1" v-if="is_invalid_search">

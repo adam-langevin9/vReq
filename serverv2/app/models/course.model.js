@@ -23,11 +23,11 @@ module.exports = (sequelize, Sequelize) => {
       },
       course_prereqs: {
         field: "course_prereqs",
-        type: Sequelize.STRING(120),
+        type: Sequelize.INTEGER.UNSIGNED,
       },
       course_precoreqs: {
         field: "course_precoreqs",
-        type: Sequelize.STRING(120),
+        type: Sequelize.INTEGER.UNSIGNED,
       },
     },
     {

@@ -10,6 +10,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+const allowCrossDomain = function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+};
+app.use(allowCrossDomain);
+
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
@@ -17,6 +25,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
+require("./app/routes/combo.routes")(app);
+require("./app/routes/combo_course.routes")(app);
+require("./app/routes/combo_combo.routes")(app);
 require("./app/routes/coreq.routes")(app);
 require("./app/routes/course.routes")(app);
 require("./app/routes/listing.routes")(app);
