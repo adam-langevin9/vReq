@@ -1,19 +1,30 @@
-const db = require("../models");
+import { db } from "../models";
+import { Op } from "sequelize";
+
 const Coreq = db.coreq;
-const Op = db.Sequelize.Op;
 
 // Retrieve all Coreqs from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (
+  req: { query: { coreq_id: any } },
+  res: {
+    send: (arg0: any) => void;
+    status: (arg0: number) => {
+      (): any;
+      new (): any;
+      send: { (arg0: { message: any }): void; new (): any };
+    };
+  }
+) => {
   const coreq_id = req.query.coreq_id;
   const condition = coreq_id
     ? { coreq_id: { [Op.like]: `%${coreq_id}%` } }
     : null;
 
   Coreq.findAll({ where: condition })
-    .then((data) => {
+    .then((data: any) => {
       res.send(data);
     })
-    .catch((err) => {
+    .catch((err: { message: any }) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving tutorials.",
@@ -22,11 +33,21 @@ exports.findAll = (req, res) => {
 };
 
 // Find a single Coreq with an id
-exports.findOne = (req, res) => {
+exports.findOne = (
+  req: { params: { id: any } },
+  res: {
+    send: (arg0: any) => void;
+    status: (arg0: number) => {
+      (): any;
+      new (): any;
+      send: { (arg0: { message: string }): void; new (): any };
+    };
+  }
+) => {
   const id = req.params.id;
 
   Coreq.findByPk(id)
-    .then((data) => {
+    .then((data: any) => {
       if (data) {
         res.send(data);
       } else {
@@ -35,7 +56,7 @@ exports.findOne = (req, res) => {
         });
       }
     })
-    .catch((err) => {
+    .catch((err: any) => {
       res.status(500).send({
         message: "Error retrieving Tutorial with id=" + id,
       });

@@ -1,7 +1,9 @@
-module.exports = (app) => {
+export default module.exports = (app: {
+  use: (arg0: string, arg1: any) => void;
+}) => {
   const listing = require("../controllers/listing.controller.js");
 
-  var router = require("express").Router();
+  const router = require("express").Router();
 
   // Retrieve all Listings
   router.get("/", listing.findAll);

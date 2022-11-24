@@ -1,7 +1,9 @@
-module.exports = (app) => {
+export default module.exports = (app: {
+  use: (arg0: string, arg1: any) => void;
+}) => {
   const combo_combo = require("../controllers/combo_combo.controller.js");
 
-  var router = require("express").Router();
+  const router = require("express").Router();
 
   // Retrieve all Combos
   router.get("/", combo_combo.findAll);

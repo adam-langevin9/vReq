@@ -1,10 +1,12 @@
-module.exports = (sequelize, Sequelize) => {
+import { DataTypes, Sequelize } from "sequelize";
+
+export default module.exports = (sequelize: Sequelize) => {
   const ComboCourse = sequelize.define(
     "combo_course",
     {
       combo_id: {
         field: "combo_id",
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
         references: {
@@ -14,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       course_id: {
         field: "course_id",
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,
         references: {
