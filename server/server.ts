@@ -1,6 +1,7 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import db from "./app/models";
 
 const app = express();
 
@@ -10,7 +11,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const allowCrossDomain = function (req, res, next) {
+const allowCrossDomain = function (
+  _req: any,
+  res: { header: (arg0: string, arg1: string) => void },
+  next: () => void
+) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
@@ -35,10 +40,9 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
 
-const db = require("./app/models");
 db.sequelize
   .sync()
-  .then((result) => {
+  .then((result: any) => {
     console.log(result);
   })
-  .catch((err) => console.log(err));
+  .catch((err: any) => console.log(err));

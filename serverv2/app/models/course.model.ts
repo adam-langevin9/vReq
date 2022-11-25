@@ -22,6 +22,7 @@ export default module.exports = (sequelize: Sequelize) => {
       course_hours: {
         field: "course_hours",
         type: DataTypes.STRING(8),
+        allowNull: false,
       },
       course_prereqs: {
         field: "course_prereqs",

@@ -1,23 +1,25 @@
-module.exports = (sequelize, Sequelize) => {
+import { DataTypes, Sequelize } from "sequelize";
+
+export default module.exports = (sequelize: Sequelize) => {
   const Vis = sequelize.define("vis", {
     vis_id: {
       field: "user_id",
-      type: Sequelize.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER.UNSIGNED,
       primaryKey: true,
       allowNull: false,
     },
     vis_title: {
       field: "vis_title",
-      type: Sequelize.STRING(50),
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     selected_degree_reqs: {
       field: "selected_degree_reqs",
-      type: Sequelize.STRING(305),
+      type: DataTypes.STRING(305),
     },
     user_id: {
       field: "user_id",
-      type: Sequelize.STRING(25),
+      type: DataTypes.STRING(25),
       allowNull: false,
       references: {
         model: require("./user.model.js"),
@@ -26,7 +28,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     degree_id: {
       field: "degree_id",
-      type: Sequelize.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER.UNSIGNED,
       references: {
         model: require("./degree.model.js"),
         key: "degree_id",

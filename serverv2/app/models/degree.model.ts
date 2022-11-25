@@ -18,6 +18,7 @@ export default module.exports = (sequelize: Sequelize) => {
       degree_reqs: {
         field: "degree_reqs",
         type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
         references: {
           model: require("./req.model.js"),
           key: "req_id",

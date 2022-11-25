@@ -1,6 +1,7 @@
-const db = require("../models");
+import { db } from "../models";
+import { Op } from "sequelize";
+
 const Listing = db.listing;
-const Op = db.Sequelize.Op;
 
 // Retrieve all Listing from the database.
 exports.findAll = (req, res) => {

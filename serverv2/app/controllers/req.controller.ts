@@ -4,17 +4,7 @@ import { Op } from "sequelize";
 const Req = db.req;
 
 // Retrieve all Reqs from the database.
-exports.findAll = (
-  req: { query: { req_id: any } },
-  res: {
-    send: (arg0: any) => void;
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: { (arg0: { message: any }): void; new (): any };
-    };
-  }
-) => {
+exports.findAll = (req, res) => {
   const req_id = req.query.req_id;
   const condition = req_id ? { req_id: { [Op.like]: `%${req_id}%` } } : null;
 

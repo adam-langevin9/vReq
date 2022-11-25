@@ -1,15 +1,16 @@
-const db = require("../models");
-const Coreq = db.coreq;
-const Op = db.Sequelize.Op;
+import { db } from "../models";
+import { Op } from "sequelize";
 
-// Retrieve all Coreqs from the database.
+const Course = db.course;
+
+// Retrieve all Course from the database.
 exports.findAll = (req, res) => {
-  const coreq_id = req.query.coreq_id;
-  const condition = coreq_id
-    ? { coreq_id: { [Op.like]: `%${coreq_id}%` } }
+  const course_id = req.query.course_id;
+  const condition = course_id
+    ? { course_id: { [Op.like]: `%${course_id}%` } }
     : null;
 
-  Coreq.findAll({ where: condition })
+  Course.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
@@ -21,11 +22,11 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Coreq with an id
+// Find a single Course with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Coreq.findByPk(id)
+  Course.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);

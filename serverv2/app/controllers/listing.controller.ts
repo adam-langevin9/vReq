@@ -4,17 +4,7 @@ import { Op } from "sequelize";
 const Listing = db.listing;
 
 // Retrieve all Listing from the database.
-exports.findAll = (
-  req: { query: { listing_subj: any; listing_num: any } },
-  res: {
-    send: (arg0: any) => void;
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: { (arg0: { message: any }): void; new (): any };
-    };
-  }
-) => {
+exports.findAll = (req, res) => {
   const listing_subj = req.query.listing_subj;
   const listing_num = req.query.listing_num;
   const condition =

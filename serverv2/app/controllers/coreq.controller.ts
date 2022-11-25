@@ -4,17 +4,7 @@ import { Op } from "sequelize";
 const Coreq = db.coreq;
 
 // Retrieve all Coreqs from the database.
-exports.findAll = (
-  req: { query: { coreq_id: any } },
-  res: {
-    send: (arg0: any) => void;
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: { (arg0: { message: any }): void; new (): any };
-    };
-  }
-) => {
+exports.findAll = (req, res) => {
   const coreq_id = req.query.coreq_id;
   const condition = coreq_id
     ? { coreq_id: { [Op.like]: `%${coreq_id}%` } }
@@ -33,17 +23,7 @@ exports.findAll = (
 };
 
 // Find a single Coreq with an id
-exports.findOne = (
-  req: { params: { id: any } },
-  res: {
-    send: (arg0: any) => void;
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: { (arg0: { message: string }): void; new (): any };
-    };
-  }
-) => {
+exports.findOne = (req, res) => {
   const id = req.params.id;
 
   Coreq.findByPk(id)

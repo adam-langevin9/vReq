@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default module.exports = (app) => {
   const coreq = require("../controllers/coreq.controller.js");
 
   var router = require("express").Router();

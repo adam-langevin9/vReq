@@ -13,11 +13,13 @@ export default module.exports = (sequelize: Sequelize) => {
       req_start_year: {
         field: "course_title",
         type: DataTypes.INTEGER.UNSIGNED,
+        primaryKey: true,
         allowNull: false,
       },
       combo_id: {
         field: "course_descr",
         type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
         references: {
           model: require("./combo.model.js"),
           key: "combo_id",

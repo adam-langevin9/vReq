@@ -4,20 +4,7 @@ import { Op } from "sequelize";
 const ComboCourse = db.combo_course;
 
 // Retrieve all Combos from the database.
-exports.findAll = (
-  req: { query: { combo_course_id: any } },
-  res: {
-    send: (arg0: any) => void;
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: {
-        (arg0: { message: any }): void;
-        new (): any;
-      };
-    };
-  }
-) => {
+exports.findAll = (req, res) => {
   const combo_course_id = req.query.combo_course_id;
   const condition = combo_course_id
     ? { combo_course_id: { [Op.like]: `%${combo_course_id}%` } }
@@ -36,17 +23,7 @@ exports.findAll = (
 };
 
 // Find a single Combo with an id
-exports.findOne = (
-  req: { params: { id: any } },
-  res: {
-    send: (arg0: any) => void;
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      send: { (arg0: { message: string }): void; new (): any };
-    };
-  }
-) => {
+exports.findOne = (req, res) => {
   const id = req.params.id;
 
   ComboCourse.findByPk(id)

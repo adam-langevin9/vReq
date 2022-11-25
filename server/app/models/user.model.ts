@@ -1,16 +1,18 @@
-module.exports = (sequelize, Sequelize) => {
+import { DataTypes, Sequelize } from "sequelize";
+
+export default module.exports = (sequelize: Sequelize) => {
   const User = sequelize.define(
     "user",
     {
       user_id: {
         field: "user_id",
-        type: Sequelize.STRING(25),
+        type: DataTypes.STRING(25),
         primaryKey: true,
         allowNull: false,
       },
       user_pw: {
         field: "user_pw",
-        type: Sequelize.STRING(50),
+        type: DataTypes.STRING(50),
         allowNull: false,
       },
     },

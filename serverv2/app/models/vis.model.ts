@@ -15,7 +15,11 @@ export default module.exports = (sequelize: Sequelize) => {
     },
     selected_degree_reqs: {
       field: "selected_degree_reqs",
-      type: DataTypes.STRING(305),
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: require("./combo.model.js"),
+        key: "combo_id",
+      },
     },
     user_id: {
       field: "user_id",

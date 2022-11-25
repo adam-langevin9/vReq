@@ -1,10 +1,12 @@
-module.exports = (sequelize, Sequelize) => {
+import { DataTypes, Sequelize } from "sequelize";
+
+export default module.exports = (sequelize: Sequelize) => {
   const Node = sequelize.define(
     "node",
     {
       vis_id: {
         field: "vis_id",
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         primaryKey: true,
         references: {
@@ -14,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       listing_id: {
         field: "listing_id",
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         primaryKey: true,
         references: {
@@ -24,21 +26,21 @@ module.exports = (sequelize, Sequelize) => {
       },
       is_complete: {
         field: "is_complete",
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
       is_manual: {
         field: "is_manual",
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
       selected_course_prereqs: {
         field: "selected_course_prereqs",
-        type: Sequelize.STRING(120),
+        type: DataTypes.STRING(120),
       },
       selected_course_precoreqs: {
         field: "selected_course_precoreqs",
-        type: Sequelize.STRING(120),
+        type: DataTypes.STRING(120),
       },
     },
     {
