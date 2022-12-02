@@ -1,7 +1,7 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { Coreq, CoreqId } from './coreq';
-import type { Degree, DegreeId } from './degree';
+import * as Sequelize from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
+import type { Coreq, CoreqId } from "./coreq.model";
+import type { Degree, DegreeId } from "./degree.model";
 
 export interface ReqAttributes {
   id: number;
@@ -13,7 +13,10 @@ export type ReqPk = "id" | "start_year";
 export type ReqId = Req[ReqPk];
 export type ReqCreationAttributes = ReqAttributes;
 
-export class Req extends Model<ReqAttributes, ReqCreationAttributes> implements ReqAttributes {
+export class Req
+  extends Model<ReqAttributes, ReqCreationAttributes>
+  implements ReqAttributes
+{
   id!: number;
   start_year!: number;
   req_string!: string;
@@ -38,7 +41,10 @@ export class Req extends Model<ReqAttributes, ReqCreationAttributes> implements 
   addPrereq_coreqs!: Sequelize.HasManyAddAssociationsMixin<Coreq, CoreqId>;
   createPrereq_coreq!: Sequelize.HasManyCreateAssociationMixin<Coreq>;
   removePrereq_coreq!: Sequelize.HasManyRemoveAssociationMixin<Coreq, CoreqId>;
-  removePrereq_coreqs!: Sequelize.HasManyRemoveAssociationsMixin<Coreq, CoreqId>;
+  removePrereq_coreqs!: Sequelize.HasManyRemoveAssociationsMixin<
+    Coreq,
+    CoreqId
+  >;
   hasPrereq_coreq!: Sequelize.HasManyHasAssociationMixin<Coreq, CoreqId>;
   hasPrereq_coreqs!: Sequelize.HasManyHasAssociationsMixin<Coreq, CoreqId>;
   countPrereq_coreqs!: Sequelize.HasManyCountAssociationsMixin;
@@ -56,36 +62,36 @@ export class Req extends Model<ReqAttributes, ReqCreationAttributes> implements 
   countDegrees!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof Req {
-    return Req.init({
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      primaryKey: true
-    },
-    start_year: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      primaryKey: true
-    },
-    req_string: {
-      type: DataTypes.STRING(305),
-      allowNull: false
-    }
-  }, {
-    sequelize,
-    tableName: 'Reqs',
-    timestamps: false,
-    indexes: [
+    return Req.init(
       {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-          { name: "start_year" },
-        ]
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          primaryKey: true,
+        },
+        start_year: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          primaryKey: true,
+        },
+        req_string: {
+          type: DataTypes.STRING(305),
+          allowNull: false,
+        },
       },
-    ]
-  });
+      {
+        sequelize,
+        tableName: "Reqs",
+        timestamps: false,
+        indexes: [
+          {
+            name: "PRIMARY",
+            unique: true,
+            using: "BTREE",
+            fields: [{ name: "id" }, { name: "start_year" }],
+          },
+        ],
+      }
+    );
   }
 }
