@@ -1,22 +1,15 @@
 {
-  "name": "server",
+  "name": "serverv2.1",
   "version": "1.0.0",
-  "description": "Node.js Rest Apis with Express, Sequelize & MySQL",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
     "dev": "tsnd --respawn index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "nodejs",
-    "express",
-    "sequelize",
-    "mysql",
-    "rest",
-    "api"
-  ],
-  "author": "Adam Langevin",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.12",
