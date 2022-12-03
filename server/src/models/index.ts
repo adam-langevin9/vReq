@@ -1,27 +1,38 @@
-import dbConfig from "../config/db.config.js";
-import { Sequelize } from "sequelize";
+"use strict";
 
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  dialect: dbConfig.DIALECT,
-  pool: dbConfig.POOL,
-  define: {
-    timestamps: false,
-  },
+import { Sequelize } from "sequelize";
+import process from "process";
+import { initModels } from "./init-models";
+const env = process.env.NODE_ENV || "development";
+const config = require("../config/db.config")[env];
+
+let sequelize: Sequelize;
+
+if (config.use_env_variable) {
+  sequelize = new Sequelize(
+    <string>process.env[config.use_env_variable],
+    config
+  );
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
+}
+
+const models = initModels(sequelize);
+
+const db = models;
+
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName as keyof typeof db].associate) {
+    db[modelName as keyof typeof db].associate(db);
+  }
 });
-export const db = {
-  sequelize: sequelize,
-  combo: require("./combo.model.js")(sequelize),
-  user: require("./user.model.js")(sequelize),
-  degree: require("./degree.model.js")(sequelize),
-  course: require("./course.model.js")(sequelize),
-  req: require("./req.model.js")(sequelize),
-  coreq: require("./coreq.model.js")(sequelize),
-  listing: require("./listing.model.js")(sequelize),
-  vis: require("./vis.model.js")(sequelize),
-  node: require("./node.model.js")(sequelize),
-  combo_course: require("./combo_course.model.js")(sequelize),
-  combo_combo: require("./combo_combo.model.js")(sequelize),
-};
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 export default db;

@@ -58,7 +58,7 @@ export type {
   VisualCreationAttributes,
 };
 
-export function initModels(sequelize: Sequelize) {
+export function initModels(sequelize: Sequelize): Record<any, any> {
   const Coreq = _Coreq.initModel(sequelize);
   const Course = _Course.initModel(sequelize);
   const Degree = _Degree.initModel(sequelize);
