@@ -1,15 +1,20 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { Combo, ComboId } from './combo';
+import * as Sequelize from "sequelize";
+import { DataTypes, Model } from "sequelize";
+import type { Combo, ComboId } from "./combo";
 
 export interface ComboComboAttributes {
   combo_id: number;
   sub_combo_id: number;
 }
 
+export type ComboComboPk = "combo_id" | "sub_combo_id";
+export type ComboComboId = ComboCombo[ComboComboPk];
 export type ComboComboCreationAttributes = ComboComboAttributes;
 
-export class ComboCombo extends Model<ComboComboAttributes, ComboComboCreationAttributes> implements ComboComboAttributes {
+export class ComboCombo
+  extends Model<ComboComboAttributes, ComboComboCreationAttributes>
+  implements ComboComboAttributes
+{
   combo_id!: number;
   sub_combo_id!: number;
 
@@ -25,43 +30,50 @@ export class ComboCombo extends Model<ComboComboAttributes, ComboComboCreationAt
   createSub_combo!: Sequelize.BelongsToCreateAssociationMixin<Combo>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof ComboCombo {
-    return ComboCombo.init({
-    combo_id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      references: {
-        model: 'Combos',
-        key: 'id'
-      }
-    },
-    sub_combo_id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      references: {
-        model: 'Combos',
-        key: 'id'
-      }
-    }
-  }, {
-    sequelize,
-    tableName: 'ComboCombos',
-    timestamps: false,
-    indexes: [
+    return ComboCombo.init(
       {
-        name: "combo_combo_combo_fk_idx",
-        using: "BTREE",
-        fields: [
-          { name: "combo_id" },
-        ]
+        combo_id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          primaryKey: true,
+          references: {
+            model: "Combos",
+            key: "id",
+          },
+        },
+        sub_combo_id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          primaryKey: true,
+          references: {
+            model: "Combos",
+            key: "id",
+          },
+        },
       },
       {
-        name: "combo_combo_sub_combo_fk_idx",
-        using: "BTREE",
-        fields: [
-          { name: "sub_combo_id" },
-        ]
-      },
-    ]
-  });
+        sequelize,
+        tableName: "ComboCombos",
+        timestamps: false,
+        indexes: [
+          {
+            name: "PRIMARY",
+            unique: true,
+            using: "BTREE",
+            fields: [{ name: "combo_id" }, { name: "sub_combo_id" }],
+          },
+          {
+            name: "combo_combo_combo_fk_idx",
+            using: "BTREE",
+            fields: [{ name: "combo_id" }],
+          },
+          {
+            name: "combo_combo_sub_combo_fk_idx",
+            using: "BTREE",
+            fields: [{ name: "sub_combo_id" }],
+          },
+        ],
+      }
+    );
   }
 }

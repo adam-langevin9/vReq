@@ -1,19 +1,19 @@
 import http from "../http-common";
 
-type Listing = {
+interface Listing {
   listing_id: number;
   listing_subj: string;
   listing_num: number;
   course_id: number;
-};
+}
 
-type GetListingResponse = {
+interface GetListingResponse {
   data: Listing;
-};
+}
 
-type GetListingsResponse = {
+interface GetListingsResponse {
   data: Listing[];
-};
+}
 
 class CourseDataService {
   async getAll(): Promise<GetListingsResponse> {
@@ -24,13 +24,8 @@ class CourseDataService {
     return await http.get(`/listing/${id}`);
   }
 
-  async getByListing(
-    listing_subj: string,
-    listing_num: number
-  ): Promise<GetListingsResponse> {
-    return await http.get(
-      `/listing?listing_subj=${listing_subj}&listing_num=${listing_num}`
-    );
+  async getByListing(listing_subj: string, listing_num: number): Promise<GetListingsResponse> {
+    return await http.get(`/listing?listing_subj=${listing_subj}&listing_num=${listing_num}`);
   }
 }
 

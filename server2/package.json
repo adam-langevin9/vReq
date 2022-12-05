@@ -1,25 +1,21 @@
 {
-  "name": "serverv2.1",
+  "name": "serverv2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "dev": "tsnd --respawn src/index",
     "build": "tsc --build",
-    "dev": "tsnd --respawn index.ts",
+    "seed": "sequelize db:seed --seed req.js && sequelize db:seed --seed coreq.js && sequelize db:seed --seed course.js && sequelize db:seed --seed listing.js ",
+    "seed:undo": "sequelize db:seed:undo --seed listing.js && sequelize db:seed:undo --seed course.js && sequelize db:seed:undo --seed coreq.js && sequelize db:seed:undo --seed req.js ",
+    "seed:redo": "npm run seed:undo && npm run seed",
+    "lint": "npx eslint src --ext .ts",
+    "lint:fix": "npx eslint src --ext .ts --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@types/cors": "^2.8.12",
-    "@types/express": "^4.17.14",
-    "@types/node": "^18.11.9",
-    "sequelize-cli": "^6.5.2",
-    "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^4.9.3"
-  },
   "dependencies": {
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
@@ -27,5 +23,23 @@
     "express": "^4.18.2",
     "mysql2": "^2.3.3",
     "sequelize": "^6.25.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "2.8.0",
+    "sequelize-cli": "^6.5.2",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.3"
   }
 }

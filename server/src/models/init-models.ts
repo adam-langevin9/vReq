@@ -1,32 +1,20 @@
 import type { Sequelize } from "sequelize";
-import { Coreq as _Coreq } from "./coreq.model";
-import type { CoreqAttributes, CoreqCreationAttributes } from "./coreq.model";
-import { Course as _Course } from "./course.model";
-import type {
-  CourseAttributes,
-  CourseCreationAttributes,
-} from "./course.model";
-import { Degree as _Degree } from "./degree.model";
-import type {
-  DegreeAttributes,
-  DegreeCreationAttributes,
-} from "./degree.model";
-import { Listing as _Listing } from "./listing.model";
-import type {
-  ListingAttributes,
-  ListingCreationAttributes,
-} from "./listing.model";
-import { Node as _Node } from "./node.model";
-import type { NodeAttributes, NodeCreationAttributes } from "./node.model";
-import { Req as _Req } from "./req.model";
-import type { ReqAttributes, ReqCreationAttributes } from "./req.model";
-import { User as _User } from "./user.model";
-import type { UserAttributes, UserCreationAttributes } from "./user.model";
-import { Visual as _Visual } from "./visual.model";
-import type {
-  VisualAttributes,
-  VisualCreationAttributes,
-} from "./visual.model";
+import { Coreq as _Coreq } from "./coreq";
+import type { CoreqAttributes, CoreqCreationAttributes } from "./coreq";
+import { Course as _Course } from "./course";
+import type { CourseAttributes, CourseCreationAttributes } from "./course";
+import { Degree as _Degree } from "./degree";
+import type { DegreeAttributes, DegreeCreationAttributes } from "./degree";
+import { Listing as _Listing } from "./listing";
+import type { ListingAttributes, ListingCreationAttributes } from "./listing";
+import { Node as _Node } from "./node";
+import type { NodeAttributes, NodeCreationAttributes } from "./node";
+import { Req as _Req } from "./req";
+import type { ReqAttributes, ReqCreationAttributes } from "./req";
+import { User as _User } from "./user";
+import type { UserAttributes, UserCreationAttributes } from "./user";
+import { Visual as _Visual } from "./visual";
+import type { VisualAttributes, VisualCreationAttributes } from "./visual";
 
 export {
   _Coreq as Coreq,
@@ -100,13 +88,13 @@ export function initModels(sequelize: Sequelize): Record<any, any> {
   Visual.hasMany(Node, { as: "nodes", foreignKey: "visual_id" });
 
   return {
-    Coreq: Coreq,
-    Course: Course,
-    Degree: Degree,
-    Listing: Listing,
-    Node: Node,
-    Req: Req,
-    User: User,
-    Visual: Visual,
+    Coreq,
+    Course,
+    Degree,
+    Listing,
+    Node,
+    Req,
+    User,
+    Visual,
   };
 }

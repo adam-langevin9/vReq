@@ -1,8 +1,8 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { Combo, ComboId } from './combo';
-import type { Listing, ListingId } from './listing';
-import type { Visual, VisualId } from './visual';
+import * as Sequelize from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
+import type { Combo, ComboId } from "./combo";
+import type { Listing, ListingId } from "./listing";
+import type { Visual, VisualId } from "./visual";
 
 export interface NodeAttributes {
   vis_id: number;
@@ -46,81 +46,76 @@ export class Node extends Model<NodeAttributes, NodeCreationAttributes> implemen
   createVi!: Sequelize.BelongsToCreateAssociationMixin<Visual>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof Node {
-    return Node.init({
-    vis_id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      references: {
-        model: 'Visuals',
-        key: 'id'
-      }
-    },
-    listing_id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      references: {
-        model: 'Listings',
-        key: 'id'
-      }
-    },
-    is_complete: {
-      type: DataTypes.TINYINT,
-      allowNull: false
-    },
-    is_manual: {
-      type: DataTypes.TINYINT,
-      allowNull: false
-    },
-    selected_prereqs: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: true,
-      references: {
-        model: 'Combos',
-        key: 'id'
-      }
-    },
-    selected_precoreqs: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: true,
-      references: {
-        model: 'Combos',
-        key: 'id'
-      }
-    }
-  }, {
-    sequelize,
-    tableName: 'Nodes',
-    timestamps: false,
-    indexes: [
+    return Node.init(
       {
-        name: "node_listing_fk_idx",
-        using: "BTREE",
-        fields: [
-          { name: "listing_id" },
-        ]
+        vis_id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          references: {
+            model: "Visuals",
+            key: "id",
+          },
+        },
+        listing_id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          references: {
+            model: "Listings",
+            key: "id",
+          },
+        },
+        is_complete: {
+          type: DataTypes.TINYINT,
+          allowNull: false,
+        },
+        is_manual: {
+          type: DataTypes.TINYINT,
+          allowNull: false,
+        },
+        selected_prereqs: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: true,
+          references: {
+            model: "Combos",
+            key: "id",
+          },
+        },
+        selected_precoreqs: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: true,
+          references: {
+            model: "Combos",
+            key: "id",
+          },
+        },
       },
       {
-        name: "node_precoreq_course_fk_idx",
-        using: "BTREE",
-        fields: [
-          { name: "selected_precoreqs" },
-        ]
-      },
-      {
-        name: "node_prereq_course_fk_idx",
-        using: "BTREE",
-        fields: [
-          { name: "selected_prereqs" },
-        ]
-      },
-      {
-        name: "node_vis_fk_idx",
-        using: "BTREE",
-        fields: [
-          { name: "vis_id" },
-        ]
-      },
-    ]
-  });
+        sequelize,
+        tableName: "Nodes",
+        timestamps: false,
+        indexes: [
+          {
+            name: "node_listing_fk_idx",
+            using: "BTREE",
+            fields: [{ name: "listing_id" }],
+          },
+          {
+            name: "node_precoreq_course_fk_idx",
+            using: "BTREE",
+            fields: [{ name: "selected_precoreqs" }],
+          },
+          {
+            name: "node_prereq_course_fk_idx",
+            using: "BTREE",
+            fields: [{ name: "selected_prereqs" }],
+          },
+          {
+            name: "node_vis_fk_idx",
+            using: "BTREE",
+            fields: [{ name: "vis_id" }],
+          },
+        ],
+      }
+    );
   }
 }

@@ -20,8 +20,5 @@ import Card from "primevue/card";
 const app = createApp(App);
 
 app.use(createPinia()).use(router).use(PrimeVue);
-app
-  .component("Button", Button)
-  .component("InputMask", InputMask)
-  .component("Card", Card);
+app.component("PrimeButton", Button).component("PrimeInputMask", InputMask).component("PrimeCard", Card);
 app.mount("#app");

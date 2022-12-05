@@ -12,16 +12,10 @@ export interface DegreeAttributes {
 
 export type DegreePk = "id";
 export type DegreeId = Degree[DegreePk];
-export type DegreeOptionalAttributes = "other_reqs";
-export type DegreeCreationAttributes = Optional<
-  DegreeAttributes,
-  DegreeOptionalAttributes
->;
+export type DegreeOptionalAttributes = "id" | "other_reqs";
+export type DegreeCreationAttributes = Optional<DegreeAttributes, DegreeOptionalAttributes>;
 
-export class Degree
-  extends Model<DegreeAttributes, DegreeCreationAttributes>
-  implements DegreeAttributes
-{
+export class Degree extends Model<DegreeAttributes, DegreeCreationAttributes> implements DegreeAttributes {
   id!: number;
   title!: string;
   req_id!: number;
@@ -49,6 +43,7 @@ export class Degree
     return Degree.init(
       {
         id: {
+          autoIncrement: true,
           type: DataTypes.INTEGER.UNSIGNED,
           allowNull: false,
           primaryKey: true,

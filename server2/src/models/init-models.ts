@@ -1,14 +1,8 @@
-import type { Sequelize, Model } from "sequelize";
+import type { Sequelize } from "sequelize";
 import { ComboCombo as _ComboCombo } from "./combo_combo";
-import type {
-  ComboComboAttributes,
-  ComboComboCreationAttributes,
-} from "./combo_combo";
-import { ComboCourse as _ComboCourse } from "./combo_course";
-import type {
-  ComboCourseAttributes,
-  ComboCourseCreationAttributes,
-} from "./combo_course";
+import type { ComboComboAttributes, ComboComboCreationAttributes } from "./combo_combo";
+import { ComboCoreq as _ComboCoreq } from "./combo_coreq";
+import type { ComboCoreqAttributes, ComboCoreqCreationAttributes } from "./combo_coreq";
 import { Combo as _Combo } from "./combo";
 import type { ComboAttributes, ComboCreationAttributes } from "./combo";
 import { Coreq as _Coreq } from "./coreq";
@@ -30,7 +24,7 @@ import type { VisualAttributes, VisualCreationAttributes } from "./visual";
 
 export {
   _ComboCombo as ComboCombo,
-  _ComboCourse as ComboCourse,
+  _ComboCoreq as ComboCoreq,
   _Combo as Combo,
   _Coreq as Coreq,
   _Course as Course,
@@ -45,8 +39,8 @@ export {
 export type {
   ComboComboAttributes,
   ComboComboCreationAttributes,
-  ComboCourseAttributes,
-  ComboCourseCreationAttributes,
+  ComboCoreqAttributes,
+  ComboCoreqCreationAttributes,
   ComboAttributes,
   ComboCreationAttributes,
   CoreqAttributes,
@@ -69,7 +63,7 @@ export type {
 
 export function initModels(sequelize: Sequelize): Record<any, any> {
   const ComboCombo = _ComboCombo.initModel(sequelize);
-  const ComboCourse = _ComboCourse.initModel(sequelize);
+  const ComboCoreq = _ComboCoreq.initModel(sequelize);
   const Combo = _Combo.initModel(sequelize);
   const Coreq = _Coreq.initModel(sequelize);
   const Course = _Course.initModel(sequelize);
@@ -80,6 +74,30 @@ export function initModels(sequelize: Sequelize): Record<any, any> {
   const User = _User.initModel(sequelize);
   const Visual = _Visual.initModel(sequelize);
 
+  Combo.belongsToMany(Combo, {
+    as: "sub_combo_id_combos",
+    through: ComboCombo,
+    foreignKey: "combo_id",
+    otherKey: "sub_combo_id",
+  });
+  Combo.belongsToMany(Combo, {
+    as: "combo_id_combos",
+    through: ComboCombo,
+    foreignKey: "sub_combo_id",
+    otherKey: "combo_id",
+  });
+  Combo.belongsToMany(Coreq, {
+    as: "coreq_id_coreqs",
+    through: ComboCoreq,
+    foreignKey: "combo_id",
+    otherKey: "coreq_id",
+  });
+  Coreq.belongsToMany(Combo, {
+    as: "combo_id_combos_combo_coreqs",
+    through: ComboCoreq,
+    foreignKey: "coreq_id",
+    otherKey: "combo_id",
+  });
   ComboCombo.belongsTo(Combo, { as: "combo", foreignKey: "combo_id" });
   Combo.hasMany(ComboCombo, { as: "combo_combos", foreignKey: "combo_id" });
   ComboCombo.belongsTo(Combo, { as: "sub_combo", foreignKey: "sub_combo_id" });
@@ -87,8 +105,8 @@ export function initModels(sequelize: Sequelize): Record<any, any> {
     as: "sub_combo_combo_combos",
     foreignKey: "sub_combo_id",
   });
-  ComboCourse.belongsTo(Combo, { as: "combo", foreignKey: "combo_id" });
-  Combo.hasMany(ComboCourse, { as: "combo_courses", foreignKey: "combo_id" });
+  ComboCoreq.belongsTo(Combo, { as: "combo", foreignKey: "combo_id" });
+  Combo.hasMany(ComboCoreq, { as: "combo_coreqs", foreignKey: "combo_id" });
   Node.belongsTo(Combo, {
     as: "selected_precoreqs_combo",
     foreignKey: "selected_precoreqs",
@@ -109,8 +127,10 @@ export function initModels(sequelize: Sequelize): Record<any, any> {
     foreignKey: "selected_reqs",
   });
   Combo.hasMany(Visual, { as: "visuals", foreignKey: "selected_reqs" });
-  ComboCourse.belongsTo(Course, { as: "course", foreignKey: "course_id" });
-  Course.hasMany(ComboCourse, { as: "combo_courses", foreignKey: "course_id" });
+  ComboCoreq.belongsTo(Coreq, { as: "coreq", foreignKey: "coreq_id" });
+  Coreq.hasMany(ComboCoreq, { as: "combo_coreqs", foreignKey: "coreq_id" });
+  Course.belongsTo(Coreq, { as: "coreq", foreignKey: "coreq_id" });
+  Coreq.hasMany(Course, { as: "courses", foreignKey: "coreq_id" });
   Listing.belongsTo(Course, { as: "course", foreignKey: "course_id" });
   Course.hasMany(Listing, { as: "listings", foreignKey: "course_id" });
   Visual.belongsTo(Degree, { as: "degree", foreignKey: "degree_id" });
@@ -127,20 +147,18 @@ export function initModels(sequelize: Sequelize): Record<any, any> {
   User.hasMany(Visual, { as: "visuals", foreignKey: "user_id" });
   Node.belongsTo(Visual, { as: "vi", foreignKey: "vis_id" });
   Visual.hasMany(Node, { as: "nodes", foreignKey: "vis_id" });
-  Course.belongsTo(Coreq, { as: "coreq", foreignKey: "coreq_id" });
-  Coreq.hasMany(Course, { as: "courses", foreignKey: "coreq_id" });
 
   return {
-    ComboCombo: ComboCombo,
-    ComboCourse: ComboCourse,
-    Combo: Combo,
-    Coreq: Coreq,
-    Course: Course,
-    Degree: Degree,
-    Listing: Listing,
-    Node: Node,
-    Req: Req,
-    User: User,
-    Visual: Visual,
+    ComboCombo,
+    ComboCoreq,
+    Combo,
+    Coreq,
+    Course,
+    Degree,
+    Listing,
+    Node,
+    Req,
+    User,
+    Visual,
   };
 }

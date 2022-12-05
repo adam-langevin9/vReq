@@ -1,21 +1,21 @@
 import http from "../http-common";
 
-type Course = {
+interface Course {
   course_id: number;
   course_title: string;
   course_descr: string;
   course_hours: string;
   course_prereqs: number;
   course_precorecs: number;
-};
+}
 
-type GetCourseResponse = {
+interface GetCourseResponse {
   data: Course;
-};
+}
 
-type GetCoursesResponse = {
+interface GetCoursesResponse {
   data: Course[];
-};
+}
 
 class CourseDataService {
   async getAll(): Promise<GetCoursesResponse> {

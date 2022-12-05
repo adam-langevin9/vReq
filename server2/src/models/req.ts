@@ -1,8 +1,8 @@
-import * as Sequelize from 'sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
-import type { Combo, ComboId } from './combo';
-import type { Coreq, CoreqId } from './coreq';
-import type { Degree, DegreeId } from './degree';
+import * as Sequelize from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
+import type { Combo, ComboId } from "./combo";
+import type { Coreq, CoreqId } from "./coreq";
+import type { Degree, DegreeId } from "./degree";
 
 export interface ReqAttributes {
   id: number;
@@ -12,7 +12,8 @@ export interface ReqAttributes {
 
 export type ReqPk = "id" | "start_year";
 export type ReqId = Req[ReqPk];
-export type ReqCreationAttributes = ReqAttributes;
+export type ReqOptionalAttributes = "id";
+export type ReqCreationAttributes = Optional<ReqAttributes, ReqOptionalAttributes>;
 
 export class Req extends Model<ReqAttributes, ReqCreationAttributes> implements ReqAttributes {
   id!: number;
@@ -62,47 +63,46 @@ export class Req extends Model<ReqAttributes, ReqCreationAttributes> implements 
   countDegrees!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof Req {
-    return Req.init({
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      primaryKey: true
-    },
-    start_year: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      primaryKey: true
-    },
-    combo_id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      references: {
-        model: 'Combos',
-        key: 'id'
+    return Req.init(
+      {
+        id: {
+          autoIncrement: true,
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          primaryKey: true,
+        },
+        start_year: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          primaryKey: true,
+        },
+        combo_id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          references: {
+            model: "Combos",
+            key: "id",
+          },
+        },
+      },
+      {
+        sequelize,
+        tableName: "Reqs",
+        timestamps: false,
+        indexes: [
+          {
+            name: "PRIMARY",
+            unique: true,
+            using: "BTREE",
+            fields: [{ name: "id" }, { name: "start_year" }],
+          },
+          {
+            name: "req_combo_fk_idx",
+            using: "BTREE",
+            fields: [{ name: "combo_id" }],
+          },
+        ],
       }
-    }
-  }, {
-    sequelize,
-    tableName: 'Reqs',
-    timestamps: false,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-          { name: "start_year" },
-        ]
-      },
-      {
-        name: "req_combo_fk_idx",
-        using: "BTREE",
-        fields: [
-          { name: "combo_id" },
-        ]
-      },
-    ]
-  });
+    );
   }
 }

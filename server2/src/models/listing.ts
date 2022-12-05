@@ -2,7 +2,7 @@ import * as Sequelize from "sequelize";
 import { DataTypes, Model, Optional } from "sequelize";
 import type { Course, CourseId } from "./course";
 import type { Node } from "./node";
-import type { VisualId } from "./visual";
+import { VisualId } from "./visual";
 
 export interface ListingAttributes {
   id: number;
@@ -13,12 +13,10 @@ export interface ListingAttributes {
 
 export type ListingPk = "id";
 export type ListingId = Listing[ListingPk];
-export type ListingCreationAttributes = ListingAttributes;
+export type ListingOptionalAttributes = "id";
+export type ListingCreationAttributes = Optional<ListingAttributes, ListingOptionalAttributes>;
 
-export class Listing
-  extends Model<ListingAttributes, ListingCreationAttributes>
-  implements ListingAttributes
-{
+export class Listing extends Model<ListingAttributes, ListingCreationAttributes> implements ListingAttributes {
   id!: number;
   subj!: string;
   num!: number;
@@ -46,6 +44,7 @@ export class Listing
     return Listing.init(
       {
         id: {
+          autoIncrement: true,
           type: DataTypes.INTEGER.UNSIGNED,
           allowNull: false,
           primaryKey: true,
