@@ -1,10 +1,11 @@
 import db from "../models";
 import type { Request, Response } from "express";
-import type { CourseAttributes } from "../models/init-models";
-const Course = db.course;
-const Op = db.Sequelize.Op;
+import { CourseAttributes, ListingAttributes } from "../models/init-models";
 
-export default module.exports = {
+const Course = db.Course;
+const Listing = db.Listing;
+
+export default {
   // Create and Save a new Course
   create(req: Request, res: Response): void {
     // Validate request
@@ -24,7 +25,7 @@ export default module.exports = {
       coreq_id: req.body.coreq_id,
     };
 
-    // Save Tutorial in the database
+    // Save Course in the database
     Course.create(course)
       .then((data: any) => {
         res.send(data);
@@ -38,23 +39,20 @@ export default module.exports = {
 
   // Retrieve all Courses from the database.
   findAll(req: Request, res: Response): void {
-    const id = req.query.id;
-    const condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
-
-    Course.findAll({ where: condition })
+    Course.findAll()
       .then((data: any) => {
         res.send(data);
       })
       .catch((err: Error) => {
         res.status(500).send({
-          message: err.message || "Some error occurred while retrieving Courses.",
+          message: err.message || "Some error occurred while retrieving Coreqs.",
         });
       });
   },
 
   // Find a single Course with an id
-  findOne(req: Request, res: Response): void {
-    const id = req.params.id;
+  findByPK(req: Request, res: Response): void {
+    const id = +req.params.id;
 
     Course.findByPk(id)
       .then((data: any) => {
@@ -62,7 +60,7 @@ export default module.exports = {
           res.send(data);
         } else {
           res.status(404).send({
-            message: `Cannot find Course with id=${id}.`,
+            message: `Cannot find Course with id${id} or .`,
           });
         }
       })
@@ -73,68 +71,32 @@ export default module.exports = {
       });
   },
 
-  // Update a Course by the id in the request
-  update(req: Request, res: Response): void {
-    const id = req.params.id;
-
-    Course.update(req.body, {
-      where: { id },
-    })
-      .then((num: number) => {
-        if (num === 1) {
-          res.send({
-            message: "Course was updated successfully.",
+  //Find a single Course with a listing
+  findByListing(req: Request, res: Response): void {
+    const subj = req.params.subj;
+    const num = +req.params.num;
+    const condition = { subj, num };
+    Listing.findOne({ where: condition })
+      .then((listing: ListingAttributes | null) => {
+        if (listing) {
+          Course.findByPk(listing.course_id).then((course: CourseAttributes | null) => {
+            if (course) {
+              res.send(course);
+            } else {
+              res.status(404).send({
+                message: `Cannot find Course for listing ${subj} ${num}.`,
+              });
+            }
           });
         } else {
-          res.send({
-            message: `Cannot update Course with id=${id}. Maybe Course was not found or req.body is empty!`,
+          res.status(404).send({
+            message: `Cannot find listing ${subj} ${num}.`,
           });
         }
-      })
-      .catch((_err: Error) => {
-        res.status(500).send({
-          message: "Error updating Tutorial with id=" + id,
-        });
-      });
-  },
-
-  // Delete a Course with the specified id in the request
-  delete(req: Request, res: Response): void {
-    const id = req.params.id;
-
-    Course.destroy({
-      where: { id },
-    })
-      .then((num: number) => {
-        if (num === 1) {
-          res.send({
-            message: "Course was deleted successfully!",
-          });
-        } else {
-          res.send({
-            message: `Cannot delete Course with id=${id}. Maybe Course was not found!`,
-          });
-        }
-      })
-      .catch((_err: Error) => {
-        res.status(500).send({
-          message: "Could not delete Course with id=" + id,
-        });
-      });
-  },
-
-  // Delete all Courses from the database.
-  deleteAll(req: Request, res: Response): void {
-    Course.destroy({
-      where: {},
-      truncate: false,
-    })
-      .then((nums: number) => {
-        res.send({ message: `${nums} Courses were deleted successfully!` });
       })
       .catch((err: Error) => {
         res.status(500).send({
-          message: err.message || "Some error occurred while removing all Courses.",
+          message: err + `\nError retrieving Course with listing ${subj} ${num}.`,
         });
       });
   },

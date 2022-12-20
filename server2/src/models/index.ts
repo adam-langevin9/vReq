@@ -1,8 +1,21 @@
 "use strict";
 
 import { Sequelize, Options } from "sequelize";
-import { initModels } from "./init-models";
-import config from "../config/config";
+import {
+  initModels,
+  ComboCombo,
+  ComboCoreq,
+  Combo,
+  Coreq,
+  Course,
+  Degree,
+  Listing,
+  Node,
+  Req,
+  User,
+  Visual,
+} from "./init-models";
+import config from "../configs/config";
 
 const sequelize = new Sequelize(
   config.database as string,
@@ -11,17 +24,20 @@ const sequelize = new Sequelize(
   config as Options
 );
 
-const models = initModels(sequelize);
+initModels(sequelize);
 
-const db = models;
-
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-export default db;
+export default {
+  Sequelize,
+  sequelize,
+  ComboCombo,
+  ComboCoreq,
+  Combo,
+  Coreq,
+  Course,
+  Degree,
+  Listing,
+  Node,
+  Req,
+  User,
+  Visual,
+};

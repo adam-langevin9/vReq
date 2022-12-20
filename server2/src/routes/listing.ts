@@ -1,7 +1,7 @@
 import listing from "../controllers/listing";
 import express from "express";
 
-export default module.exports = (app: any) => {
+export default (app: any) => {
   const router = express.Router();
 
   // Retrieve all Listings

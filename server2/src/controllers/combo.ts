@@ -1,10 +1,9 @@
 import db from "../models";
 import type { Request, Response } from "express";
 import type { ComboAttributes } from "../models/init-models";
-const Combo = db.combo;
-const Op = db.Sequelize.Op;
+const Combo = db.Combo;
 
-export default module.exports = {
+export default {
   // Create and Save a new Combo
   create(req: Request, res: Response): void {
     // Validate request
@@ -21,7 +20,7 @@ export default module.exports = {
       op: req.body.id ? req.body.id : "ONE",
     };
 
-    // Save Tutorial in the database
+    // Save Combo in the database
     Combo.create(combo)
       .then((data: any) => {
         res.send(data);
@@ -35,10 +34,7 @@ export default module.exports = {
 
   // Retrieve all Combos from the database.
   findAll(req: Request, res: Response): void {
-    const id = req.query.id;
-    const condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
-
-    Combo.findAll({ where: condition })
+    Combo.findAll()
       .then((data: any) => {
         res.send(data);
       })
@@ -50,8 +46,8 @@ export default module.exports = {
   },
 
   // Find a single Combo with an id
-  findOne(req: Request, res: Response): void {
-    const id = req.params.id;
+  findByPk(req: Request, res: Response): void {
+    const id = +req.params.id;
 
     Combo.findByPk(id)
       .then((data: any) => {
@@ -59,7 +55,7 @@ export default module.exports = {
           res.send(data);
         } else {
           res.status(404).send({
-            message: `Cannot find Combo with id=${id}.`,
+            message: `Cannot find Combo with id${id} or .`,
           });
         }
       })
@@ -70,68 +66,24 @@ export default module.exports = {
       });
   },
 
-  // Update a Combo by the id in the request
-  update(req: Request, res: Response): void {
-    const id = req.params.id;
+  // Find a single Combo with an id
+  findOne(req: Request, res: Response): void {
+    const req_id = req.params.req_id;
+    const start_year = req.params.start_year;
 
-    Combo.update(req.body, {
-      where: { id },
-    })
-      .then((num: number) => {
-        if (num === 1) {
-          res.send({
-            message: "Combo was updated successfully.",
-          });
+    Combo.findOne({ where: {} })
+      .then((data: any) => {
+        if (data) {
+          res.send(data);
         } else {
-          res.send({
-            message: `Cannot update Combo with id=${id}. Maybe Combo was not found or req.body is empty!`,
+          res.status(404).send({
+            message: `Cannot find Combo with id=${req_id}.`,
           });
         }
       })
       .catch((_err: Error) => {
         res.status(500).send({
-          message: "Error updating Tutorial with id=" + id,
-        });
-      });
-  },
-
-  // Delete a Combo with the specified id in the request
-  delete(req: Request, res: Response): void {
-    const id = req.params.id;
-
-    Combo.destroy({
-      where: { id },
-    })
-      .then((num: number) => {
-        if (num === 1) {
-          res.send({
-            message: "Combo was deleted successfully!",
-          });
-        } else {
-          res.send({
-            message: `Cannot delete Combo with id=${id}. Maybe Combo was not found!`,
-          });
-        }
-      })
-      .catch((_err: Error) => {
-        res.status(500).send({
-          message: "Could not delete Combo with id=" + id,
-        });
-      });
-  },
-
-  // Delete all Combos from the database.
-  deleteAll(req: Request, res: Response): void {
-    Combo.destroy({
-      where: {},
-      truncate: false,
-    })
-      .then((nums: number) => {
-        res.send({ message: `${nums} Combos were deleted successfully!` });
-      })
-      .catch((err: Error) => {
-        res.status(500).send({
-          message: err.message || "Some error occurred while removing all Combos.",
+          message: "Error retrieving Combo with id=" + req_id,
         });
       });
   },
