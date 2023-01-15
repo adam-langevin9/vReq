@@ -1,12 +1,10 @@
 import http from "../http-common";
 
 interface Course {
-  course_id: number;
-  course_title: string;
-  course_descr: string;
-  course_hours: string;
-  course_prereqs: number;
-  course_precorecs: number;
+  id: number;
+  title: string;
+  descr: string;
+  hours: string;
 }
 
 interface GetCourseResponse {
@@ -24,6 +22,10 @@ class CourseDataService {
 
   async getByID(id: number): Promise<GetCourseResponse> {
     return await http.get(`/course/${id}`);
+  }
+
+  async getByListing(subj: string, num: number): Promise<GetCourseResponse> {
+    return await http.get(`/course/${subj}/${num}`);
   }
 }
 

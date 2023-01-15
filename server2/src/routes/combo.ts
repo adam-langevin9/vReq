@@ -1,7 +1,7 @@
 import combo from "../controllers/combo";
-import express from "express";
+import express, { Express } from "express";
 
-export default (app: any) => {
+export default (app: Express): void => {
   const router = express.Router();
 
   // Retrieve all Combos

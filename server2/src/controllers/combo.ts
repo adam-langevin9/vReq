@@ -61,7 +61,7 @@ export default {
       })
       .catch((_err: Error) => {
         res.status(500).send({
-          message: "Error retrieving Combo with id=" + id,
+          message: "Error retrieving Combo with id=" + id.toString(),
         });
       });
   },
@@ -69,7 +69,6 @@ export default {
   // Find a single Combo with an id
   findOne(req: Request, res: Response): void {
     const req_id = req.params.req_id;
-    const start_year = req.params.start_year;
 
     Combo.findOne({ where: {} })
       .then((data: any) => {

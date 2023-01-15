@@ -60,18 +60,18 @@ export default {
           res.send(data);
         } else {
           res.status(404).send({
-            message: `Cannot find Course with id${id} or .`,
+            message: `Cannot find Course with id ${id}`,
           });
         }
       })
       .catch((_err: Error) => {
         res.status(500).send({
-          message: "Error retrieving Course with id=" + id,
+          message: `Error retrieving Course with id ${id}`,
         });
       });
   },
 
-  //Find a single Course with a listing
+  // Find a single Course with a listing
   findByListing(req: Request, res: Response): void {
     const subj = req.params.subj;
     const num = +req.params.num;
@@ -96,7 +96,7 @@ export default {
       })
       .catch((err: Error) => {
         res.status(500).send({
-          message: err + `\nError retrieving Course with listing ${subj} ${num}.`,
+          message: `${err} \nError retrieving Course with listing ${subj} ${num}.`,
         });
       });
   },

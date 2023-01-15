@@ -20,6 +20,12 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(function (_req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // routes
 courseRoute(app);
 reqRoute(app);

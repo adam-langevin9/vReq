@@ -9,8 +9,8 @@
     "seed": "sequelize db:seed --seed req.js && sequelize db:seed --seed coreq.js && sequelize db:seed --seed course.js && sequelize db:seed --seed listing.js ",
     "seed:undo": "sequelize db:seed:undo --seed listing.js && sequelize db:seed:undo --seed course.js && sequelize db:seed:undo --seed coreq.js && sequelize db:seed:undo --seed req.js ",
     "seed:redo": "npm run seed:undo && npm run seed",
-    "lint": "npx eslint src --ext .ts",
-    "lint:fix": "npx eslint src --ext .ts --fix",
+    "lint": "npx eslint src --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
+    "lint:fix": "npx eslint src --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

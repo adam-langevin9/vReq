@@ -1,6 +1,5 @@
 <script lang="ts">
 import CourseDataService from "../services/CourseDataService.js";
-import ListingDataService from "../services/ListingDataService";
 
 export default {
   data() {
@@ -28,24 +27,21 @@ export default {
   },
   methods: {
     retrieveCourse() {
-      ListingDataService.getByListing(this.input.subject, +this.input.number)
+      if (this.is_new) {
+        this.is_new = false;
+      }
+      CourseDataService.getByListing(this.input.subject, +this.input.number)
         .then((response) => {
-          const courseId = response.data.find((i) => i)?.course_id;
-          if (courseId) {
-            CourseDataService.getByID(courseId).then((response) => {
-              const course = response.data;
-              if (course) {
-                if (this.is_new) {
-                  this.is_new = false;
-                }
-                this.response.id = course.course_id;
-                this.response.title = course.course_title;
-                this.response.hours = course.course_hours;
-                this.response.description = course.course_descr;
-              } else {
-                this.response.id = 0;
-              }
-            });
+          if (response) {
+            const course = response.data;
+            if (course) {
+              this.response.id = course.id;
+              this.response.title = course.title;
+              this.response.hours = course.hours;
+              this.response.description = course.descr;
+            } else {
+              this.response.id = 0;
+            }
           } else {
             this.response.id = 0;
           }
@@ -63,7 +59,7 @@ export default {
     <div style="max-width: 575px" class="grid p-fluid">
       <div class="col-4 p-2">
         <span class="p-float-label">
-          <InputMask
+          <PrimeInputMask
             id="subject"
             class="max-w-12rem"
             v-model="input.subject"
@@ -77,16 +73,22 @@ export default {
 
       <div class="col-4 p-2">
         <span class="p-float-label">
-          <InputMask id="number" class="max-w-12rem" v-model="input.number" mask="999" slotChar="" />
+          <PrimeInputMask id="number" class="max-w-12rem" v-model="input.number" mask="999" slotChar="" />
           <label for="number">Course Number</label>
         </span>
       </div>
 
       <div class="col-4 p-2">
-        <Button @click="retrieveCourse" label="Search" icon="pi pi-search" iconPos="right" class="p-button-secondary" />
+        <PrimeButton
+          @click="retrieveCourse"
+          label="Search"
+          icon="pi pi-search"
+          iconPos="right"
+          class="p-button-secondary"
+        />
       </div>
 
-      <Card class="m-2 flex-grow-1" v-if="is_valid_search">
+      <PrimeCard class="m-2 flex-grow-1" v-if="is_valid_search">
         <template #title>
           {{ response.title }}
         </template>
@@ -96,13 +98,13 @@ export default {
         <template #content>
           {{ response.description }}
         </template>
-      </Card>
-      <Card class="m-2 flex-grow-1" v-if="is_invalid_search">
+      </PrimeCard>
+      <PrimeCard class="m-2 flex-grow-1" v-if="is_invalid_search">
         <template #content>
           <em> That course could not be located. Please try a different course. </em>
         </template>
-      </Card>
-      <Card class="m-2 flex-grow-1" v-if="is_new">
+      </PrimeCard>
+      <PrimeCard class="m-2 flex-grow-1" v-if="is_new">
         <template #content>
           To get started, enter a course's subject and number into the fields above.
           <br /><br />
@@ -117,10 +119,7 @@ export default {
             </li>
           </ul>
         </template>
-      </Card>
-      <Button label="Add Course(s)" icon="pi" iconPos="right" class="m-2" />
+      </PrimeCard>
     </div>
   </div>
 </template>
-
-<style scoped></style>
