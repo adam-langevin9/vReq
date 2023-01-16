@@ -28,14 +28,12 @@ const viewMaxWidth = "80%";
   min-height: v-bind(viewMinHeight);
 }
 
-.visual >>> .node {
+.visual:deep(.node) {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 1rem;
   color: #495057;
   border-radius: 3px;
-  width: 175px;
-  height: 45px;
   text-align: center;
   border-width: 1px;
   border-style: solid;

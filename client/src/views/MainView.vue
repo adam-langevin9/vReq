@@ -22,7 +22,9 @@ const { nodes, edges, addNodes, addEdges } = useVueFlow({
     // new ChildNode("BIO 201", "123", { x: 5, y: 5 }, new Listing(["BIO 201"])),
     // new ChildNode("BIOL 201", "123", { x: 5, y: 55 }, new Listing(["BIOL 201", "TEST 201"])),
   ],
-  edges: [new HardEdge("CSC 131", "CSC 231"), new SoftEdge("CSC 131", "CSC 220")],
+  edges: [
+    /*new HardEdge("CSC 131", "CSC 231"), new SoftEdge("CSC 131", "CSC 220")*/
+  ],
 });
 
 const ncs = new NodeCreationService(nodes, addNodes);
@@ -32,7 +34,6 @@ function retrieveDetailedCoreq(listing: { subj: string; num: number }) {
     .then((response) => {
       if (response) {
         const detailedCoreq = response.data;
-        console.log(response);
         if (detailedCoreq) {
           ncs.createNode(detailedCoreq);
         } else {
@@ -50,8 +51,7 @@ function retrieveDetailedCoreq(listing: { subj: string; num: number }) {
 
 <template>
   <main>
-    <CourseSearch @addCourses="retrieveDetailedCoreq" />
-    <CourseVisual ref="visual" />
-    {{ nodes }}
+    <CourseSearch @add-courses-clicked="retrieveDetailedCoreq" />
+    <CourseVisual />
   </main>
 </template>

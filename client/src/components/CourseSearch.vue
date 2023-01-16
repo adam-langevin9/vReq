@@ -17,6 +17,9 @@ export default {
       is_new: true,
     };
   },
+  emits: {
+    addCoursesClicked: null,
+  },
   computed: {
     is_valid_search() {
       return this.response.id;
@@ -50,8 +53,8 @@ export default {
           this.response.id = 0;
         });
     },
-    addCourses() {
-      this.$emit("addCourses", this.input);
+    addCourses(_event: any) {
+      this.$emit("addCoursesClicked", this.input);
     },
   },
 };
@@ -126,6 +129,6 @@ export default {
     </div>
   </div>
   <div class="flex justify-content-center">
-    <PrimeButton label="Add Course(s)" icon="pi" iconPos="right" class="m-2" @click="addCourses()" />
+    <PrimeButton label="Add Course(s)" icon="pi" iconPos="right" class="m-2" @click="addCourses" />
   </div>
 </template>
