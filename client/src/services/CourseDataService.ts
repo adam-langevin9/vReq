@@ -3,7 +3,7 @@ import http from "../http-common";
 interface Course {
   id: number;
   title: string;
-  descr: string;
+  descr: string | undefined;
   hours: string;
 }
 
@@ -25,7 +25,7 @@ class CourseDataService {
   }
 
   async getByListing(subj: string, num: number): Promise<GetCourseResponse> {
-    return await http.get(`/course/${subj}/${num}`);
+    return await http.get(`/course/subj/${subj}/num/${num}`);
   }
 }
 

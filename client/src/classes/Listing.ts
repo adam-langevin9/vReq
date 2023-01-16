@@ -1,9 +1,17 @@
-export class Listing {
-  crosslistings: Array<string>;
-  selectedListing: string;
+export interface ListingAttributes {
+  id: number;
+  subj: string;
+  num: number;
+}
 
-  constructor(crosslistings: Array<string>, selectedListing?: string) {
-    this.crosslistings = crosslistings;
-    this.selectedListing = selectedListing ?? crosslistings[0];
+export class Listing {
+  id: number;
+  subj: string;
+  num: number;
+
+  constructor(id: number, subj: string, num: number) {
+    this.id = id;
+    this.subj = subj;
+    this.num = num;
   }
 }

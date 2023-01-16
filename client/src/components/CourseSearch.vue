@@ -5,8 +5,8 @@ export default {
   data() {
     return {
       input: {
-        subject: "",
-        number: "",
+        subj: "",
+        num: "",
       },
       response: {
         id: 0,
@@ -30,7 +30,7 @@ export default {
       if (this.is_new) {
         this.is_new = false;
       }
-      CourseDataService.getByListing(this.input.subject, +this.input.number)
+      CourseDataService.getByListing(this.input.subj, +this.input.num)
         .then((response) => {
           if (response) {
             const course = response.data;
@@ -38,7 +38,7 @@ export default {
               this.response.id = course.id;
               this.response.title = course.title;
               this.response.hours = course.hours;
-              this.response.description = course.descr;
+              this.response.description = course.descr ?? "";
             } else {
               this.response.id = 0;
             }
@@ -49,6 +49,9 @@ export default {
         .catch((_e) => {
           this.response.id = 0;
         });
+    },
+    addCourses() {
+      this.$emit("addCourses", this.input);
     },
   },
 };
@@ -62,7 +65,7 @@ export default {
           <PrimeInputMask
             id="subject"
             class="max-w-12rem"
-            v-model="input.subject"
+            v-model="input.subj"
             mask="aaa?a"
             slotChar=""
             style="text-transform: uppercase"
@@ -73,7 +76,7 @@ export default {
 
       <div class="col-4 p-2">
         <span class="p-float-label">
-          <PrimeInputMask id="number" class="max-w-12rem" v-model="input.number" mask="999" slotChar="" />
+          <PrimeInputMask id="number" class="max-w-12rem" v-model="input.num" mask="999" slotChar="" />
           <label for="number">Course Number</label>
         </span>
       </div>
@@ -121,5 +124,8 @@ export default {
         </template>
       </PrimeCard>
     </div>
+  </div>
+  <div class="flex justify-content-center">
+    <PrimeButton label="Add Course(s)" icon="pi" iconPos="right" class="m-2" @click="addCourses()" />
   </div>
 </template>

@@ -1,25 +1,36 @@
 <script lang="ts">
-import { Listing } from "../../../../classes/Listing";
+import { DetailedCourse } from "@/classes/DetailedCourse";
+import type { Listing } from "@/classes/Listing";
 export default {
   props: {
-    listing: {
-      type: Listing,
+    detailedCourse: {
+      type: DetailedCourse,
       required: true,
+    },
+  },
+  data() {
+    return {
+      selection: this.listingObjToString(this.detailedCourse.selectedListing),
+      options: this.detailedCourse.listings.map((listing: Listing) =>
+        listing.subj.concat(" ").concat(listing.num.toString())
+      ),
+    };
+  },
+  methods: {
+    listingObjToString(listing: Listing) {
+      return listing.subj.concat(" ").concat(listing.num.toString());
     },
   },
 };
 </script>
 
 <template>
-  <div v-if="listing.crosslistings.length > 1">
-    <PrimeDropdown
-      v-model="listing.selectedListing"
-      :options="listing.crosslistings"
-      dropdownIcon=""
-      class="crosslisting"
-    />
+  <div v-if="detailedCourse.listings.length > 1">
+    <PrimeDropdown v-model="selection" :options="options" dropdownIcon="" class="crosslisting" />
   </div>
-  <div v-else class="single-listing">{{ listing.selectedListing }}</div>
+  <div v-else class="single-listing">
+    {{ selection }}
+  </div>
 </template>
 
 <style>

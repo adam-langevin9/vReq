@@ -1,0 +1,196 @@
+[
+  {
+    "type": "single",
+    "dimensions": { "width": 175, "height": 45 },
+    "handleBounds": {
+      "source": [
+        { "id": "source", "position": "right", "x": 173.0000355431848, "y": 19.49998842995812, "width": 6, "height": 6 }
+      ],
+      "target": [
+        { "id": "target", "position": "left", "x": -3.999999242917994, "y": 19.49998842995812, "width": 6, "height": 6 }
+      ]
+    },
+    "computedPosition": { "x": 0, "y": 0, "z": 0 },
+    "connectable": false,
+    "selected": false,
+    "dragging": false,
+    "resizing": false,
+    "initialized": true,
+    "id": "CSC 131",
+    "position": { "x": 0, "y": 0 },
+    "data": { "crosslistings": ["CSC 131"], "selectedListing": "CSC 131" },
+    "sourcePosition": "right",
+    "targetPosition": "left",
+    "deletable": false,
+    "events": {}
+  },
+  {
+    "type": "single",
+    "dimensions": { "width": 175, "height": 45 },
+    "handleBounds": {
+      "source": [
+        {
+          "id": "source",
+          "position": "right",
+          "x": 173.00002503749533,
+          "y": 19.49998842995812,
+          "width": 6,
+          "height": 6
+        }
+      ],
+      "target": [
+        { "id": "target", "position": "left", "x": -3.999999242917994, "y": 19.49998842995812, "width": 6, "height": 6 }
+      ]
+    },
+    "computedPosition": { "x": 250, "y": 0, "z": 0 },
+    "connectable": false,
+    "selected": false,
+    "dragging": false,
+    "resizing": false,
+    "initialized": true,
+    "id": "CSC 231",
+    "position": { "x": 250, "y": 0 },
+    "data": { "crosslistings": ["CSC 231"], "selectedListing": "CSC 231" },
+    "sourcePosition": "right",
+    "targetPosition": "left",
+    "deletable": false,
+    "events": {}
+  },
+  {
+    "type": "single",
+    "dimensions": { "width": 175, "height": 45 },
+    "handleBounds": {
+      "source": [
+        {
+          "id": "source",
+          "position": "right",
+          "x": 173.00002503749533,
+          "y": 19.49998842995812,
+          "width": 6,
+          "height": 6
+        }
+      ],
+      "target": [
+        { "id": "target", "position": "left", "x": -3.999999242917994, "y": 19.49998842995812, "width": 6, "height": 6 }
+      ]
+    },
+    "computedPosition": { "x": 250, "y": 50, "z": 0 },
+    "connectable": false,
+    "selected": false,
+    "dragging": false,
+    "resizing": false,
+    "initialized": true,
+    "id": "CSC 220",
+    "position": { "x": 250, "y": 50 },
+    "data": { "crosslistings": ["ART 220", "CSC 220", "FST 220"], "selectedListing": "CSC 220" },
+    "sourcePosition": "right",
+    "targetPosition": "left",
+    "deletable": false,
+    "events": {}
+  },
+  {
+    "type": "single",
+    "dimensions": { "width": 175, "height": 45 },
+    "handleBounds": {
+      "source": [
+        { "id": "source", "position": "right", "x": 173.0000355431848, "y": 19.49998842995812, "width": 6, "height": 6 }
+      ],
+      "target": [
+        { "id": "target", "position": "left", "x": -3.999999242917994, "y": 19.49998842995812, "width": 6, "height": 6 }
+      ]
+    },
+    "computedPosition": { "x": 0, "y": 50, "z": 0 },
+    "connectable": false,
+    "selected": false,
+    "dragging": false,
+    "resizing": false,
+    "initialized": true,
+    "id": "CSC 133",
+    "position": { "x": 0, "y": 50 },
+    "data": { "crosslistings": ["CSC 133", "CIT 133", "MIS 133"], "selectedListing": "CSC 133" },
+    "sourcePosition": "right",
+    "targetPosition": "left",
+    "deletable": false,
+    "events": {}
+  },
+  {
+    "type": "default",
+    "dimensions": { "width": 185, "height": 105 },
+    "handleBounds": {
+      "source": [
+        {
+          "id": "123__handle-right",
+          "position": "right",
+          "x": 182.00003383975027,
+          "y": 49.500035280290426,
+          "width": 6,
+          "height": 6
+        }
+      ],
+      "target": [
+        {
+          "id": "123__handle-left",
+          "position": "left",
+          "x": -2.9999994321884955,
+          "y": 49.500035280290426,
+          "width": 6,
+          "height": 6
+        }
+      ]
+    },
+    "computedPosition": { "x": -5, "y": 100, "z": 0 },
+    "connectable": false,
+    "selected": false,
+    "dragging": false,
+    "resizing": false,
+    "initialized": true,
+    "id": "123",
+    "position": { "x": -5, "y": 100 },
+    "sourcePosition": "right",
+    "targetPosition": "left",
+    "width": "185px",
+    "height": "105px",
+    "deletable": false,
+    "data": {},
+    "events": {},
+    "isParent": true
+  },
+  {
+    "type": "coreq",
+    "dimensions": { "width": 175, "height": 45 },
+    "handleBounds": {},
+    "computedPosition": { "x": 0, "y": 105, "z": 1 },
+    "draggable": false,
+    "connectable": false,
+    "selected": false,
+    "dragging": false,
+    "resizing": false,
+    "initialized": true,
+    "id": "BIO 201",
+    "parentNode": "123",
+    "position": { "x": 5, "y": 5 },
+    "data": { "crosslistings": ["BIO 201"], "selectedListing": "BIO 201" },
+    "extent": "parent",
+    "deletable": false,
+    "events": {}
+  },
+  {
+    "type": "coreq",
+    "dimensions": { "width": 175, "height": 45 },
+    "handleBounds": {},
+    "computedPosition": { "x": 0, "y": 155, "z": 1 },
+    "draggable": false,
+    "connectable": false,
+    "selected": false,
+    "dragging": false,
+    "resizing": false,
+    "initialized": true,
+    "id": "BIOL 201",
+    "parentNode": "123",
+    "position": { "x": 5, "y": 55 },
+    "data": { "crosslistings": ["BIOL 201", "TEST 201"], "selectedListing": "BIOL 201" },
+    "extent": "parent",
+    "deletable": false,
+    "events": {}
+  }
+]

@@ -1,9 +1,9 @@
 import type { NodeTypesObject, NodeComponent } from "@vue-flow/core";
-import SingleReqNode from "./SingleReqNodeType.vue";
-import CoreqNode from "./CoreqNodeType.vue";
+import SingleNode from "./SingleNodeType.vue";
+import ChildNode from "./ChildNodeType.vue";
 import { markRaw } from "vue";
 
 export const nodeTypes: NodeTypesObject = {
-  single: markRaw(SingleReqNode) as NodeComponent,
-  coreq: markRaw(CoreqNode) as NodeComponent,
+  single: markRaw(SingleNode) as NodeComponent,
+  coreq: markRaw(ChildNode) as NodeComponent,
 };
