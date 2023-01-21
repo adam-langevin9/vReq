@@ -10,12 +10,12 @@ export async function getDetailedCombo(rootCombo: Combo, selectedListing: Listin
   const detailedReq: DetailedCombo = { op: rootCombo.op, elements: [] };
 
   // Traverses ComboCoreqs
-  for (var coreq of await rootCombo.getCoreq_id_coreqs()) {
+  for (const coreq of await rootCombo.getCoreq_id_coreqs()) {
     detailedReq.elements.push(await getDetailedCoreq(coreq, selectedListing));
   }
 
   // Traverses ComboCombs
-  for (var subCombo of await rootCombo.getCombo_id_combos()) {
+  for (const subCombo of await rootCombo.getCombo_id_combos()) {
     detailedReq.elements.push(await getDetailedCombo(subCombo, selectedListing));
   }
 

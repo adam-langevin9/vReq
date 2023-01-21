@@ -7,10 +7,6 @@ interface Req {
   combo_id: number;
 }
 
-interface GetReqResponse {
-  data: Req;
-}
-
 interface GetReqsResponse {
   data: Req[];
 }

@@ -7,7 +7,7 @@ export interface DetailedCoreq {
   id: number;
   prereq?: DetailedCombo;
   precoreq?: DetailedCombo;
-  courses: Array<DetailedCourse>;
+  courses: DetailedCourse[];
 }
 
 export async function getDetailedCoreq(
@@ -17,13 +17,15 @@ export async function getDetailedCoreq(
 ): Promise<DetailedCoreq> {
   const courses = await coreq.getCourses();
 
-  var detailedCoreq: DetailedCoreq = {
+  const detailedCoreq: DetailedCoreq = {
     id: coreq.id,
     prereq: coreq.prereq_id
-      ? await getDetailedCombo(await (await getRecentReq(coreq.prereq_id, start_year))?.getCombo()!, selectedListing)
+      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+        await getDetailedCombo(await (await getRecentReq(coreq.prereq_id, start_year))?.getCombo()!, selectedListing)
       : undefined,
     precoreq: coreq.precoreq_id
-      ? await getDetailedCombo(await (await getRecentReq(coreq.precoreq_id, start_year))?.getCombo()!, selectedListing)
+      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+        await getDetailedCombo(await (await getRecentReq(coreq.precoreq_id, start_year))?.getCombo()!, selectedListing)
       : undefined,
     courses: [],
   };

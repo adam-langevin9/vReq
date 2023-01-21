@@ -5,5 +5,5 @@ export interface DetailedCoreqAttributes {
   id: number;
   prereq?: DetailedComboAttributes;
   precoreq?: DetailedComboAttributes;
-  courses: Array<DetailedCourseAttributes>;
+  courses: DetailedCourseAttributes[];
 }

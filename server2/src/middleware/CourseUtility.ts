@@ -16,11 +16,11 @@ export interface DetailedCourse {
 export async function getDetailedCourse(course: Course, selectedListing?: Listing): Promise<DetailedCourse> {
   const listings = await course.getListings({ attributes: { exclude: ["course_id"] } });
   const selectedListingIdx =
-    selectedListing && listings.map((listing) => listing.id).indexOf(selectedListing.id) > -1
+    selectedListing && listings.map((listing) => listing.id).includes(selectedListing.id)
       ? listings.map((listing) => listing.id).indexOf(selectedListing.id)
       : 0;
   const selectedListingSubjIdx =
-    selectedListing && listings.map((listing) => listing.subj).indexOf(selectedListing.subj) > -1
+    selectedListing && listings.map((listing) => listing.subj).includes(selectedListing.subj)
       ? listings.map((listing) => listing.subj).indexOf(selectedListing.subj)
       : 0;
   return {

@@ -1,6 +1,5 @@
 import type { DetailedCoreqAttributes } from "@/classes/DetailedCoreq";
-import { Position, type XYPosition } from "@vue-flow/core";
-import type { Node } from "@vue-flow/core";
+import { Position, type XYPosition, type Node } from "@vue-flow/core";
 import type { DetailedCourseAttributes } from "@/classes/DetailedCourse";
 
 export class ParentNode implements Node {

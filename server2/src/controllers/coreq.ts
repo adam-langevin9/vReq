@@ -1,9 +1,7 @@
 import db from "../models";
 import type { Request, Response } from "express";
-import { CoreqAttributes } from "../models/init-models";
 import { getDetailedCoreq } from "../middleware/CoreqUtility";
 
-const Coreq = db.Coreq;
 const Listing = db.Listing;
 
 export default {
@@ -23,7 +21,4 @@ export default {
 
     res.send(await getDetailedCoreq(await (await selectedListing.getCourse()).getCoreq(), selectedListing));
   },
-
-  // Get dependancy chain given a coreq
-  async getDependencies(req: Request, res: Response): Promise<void> {},
 };

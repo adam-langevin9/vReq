@@ -1,7 +1,6 @@
 import type { DetailedCoreqAttributes } from "@/classes/DetailedCoreq";
 import type { DetailedCourseAttributes } from "@/classes/DetailedCourse";
-import type { XYPosition } from "@vue-flow/core";
-import type { Node } from "@vue-flow/core";
+import type { XYPosition, Node } from "@vue-flow/core";
 
 export class ChildNode implements Node {
   readonly id: string;

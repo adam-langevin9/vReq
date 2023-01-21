@@ -79,6 +79,7 @@ export default {
     Listing.findOne({ where: condition })
       .then((listing: ListingAttributes | null) => {
         if (listing) {
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           Course.findByPk(listing.course_id).then((course: CourseAttributes | null) => {
             if (course) {
               res.send(course);

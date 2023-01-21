@@ -1,6 +1,6 @@
 import db from "../models";
 import type { Request, Response } from "express";
-import { Coreq, ReqAttributes } from "../models/init-models";
+import { ReqAttributes } from "../models/init-models";
 
 const Req = db.Req;
 

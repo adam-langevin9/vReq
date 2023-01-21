@@ -1,23 +1,22 @@
 import type { DetailedCoreqAttributes } from "@/classes/DetailedCoreq";
-import type { AddNodes, GraphNode, AddEdges, GraphEdge } from "@vue-flow/core";
+import type { AddNodes, GraphNode, AddEdges, GraphEdge, Node } from "@vue-flow/core";
 import type { Ref } from "vue";
 import { ChildNode } from "@/components/CourseVisual/Nodes/ChildNode";
 import { SingleNode } from "@/components/CourseVisual/Nodes/SingleNode";
 import { ParentNode } from "@/components/CourseVisual/Nodes/ParentNode";
 import { createEdgeID, createHardEdge, createSoftEdge } from "./EdgeCreationUtility";
-import type { Node } from "@vue-flow/core";
 import type { DetailedComboAttributes } from "@/classes/DetailedCombo";
 
 export default class NodeCreationService {
-  private addNodes: AddNodes;
-  private nodes: Ref<GraphNode<any, any>[]>;
-  private addEdges: AddEdges;
-  private edges: Ref<GraphEdge<any, any>[]>;
+  private readonly addNodes: AddNodes;
+  private readonly nodes: Ref<Array<GraphNode<any, any>>>;
+  private readonly addEdges: AddEdges;
+  private readonly edges: Ref<Array<GraphEdge<any, any>>>;
 
   constructor(
-    nodes: Ref<GraphNode<any, any>[]>,
+    nodes: Ref<Array<GraphNode<any, any>>>,
     addNodes: AddNodes,
-    edges: Ref<GraphEdge<any, any>[]>,
+    edges: Ref<Array<GraphEdge<any, any>>>,
     addEdges: AddEdges
   ) {
     this.addNodes = addNodes;
@@ -27,7 +26,7 @@ export default class NodeCreationService {
   }
 
   private createNode(coreq: DetailedCoreqAttributes): void {
-    const newNodes: Array<Node> = [];
+    const newNodes: Node[] = [];
     if (this.nodes.value.find((node) => node.id === coreq.id.toString())) {
       // Node is already in Visual
       return;
@@ -45,7 +44,7 @@ export default class NodeCreationService {
     this.addNodes(newNodes);
   }
 
-  private createEdge(source_id: string, target_id: string, type: "prereq" | "precoreq") {
+  private createEdge(source_id: string, target_id: string, type: "prereq" | "precoreq"): void {
     if (this.edges.value.find((edge) => edge.id === createEdgeID(source_id, target_id).toString())) {
       // Edge is already in Visual
       return;
