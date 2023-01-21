@@ -9,7 +9,7 @@ import type { Visual, VisualId } from "./visual";
 
 export interface ComboAttributes {
   id: number;
-  op: "AND" | "OR" | "NOT" | "ONE";
+  op: "AND" | "OR" | "ONE";
 }
 
 export type ComboPk = "id";
@@ -18,7 +18,7 @@ export type ComboCreationAttributes = ComboAttributes;
 
 export class Combo extends Model<ComboAttributes, ComboCreationAttributes> implements ComboAttributes {
   id!: number;
-  op!: "AND" | "OR" | "NOT" | "ONE";
+  op!: "AND" | "OR" | "ONE";
 
   // Combo hasMany ComboCombo via combo_id
   combo_combos!: ComboCombo[];
@@ -178,7 +178,7 @@ export class Combo extends Model<ComboAttributes, ComboCreationAttributes> imple
           primaryKey: true,
         },
         op: {
-          type: DataTypes.ENUM("AND", "OR", "NOT", "ONE"),
+          type: DataTypes.ENUM("AND", "OR", "ONE"),
           allowNull: false,
         },
       },

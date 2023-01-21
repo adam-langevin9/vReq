@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { Handle, Position } from "@vue-flow/core";
+import { Handle, Position, type HandleConnectable } from "@vue-flow/core";
 import ListingSelect from "../NodeComponents/ListingSelect.vue";
 import NodeMenu from "../NodeComponents/NodeMenu.vue";
-import { DetailedCourse } from "@/classes/DetailedCourse";
-defineProps({
+import type { DetailedCourseAttributes } from "@/classes/DetailedCourse";
+defineProps<{
   data: {
-    type: DetailedCourse,
-    required: true,
-  },
-  connectable: Boolean,
-});
+    type: DetailedCourseAttributes;
+    required: true;
+  };
+  connectable: HandleConnectable | undefined;
+}>();
 </script>
 
 <template>

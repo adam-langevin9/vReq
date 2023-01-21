@@ -1,16 +1,20 @@
-<script lang="ts">
-import { DetailedCourse } from "@/classes/DetailedCourse";
+<script setup lang="ts">
+import type { DetailedCourseAttributes } from "@/classes/DetailedCourse";
 import type { Listing } from "@/classes/Listing";
+defineProps<{
+  detailedCourse: {
+    [x: string]: any;
+    type: DetailedCourseAttributes;
+    required: true;
+  };
+}>();
+</script>
+
+<script lang="ts">
 export default {
-  props: {
-    detailedCourse: {
-      type: DetailedCourse,
-      required: true,
-    },
-  },
   data() {
     return {
-      selection: this.listingObjToString(this.detailedCourse.selectedListing),
+      selection: this.listingObjToString(this.detailedCourse.listings[this.detailedCourse.selectedListing]),
       options: this.detailedCourse.listings.map((listing: Listing) =>
         listing.subj.concat(" ").concat(listing.num.toString())
       ),

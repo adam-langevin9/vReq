@@ -5,5 +5,5 @@ import { markRaw } from "vue";
 
 export const nodeTypes: NodeTypesObject = {
   single: markRaw(SingleNode) as NodeComponent,
-  coreq: markRaw(ChildNode) as NodeComponent,
+  child: markRaw(ChildNode) as NodeComponent,
 };

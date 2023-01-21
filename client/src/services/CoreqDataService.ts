@@ -1,5 +1,5 @@
 import http from "../http-common";
-import type { DetailedCoreq } from "@/classes/DetailedCoreq";
+import type { DetailedCoreqAttributes } from "@/classes/DetailedCoreq";
 
 interface Coreq {
   id: number;
@@ -16,10 +16,10 @@ interface GetCoreqsResponse {
 }
 
 interface GetDetailedCoreqResponse {
-  data: DetailedCoreq;
+  data: DetailedCoreqAttributes;
 }
 
-class CourseDataService {
+class CoreqDataService {
   async getAll(): Promise<GetCoreqsResponse> {
     return await http.get("/coreq");
   }
@@ -33,4 +33,4 @@ class CourseDataService {
   }
 }
 
-export default new CourseDataService();
+export default new CoreqDataService();

@@ -1,14 +1,13 @@
 <script lang="ts" setup>
-import { DetailedCoreq } from "@/classes/DetailedCoreq";
-import { DetailedCourse } from "@/classes/DetailedCourse";
+import type { DetailedCourseAttributes } from "@/classes/DetailedCourse";
 import ListingSelect from "../NodeComponents/ListingSelect.vue";
 import NodeMenu from "../NodeComponents/NodeMenu.vue";
-defineProps({
+defineProps<{
   data: {
-    type: DetailedCourse,
-    required: true,
-  },
-});
+    type: DetailedCourseAttributes;
+    required: true;
+  };
+}>();
 </script>
 
 <template>

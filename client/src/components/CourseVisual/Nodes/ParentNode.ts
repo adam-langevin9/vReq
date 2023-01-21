@@ -1,12 +1,12 @@
-import type { DetailedCoreq } from "@/classes/DetailedCoreq";
+import type { DetailedCoreqAttributes } from "@/classes/DetailedCoreq";
 import { Position, type XYPosition } from "@vue-flow/core";
 import type { Node } from "@vue-flow/core";
-import type { DetailedCourse } from "@/classes/DetailedCourse";
+import type { DetailedCourseAttributes } from "@/classes/DetailedCourse";
 
 export class ParentNode implements Node {
   readonly id: string;
   readonly position: XYPosition;
-  readonly data: DetailedCourse;
+  readonly data: DetailedCourseAttributes;
   readonly height: string;
 
   readonly sourcePosition = Position.Right;
@@ -15,11 +15,10 @@ export class ParentNode implements Node {
   readonly deletable = false;
   readonly connectable = false;
 
-  constructor(position: XYPosition, data: DetailedCoreq) {
+  constructor(position: XYPosition, data: DetailedCoreqAttributes) {
     this.id = data.id.toString();
     this.position = position;
     this.data = data.courses[0];
     this.height = (50 * data.courses.length + 5).toString().concat("px");
-    console.log(this.position, this.width, this.height);
   }
 }

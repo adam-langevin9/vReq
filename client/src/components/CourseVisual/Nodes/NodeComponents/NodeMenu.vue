@@ -6,6 +6,7 @@ export default {
     opt1: String,
     opt2: String,
     opt3: String,
+    class: String,
   },
   data() {
     return {

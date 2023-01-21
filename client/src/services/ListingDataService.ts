@@ -1,9 +1,9 @@
 import http from "../http-common";
 
 interface Listing {
-  listing_id: number;
-  listing_subj: string;
-  listing_num: number;
+  id: number;
+  subj: string;
+  num: number;
   course_id: number;
 }
 

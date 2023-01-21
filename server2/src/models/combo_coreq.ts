@@ -54,7 +54,7 @@ export class ComboCoreq
       },
       {
         sequelize,
-        tableName: "ComboCoreq",
+        tableName: "ComboCoreqs",
         timestamps: false,
         indexes: [
           {
