@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useCourseFlow } from "@/stores/CourseFlowStore";
-const CourseFlowStore = useCourseFlow();
+import { useCourseInput } from "@/stores/CourseInputStore";
+const CourseFlowStore = useCourseInput();
 </script>
 <template>
   <div id="course-search" class="flex justify-content-center flex-wrap card-container mt-5">

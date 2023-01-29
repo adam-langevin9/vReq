@@ -4,12 +4,23 @@ import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
 import { nodeTypes } from "./Nodes/NodeTypes";
+import { getIncomers, useVueFlow } from "@vue-flow/core";
 
 const viewMinHeight = "30rem";
 const viewMaxWidth = "80%";
+const vueFlow = useVueFlow();
+
+function printFlowData() {
+  console.log("==========");
+  console.log("Flow Data");
+  console.log("----------");
+  console.log(vueFlow.toObject());
+  console.log("==========");
+}
 </script>
 
 <template>
+  <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 20px; left: 20px" />
   <div class="flex justify-content-center m-2">
     <VueFlow class="visual" :node-types="nodeTypes" :default-zoom="1.5" :min-zoom="0.2" :max-zoom="4">
       <Background class="background" />

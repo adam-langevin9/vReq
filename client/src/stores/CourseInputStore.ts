@@ -8,8 +8,8 @@ import type { AltReqGroup } from "@/classes/AltReqGroup";
 import type { DetailedCourse } from "@/classes/Course";
 import { useLayout } from "@/utils/LayoutUtility";
 
-export const useCourseFlow = defineStore("CourseFlow", () => {
-  const vueFlowStore = useVueFlow();
+export const useCourseInput = defineStore("CourseInput", () => {
+  const vueFlow = useVueFlow();
   useLayout();
   const input = ref({ subj: "", num: "" });
   const searchResult: Ref<DetailedCourse | undefined> = ref();
@@ -25,15 +25,15 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     });
   }
 
-  function addCoreqToFlow() {
+  function addInputToFlow() {
     getDetailedCoreqFor(input.value.subj, +input.value.num)
       .then((detailedCoreq) => {
         if (detailedCoreq) {
           const { nodes, edges } = NodeFactory.createNodes(detailedCoreq);
-          vueFlowStore.addNodes(
-            nodes.filter((newNode) => !vueFlowStore.nodes.value.map((oldNode) => oldNode.id).includes(newNode.id))
+          vueFlow.addNodes(
+            nodes.filter((newNode) => !vueFlow.nodes.value.map((oldNode) => oldNode.id).includes(newNode.id))
           );
-          vueFlowStore.addEdges(edges);
+          vueFlow.addEdges(edges);
         } else {
         }
       })
@@ -41,12 +41,12 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   }
 
   return {
-    vueFlowStore,
     input,
     searchResult,
     isNew,
     altsReqs,
+    vueFlow,
     retrieveCourse,
-    addCoreqToFlow,
+    addInputToFlow,
   };
 });

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { ICustomNodeData } from "@/classes/Nodes/Node";
-import { useCourseFlow } from "@/stores/CourseFlowStore";
+import { useCourseInput } from "@/stores/CourseInputStore";
 import type { GraphNode } from "@vue-flow/core";
 import { computed, ref } from "vue";
 
-const courseFlowStore = useCourseFlow();
+const courseInput = useCourseInput();
 
 const sidebar = ref({ visibile: false, position: "right" });
 const activeAccordion = ref([]);
@@ -14,7 +14,7 @@ const sidebarPositionIcon = computed(() => {
 });
 
 const altReqGroups = computed(() => {
-  return courseFlowStore.vueFlowStore.nodes
+  return courseInput.vueFlow.nodes
     .filter((node: GraphNode<ICustomNodeData>) => node.data.altReqs.length > 0)
     .map((node: GraphNode<ICustomNodeData>) => {
       return {
