@@ -1,14 +1,15 @@
 import { ref, watch, type Ref } from "vue";
 import { defineStore } from "pinia";
-import { Position, useVueFlow } from "@vue-flow/core";
+import { Position, useVueFlow, getOutgoers } from "@vue-flow/core";
 import { getDetailedCoreqFor } from "@/services/api/CoreqDataService";
 import { getCourseFor } from "@/services/api/CourseDataService";
 import { NodeFactory } from "@/services/NodeService";
 import type { AltReqGroup } from "@/classes/AltReqGroup";
 import type { DetailedCourse } from "@/classes/Course";
 import { useLayout } from "@/utils/LayoutUtility";
+import type { CourseNode } from "@/classes/Node";
 
-export const useCourseInput = defineStore("CourseInput", () => {
+export const useCourseFlow = defineStore("CourseFlow", () => {
   const vueFlow = useVueFlow();
   useLayout();
   const input = ref({ subj: "", num: "" });
@@ -25,14 +26,26 @@ export const useCourseInput = defineStore("CourseInput", () => {
     });
   }
 
+  function postNodes(newNodes: CourseNode[]) {
+    const uniqueNodes: CourseNode[] = [];
+    newNodes.forEach((newNode) => {
+      const existingNode = vueFlow.findNode(newNode.id);
+      if (existingNode) {
+        existingNode.data.manual = existingNode.data.manual ? existingNode.data.manual : newNode.data.manual;
+        existingNode.hidden = existingNode.hidden ? newNode.hidden : existingNode.hidden;
+      } else {
+        uniqueNodes.push(newNode);
+      }
+    });
+    vueFlow.addNodes(uniqueNodes);
+  }
+
   function addInputToFlow() {
     getDetailedCoreqFor(input.value.subj, +input.value.num)
       .then((detailedCoreq) => {
         if (detailedCoreq) {
           const { nodes, edges } = NodeFactory.createNodes(detailedCoreq);
-          vueFlow.addNodes(
-            nodes.filter((newNode) => !vueFlow.nodes.value.map((oldNode) => oldNode.id).includes(newNode.id))
-          );
+          postNodes(nodes);
           vueFlow.addEdges(edges);
         } else {
         }

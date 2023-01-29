@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { DetailedCoreq } from "@/classes/Coreq";
-import type { DetailedCourse } from "@/classes/Course";
 import type { ICourseNodeData } from "@/classes/Node";
-import { useCourseInput } from "@/stores/CourseInputStore";
+import { useCourseFlow } from "@/stores/CoursFlowStore";
 import type { GraphNode } from "@vue-flow/core";
 import { computed, ref } from "vue";
 
-const courseInput = useCourseInput();
+const courseFlow = useCourseFlow();
 
 const sidebar = ref({ visibile: false, position: "right" });
 const activeAccordion = ref([]);
@@ -16,7 +15,7 @@ const sidebarPositionIcon = computed(() => {
 });
 
 const altReqGroups = computed(() => {
-  return courseInput.vueFlow.nodes
+  return courseFlow.vueFlow.nodes
     .filter((node: GraphNode<ICourseNodeData>) => node.data.altReqs.length > 0)
     .map((node: GraphNode<ICourseNodeData>) => {
       return {

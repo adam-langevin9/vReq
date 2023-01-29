@@ -2,16 +2,16 @@
 import CourseSearch from "../components/CourseSearch.vue";
 import CourseFlow from "../components/CourseFlow/CourseFlow.vue";
 import AltSelector from "@/components/AltSelector.vue";
-import { useCourseInput } from "@/stores/CourseInputStore";
+import { useCourseFlow } from "@/stores/CoursFlowStore";
 
-const courseInput = useCourseInput();
+const courseFlow = useCourseFlow();
 </script>
 
 <template>
   <main>
     <CourseSearch />
     <div class="flex justify-content-center">
-      <PrimeButton label="Add Course(s)" icon="pi" iconPos="right" class="m-2" @click="courseInput.addInputToFlow" />
+      <PrimeButton label="Add Course(s)" icon="pi" iconPos="right" class="m-2" @click="courseFlow.addInputToFlow" />
     </div>
     <CourseFlow />
     <AltSelector />

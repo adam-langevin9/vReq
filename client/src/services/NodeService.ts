@@ -16,16 +16,6 @@ interface ICurr {
   hidden: boolean;
 }
 
-function postCourseNode(id: string, courses: DetailedCourse[], manual: boolean = true, hidden: boolean = false) {
-  const node = vueFlow.findNode(id);
-  if (node) {
-    node.data.manual = node.data.manual ? node.data.manual : manual;
-    node.hidden = hidden;
-  } else {
-    //nodes.push(new CourseNode(id, courses, manual, hidden));
-  }
-}
-
 function createAltReqGroup(detailedCoreq: DetailedCoreq): AltReqGroup {
   const altReqGroup: AltReqGroup = new AltReqGroup(detailedCoreq.id);
 
