@@ -1,5 +1,5 @@
-import type { Listing } from "../Listing";
-import type { AltReq } from "../AltReqGroup";
+import CustomNode from "@/components/CourseFlow/CustomNode.vue";
+import type { AltReq } from "./AltReqGroup";
 import type {
   XYPosition,
   Node,
@@ -17,14 +17,24 @@ import type {
   Dimensions,
   NodeHandleBounds,
   XYZPosition,
+  NodeTypesObject,
 } from "@vue-flow/core";
-import type { VNode, RendererNode, RendererElement, Component, ComputedOptions, MethodOptions } from "vue";
+import {
+  type VNode,
+  type RendererNode,
+  type RendererElement,
+  type Component,
+  type ComputedOptions,
+  type MethodOptions,
+  markRaw,
+} from "vue";
+import type { DetailedCourse } from "./Course";
 
-interface ICustomNode extends Node<ICustomNodeData> {
+interface ICourseNode extends Node<ICourseNodeData> {
   id: string;
   position: XYPosition;
-  data: ICustomNodeData;
-  type: "default" | "child" | "single";
+  data: ICourseNodeData;
+  type: "course";
   width: "175px" | "185px";
   height: string;
   draggable: boolean;
@@ -33,27 +43,22 @@ interface ICustomNode extends Node<ICustomNodeData> {
   connectable: boolean;
 }
 
-export interface ICustomNodeData extends ElementData {
-  id: number;
-  title: string;
-  hours: string;
-  descr?: string;
-  is_complete: boolean;
-  is_manual: boolean;
-  selectedListing: number;
-  listings: Listing[];
+export interface ICourseNodeData extends ElementData {
+  courses: DetailedCourse[];
+  complete: boolean;
+  manual: boolean;
   altReqs: AltReq[];
 }
 
-export class CustomNode implements ICustomNode {
+export class CourseNode implements ICourseNode {
   readonly id: string;
-  position: XYPosition;
-  readonly data: ICustomNodeData;
-  readonly type: "default" | "child" | "single";
+  position: XYPosition = { x: 0, y: 0 };
+  readonly data: ICourseNodeData;
+  readonly type: "course" = "course";
   readonly width: "175px" | "185px";
   readonly height: string;
-  draggable: boolean;
-  deletable: boolean;
+  draggable: boolean = true;
+  deletable: boolean = false;
   hidden: boolean;
   readonly connectable: boolean = false;
   label?:
@@ -77,25 +82,15 @@ export class CustomNode implements ICustomNode {
   zIndex?: number | undefined;
   ariaLabel?: string | undefined;
 
-  constructor(
-    id: string,
-    position: XYPosition,
-    data: ICustomNodeData,
-    type: "default" | "child" | "single",
-    width: "175px" | "185px",
-    height: string,
-    draggable: boolean,
-    deletable: boolean,
-    hidden: boolean
-  ) {
+  constructor(id: string, courses: DetailedCourse[], manual: boolean = true, hidden: boolean = false) {
     this.id = id.toString();
-    this.position = position;
-    this.data = data;
-    this.type = type;
-    this.width = width;
-    this.height = height;
-    this.draggable = draggable;
-    this.deletable = deletable;
+    this.data = { courses, manual, complete: false, altReqs: [] };
+    this.width = courses.length === 1 ? "175px" : "185px";
+    this.height = courses.length === 1 ? "45px" : (50 * courses.length + 5).toString().concat("px");
     this.hidden = hidden;
   }
 }
+
+export const nodeTypes: NodeTypesObject = {
+  course: markRaw(CustomNode) as NodeComponent,
+};

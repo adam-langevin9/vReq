@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import type { ICustomNodeData } from "@/classes/Nodes/Node";
+import { DetailedCoreq } from "@/classes/Coreq";
+import type { DetailedCourse } from "@/classes/Course";
+import type { ICourseNodeData } from "@/classes/Node";
 import { useCourseInput } from "@/stores/CourseInputStore";
 import type { GraphNode } from "@vue-flow/core";
 import { computed, ref } from "vue";
@@ -15,13 +17,10 @@ const sidebarPositionIcon = computed(() => {
 
 const altReqGroups = computed(() => {
   return courseInput.vueFlow.nodes
-    .filter((node: GraphNode<ICustomNodeData>) => node.data.altReqs.length > 0)
-    .map((node: GraphNode<ICustomNodeData>) => {
+    .filter((node: GraphNode<ICourseNodeData>) => node.data.altReqs.length > 0)
+    .map((node: GraphNode<ICourseNodeData>) => {
       return {
-        listings: node.data.listings
-          .slice(0, -1)
-          .reduce((acc, curr) => acc.concat(curr.toString()).concat(" / "), "")
-          .concat(node.data.listings[node.data.listings.length - 1].toString()),
+        listings: new DetailedCoreq(+node.id, node.data.courses).getListingsString(),
         reqs: node.data.altReqs,
       };
     })

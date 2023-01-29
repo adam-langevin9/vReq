@@ -3,7 +3,7 @@ import { VueFlow } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
-import { nodeTypes } from "./Nodes/NodeTypes";
+import { nodeTypes } from "@/classes/Node";
 import { getIncomers, useVueFlow } from "@vue-flow/core";
 
 const viewMinHeight = "30rem";
@@ -37,18 +37,5 @@ function printFlowData() {
 }
 .background {
   min-height: v-bind(viewMinHeight);
-}
-
-.visual:deep(.node) {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 1rem;
-  color: #495057;
-  border-radius: 3px;
-  text-align: center;
-  border-width: 1px;
-  border-style: solid;
-  background: #fff;
-  white-space: nowrap;
 }
 </style>

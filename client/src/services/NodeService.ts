@@ -1,10 +1,13 @@
 import type { DetailedCombo } from "@/classes/Combo";
 import { CoreqTitle, DetailedCoreq } from "@/classes/Coreq";
-import type { CustomNode } from "@/classes/Nodes/Node";
-import { SingleNode, ParentNode, ChildNode } from "@/classes/Nodes";
+import { CourseNode } from "@/classes/Node";
 import { CustomEdge } from "@/classes/Edge";
 import { AltReq, AltReqGroup } from "@/classes/AltReqGroup";
 import type { Req } from "@/classes/Req";
+import type { DetailedCourse } from "@/classes/Course";
+import { useVueFlow } from "@vue-flow/core";
+
+const vueFlow = useVueFlow();
 
 interface ICurr {
   elm?: DetailedCoreq | DetailedCombo;
@@ -13,25 +16,14 @@ interface ICurr {
   hidden: boolean;
 }
 
-function createNode(
-  coreq: DetailedCoreq,
-  is_manual: boolean,
-  hidden: boolean = false,
-  is_complete = false
-): Array<CustomNode> {
-  coreq = new DetailedCoreq(coreq.id, coreq.courses, coreq.prereq, coreq.precoreq);
-  const newNodes: CustomNode[] = [];
-  if (coreq.courses.length === 1) {
-    // single node
-    newNodes.push(new SingleNode({ x: 0, y: 0 }, coreq, is_manual, hidden, is_complete));
+function postCourseNode(id: string, courses: DetailedCourse[], manual: boolean = true, hidden: boolean = false) {
+  const node = vueFlow.findNode(id);
+  if (node) {
+    node.data.manual = node.data.manual ? node.data.manual : manual;
+    node.hidden = hidden;
   } else {
-    // nested nodes
-    newNodes.push(new ParentNode({ x: 0, y: 0 }, coreq, is_manual, hidden, is_complete));
-    for (let i = 0; i < coreq.courses.length; i++) {
-      newNodes.push(new ChildNode(i, coreq, is_manual, hidden, is_complete));
-    }
+    //nodes.push(new CourseNode(id, courses, manual, hidden));
   }
-  return newNodes;
 }
 
 function createAltReqGroup(detailedCoreq: DetailedCoreq): AltReqGroup {
@@ -77,10 +69,10 @@ function createAltReq(detailedCombo: DetailedCombo): AltReq {
 
 export module NodeFactory {
   export function createNodes(coreq: DetailedCoreq): {
-    nodes: Array<CustomNode>;
+    nodes: Array<CourseNode>;
     edges: Array<CustomEdge>;
   } {
-    const nodes: Array<CustomNode> = [];
+    const nodes: Array<CourseNode> = [];
     const edges: Array<CustomEdge> = [];
 
     if (!coreq) {
@@ -90,7 +82,7 @@ export module NodeFactory {
     const stack: Array<ICurr> = [];
     var curr: ICurr | undefined = { elm: coreq, hidden: false };
 
-    nodes.push(...createNode(coreq, true));
+    nodes.push(new CourseNode(coreq.id.toString(), coreq.courses, true, false));
 
     if ((curr.elm as DetailedCoreq).precoreq) {
       stack.push({
@@ -120,7 +112,7 @@ export module NodeFactory {
           curr = stack.pop();
         } else {
           if (!nodes.map((node) => node.id).includes(curr.elm.id.toString())) {
-            nodes.push(...createNode(curr.elm, false, curr.hidden));
+            nodes.push(new CourseNode(curr.elm.id.toString(), curr.elm.courses, false, curr.hidden));
           }
 
           if (

@@ -3,17 +3,18 @@ import type Menu from "primevue/menu";
 
 export default {
   props: {
-    opt1: String,
-    opt2: String,
-    opt3: String,
-    class: String,
+    group: Boolean,
   },
   data() {
     return {
       items: [
-        { label: this.opt1 ?? "Mark Complete", icon: "pi pi-check", command: () => {} },
-        { label: this.opt2 ?? "View Alternates", icon: "pi pi-eye", command: () => {} },
-        { label: this.opt3 ?? "Remove Course", icon: "pi pi-trash", command: () => {} },
+        { label: this.group ? "Mark Complete" : "Mark Complete", icon: "pi pi-check", command: () => {} },
+        {
+          label: this.group ? "View Alternates" : "View Alternates",
+          icon: "pi pi-eye",
+          command: () => {},
+        },
+        { label: this.group ? "Remove Group" : "Remove Course", icon: "pi pi-trash", command: () => {} },
       ],
     };
   },
