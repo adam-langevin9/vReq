@@ -1,9 +1,3 @@
-export interface ListingAttributes {
-  id: number;
-  subj: string;
-  num: number;
-}
-
 export class Listing {
   id: number;
   subj: string;
@@ -13,5 +7,9 @@ export class Listing {
     this.id = id;
     this.subj = subj;
     this.num = num;
+  }
+
+  toString() {
+    return this.subj.concat(" ").concat(this.num.toString());
   }
 }

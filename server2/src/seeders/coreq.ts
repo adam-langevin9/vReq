@@ -582,7 +582,7 @@ export default {
         },
         {
           id: 143,
-          prereq_id: null,
+          prereq_id: 112,
           precoreq_id: 103,
         },
         {

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { DetailedCourseAttributes } from "@/classes/DetailedCourse";
+import type { ICustomNodeData } from "@/classes/Nodes/Node";
 import ListingSelect from "../NodeComponents/ListingSelect.vue";
 import NodeMenu from "../NodeComponents/NodeMenu.vue";
 defineProps<{
   data: {
-    type: DetailedCourseAttributes;
+    type: ICustomNodeData;
     required: true;
   };
 }>();

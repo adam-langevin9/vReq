@@ -2,10 +2,10 @@
 import { Handle, Position, type HandleConnectable } from "@vue-flow/core";
 import ListingSelect from "../NodeComponents/ListingSelect.vue";
 import NodeMenu from "../NodeComponents/NodeMenu.vue";
-import type { DetailedCourseAttributes } from "@/classes/DetailedCourse";
+import type { ICustomNodeData } from "@/classes/Nodes/Node";
 defineProps<{
   data: {
-    type: DetailedCourseAttributes;
+    type: ICustomNodeData;
     required: true;
   };
   connectable: HandleConnectable | undefined;

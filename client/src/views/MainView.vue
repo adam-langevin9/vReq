@@ -1,43 +1,36 @@
 <script setup lang="ts">
-import { useVueFlow } from "@vue-flow/core";
 import CourseSearch from "../components/CourseSearch.vue";
-import CourseVisual from "../components/CourseVisual/CourseVisual.vue";
-import GraphCreationService from "@/components/CourseVisual/GraphCreationService";
-import CoreqDataService from "@/services/CoreqDataService";
+import CourseFlow from "../components/CourseFlow/CourseFlow.vue";
+import AltSelector from "@/components/AltSelector.vue";
+import { useCourseFlow } from "@/stores/CourseFlowStore";
+import { getIncomers, type GraphNode, isNode } from "@vue-flow/core";
+import type { ICustomNodeData } from "@/classes/Nodes/Node";
 
-const { nodes, edges, addNodes, addEdges, toObject } = useVueFlow({
-  fitViewOnInit: true,
-  nodes: [],
-  edges: [],
-});
+const CourseFlowStore = useCourseFlow();
 
-const nodeCreationService = new GraphCreationService(nodes, addNodes, edges, addEdges);
-
-function retrieveDetailedCoreq(listing: { subj: string; num: number }) {
-  CoreqDataService.getDetailedByListing(listing.subj, +listing.num)
-    .then((response) => {
-      const detailedCoreq = response?.data;
-      if (detailedCoreq) {
-        nodeCreationService.createNodeWAncestors(detailedCoreq);
-      } else {
-        console.log("unable to get detailed coreq");
-      }
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-}
-
-function printData() {
-  console.log("--------");
-  console.log(toObject());
+function printFlowData() {
+  console.log("==========");
+  console.log("Flow Data");
+  console.log("----------");
+  console.log(CourseFlowStore.vueFlowStore.toObject());
+  console.log("==========");
 }
 </script>
 
 <template>
   <main>
-    <CourseSearch @add-courses-clicked="retrieveDetailedCoreq" />
-    <CourseVisual />
-    <PrimeButton label="Data" @click="printData" style="position: fixed; top: 20px; left: 20px" />
+    <CourseSearch />
+    <div class="flex justify-content-center">
+      <PrimeButton
+        label="Add Course(s)"
+        icon="pi"
+        iconPos="right"
+        class="m-2"
+        @click="CourseFlowStore.addCoreqToFlow"
+      />
+    </div>
+    <CourseFlow />
+    <AltSelector />
+    <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 20px; left: 20px" />
   </main>
 </template>

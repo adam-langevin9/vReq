@@ -7,17 +7,19 @@ export interface DetailedCombo {
 }
 
 export async function getDetailedCombo(rootCombo: Combo, selectedListing: Listing): Promise<DetailedCombo> {
-  const detailedReq: DetailedCombo = { op: rootCombo.op, elements: [] };
+  const detailedCombo: DetailedCombo = { op: rootCombo.op, elements: [] };
 
   // Traverses ComboCoreqs
-  for (const coreq of await rootCombo.getCoreq_id_coreqs()) {
-    detailedReq.elements.push(await getDetailedCoreq(coreq, selectedListing));
+  const coreqs = await rootCombo.getCoreq_id_coreqs();
+  for (const coreq of coreqs) {
+    detailedCombo.elements.push(await getDetailedCoreq(coreq, selectedListing));
   }
 
   // Traverses ComboCombs
-  for (const subCombo of await rootCombo.getCombo_id_combos()) {
-    detailedReq.elements.push(await getDetailedCombo(subCombo, selectedListing));
+  const combos = await rootCombo.getSub_combo_id_combos();
+  for (const subCombo of combos) {
+    detailedCombo.elements.push(await getDetailedCombo(subCombo, selectedListing));
   }
 
-  return detailedReq;
+  return detailedCombo;
 }

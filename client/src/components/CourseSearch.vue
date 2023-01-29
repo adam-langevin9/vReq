@@ -1,65 +1,7 @@
-<script lang="ts">
-import CourseDataService from "../services/CourseDataService.js";
-
-export default {
-  data() {
-    return {
-      input: {
-        subj: "",
-        num: "",
-      },
-      response: {
-        id: 0,
-        title: "",
-        hours: "",
-        description: "",
-      },
-      is_new: true,
-    };
-  },
-  emits: {
-    addCoursesClicked: null,
-  },
-  computed: {
-    is_valid_search() {
-      return this.response.id;
-    },
-    is_invalid_search() {
-      return !this.is_new && !this.is_valid_search;
-    },
-  },
-  methods: {
-    retrieveCourse() {
-      if (this.is_new) {
-        this.is_new = false;
-      }
-      CourseDataService.getByListing(this.input.subj, +this.input.num)
-        .then((response) => {
-          if (response) {
-            const course = response.data;
-            if (course) {
-              this.response.id = course.id;
-              this.response.title = course.title;
-              this.response.hours = course.hours;
-              this.response.description = course.descr ?? "";
-            } else {
-              this.response.id = 0;
-            }
-          } else {
-            this.response.id = 0;
-          }
-        })
-        .catch((_e) => {
-          this.response.id = 0;
-        });
-    },
-    addCourses(_event: any) {
-      this.$emit("addCoursesClicked", this.input);
-    },
-  },
-};
+<script setup lang="ts">
+import { useCourseFlow } from "@/stores/CourseFlowStore";
+const CourseFlowStore = useCourseFlow();
 </script>
-
 <template>
   <div id="course-search" class="flex justify-content-center flex-wrap card-container mt-5">
     <div style="max-width: 575px" class="grid p-fluid">
@@ -68,7 +10,7 @@ export default {
           <PrimeInputMask
             id="subject"
             class="max-w-12rem"
-            v-model="input.subj"
+            v-model="CourseFlowStore.input.subj"
             mask="aaa?a"
             slotChar=""
             style="text-transform: uppercase"
@@ -79,38 +21,22 @@ export default {
 
       <div class="col-4 p-2">
         <span class="p-float-label">
-          <PrimeInputMask id="number" class="max-w-12rem" v-model="input.num" mask="999" slotChar="" />
+          <PrimeInputMask id="number" class="max-w-12rem" v-model="CourseFlowStore.input.num" mask="999" slotChar="" />
           <label for="number">Course Number</label>
         </span>
       </div>
 
       <div class="col-4 p-2">
         <PrimeButton
-          @click="retrieveCourse"
+          @click="CourseFlowStore.retrieveCourse"
           label="Search"
           icon="pi pi-search"
           iconPos="right"
           class="p-button-secondary"
         />
       </div>
-
-      <PrimeCard class="m-2 flex-grow-1" v-if="is_valid_search">
-        <template #title>
-          {{ response.title }}
-        </template>
-
-        <template #subtitle> Credit Hours: {{ response.hours }} </template>
-
-        <template #content>
-          {{ response.description }}
-        </template>
-      </PrimeCard>
-      <PrimeCard class="m-2 flex-grow-1" v-if="is_invalid_search">
-        <template #content>
-          <em> That course could not be located. Please try a different course. </em>
-        </template>
-      </PrimeCard>
-      <PrimeCard class="m-2 flex-grow-1" v-if="is_new">
+      <PrimeCard v-if="CourseFlowStore.isNew" class="m-2 flex-grow-1">
+        <!-- Welcome Message -->
         <template #content>
           To get started, enter a course's subject and number into the fields above.
           <br /><br />
@@ -126,9 +52,28 @@ export default {
           </ul>
         </template>
       </PrimeCard>
+      <PrimeCard v-else-if="CourseFlowStore.searchResult">
+        <!-- Search Result -->
+        <template #title>
+          {{ CourseFlowStore.searchResult.title }}
+        </template>
+        <template #subtitle
+          ><span v-if="CourseFlowStore.searchResult.hours">Credit Hours:</span>
+          {{ CourseFlowStore.searchResult.hours }}
+        </template>
+        <template #content>
+          {{ CourseFlowStore.searchResult.descr }}
+        </template>
+      </PrimeCard>
+      <PrimeCard v-else>
+        <!-- Error Message -->
+        <template #title> Course Not Found </template>
+        <template #content>
+          {{ CourseFlowStore.input.subj.toUpperCase() }} {{ CourseFlowStore.input.num }} could not be found. Please
+          check that you entered the course correctly or try a different course.
+        </template>
+      </PrimeCard>
     </div>
   </div>
-  <div class="flex justify-content-center">
-    <PrimeButton label="Add Course(s)" icon="pi" iconPos="right" class="m-2" @click="addCourses" />
-  </div>
+  {{ CourseFlowStore.searchResult?.getListingsString() }}
 </template>

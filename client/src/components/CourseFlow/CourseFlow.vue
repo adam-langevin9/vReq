@@ -3,7 +3,7 @@ import { VueFlow } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
-import { nodeTypes } from "./Nodes/NodeTypes/NodeTypes";
+import { nodeTypes } from "./Nodes/NodeTypes";
 
 const viewMinHeight = "30rem";
 const viewMaxWidth = "80%";

@@ -24,6 +24,11 @@ import Button from "primevue/button";
 import Card from "primevue/card";
 import Dropdown from "primevue/dropdown";
 import Menu from "primevue/menu";
+import Accordion from "primevue/accordion";
+import AccordionTab from "primevue/accordiontab";
+import RadioButton from "primevue/radiobutton";
+import Divider from "primevue/divider";
+import Sidebar from "primevue/sidebar";
 
 const app = createApp(App);
 
@@ -33,5 +38,10 @@ app
   .component("PrimeInputMask", InputMask)
   .component("PrimeCard", Card)
   .component("PrimeDropdown", Dropdown)
-  .component("PrimeMenu", Menu);
+  .component("PrimeMenu", Menu)
+  .component("PrimeAccordion", Accordion)
+  .component("PrimeAccordionTab", AccordionTab)
+  .component("PrimeRadioButton", RadioButton)
+  .component("PrimeDivider", Divider)
+  .component("PrimeSidebar", Sidebar);
 app.mount("#app");

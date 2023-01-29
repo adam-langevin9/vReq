@@ -785,6 +785,10 @@ export default {
           combo_id: 109,
           coreq_id: 32,
         },
+        {
+          combo_id: 120,
+          coreq_id: 137,
+        },
       ],
       {}
     ),

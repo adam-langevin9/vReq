@@ -6,7 +6,7 @@ import type { Listing, ListingId } from "./listing";
 export interface CourseAttributes {
   id: number;
   title: string;
-  descr?: string;
+  descr: string;
   hours: string;
   coreq_id: number;
 }
@@ -19,7 +19,7 @@ export type CourseCreationAttributes = Optional<CourseAttributes, CourseOptional
 export class Course extends Model<CourseAttributes, CourseCreationAttributes> implements CourseAttributes {
   id!: number;
   title!: string;
-  descr?: string;
+  descr!: string;
   hours!: string;
   coreq_id!: number;
 
@@ -56,7 +56,7 @@ export class Course extends Model<CourseAttributes, CourseCreationAttributes> im
         },
         descr: {
           type: DataTypes.STRING(750),
-          allowNull: true,
+          allowNull: false,
         },
         hours: {
           type: DataTypes.STRING(8),

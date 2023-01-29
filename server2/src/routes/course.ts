@@ -11,7 +11,7 @@ export default (app: Express): void => {
   router.get("/:id", course.findByPK);
 
   // Retrieve a single Course with listing
-  router.get("/subj/:subj/num/:num", course.findByListing);
+  router.get("/subj/:subj/num/:num", course.findDetailedCourse);
 
   app.use("/api/course", router);
 };

@@ -1,6 +1,7 @@
 import db from "../models";
 import type { Request, Response } from "express";
 import { CourseAttributes, ListingAttributes } from "../models/init-models";
+import { getDetailedCourse } from "../middleware/CourseUtility";
 
 const Course = db.Course;
 const Listing = db.Listing;
@@ -71,34 +72,19 @@ export default {
       });
   },
 
-  // Find a single Course with a listing
-  findByListing(req: Request, res: Response): void {
+  async findDetailedCourse(req: Request, res: Response): Promise<void> {
     const subj = req.params.subj;
     const num = +req.params.num;
     const condition = { subj, num };
-    Listing.findOne({ where: condition })
-      .then((listing: ListingAttributes | null) => {
-        if (listing) {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          Course.findByPk(listing.course_id).then((course: CourseAttributes | null) => {
-            if (course) {
-              res.send(course);
-            } else {
-              res.status(404).send({
-                message: `Cannot find Course for listing ${subj} ${num}.`,
-              });
-            }
-          });
-        } else {
-          res.status(404).send({
-            message: `Cannot find listing ${subj} ${num}.`,
-          });
-        }
-      })
-      .catch((err: Error) => {
-        res.status(500).send({
-          message: `${err} \nError retrieving Course with listing ${subj} ${num}.`,
-        });
+
+    const selectedListing = await Listing.findOne({ where: condition });
+    if (!selectedListing) {
+      res.status(404).send({
+        message: `Cannot find Listing ${subj} ${num}.`,
       });
+      return;
+    }
+
+    res.send(await getDetailedCourse(await selectedListing.getCourse(), selectedListing));
   },
 };

@@ -550,6 +550,11 @@ export default {
           start_year: 2022,
           combo_id: 109,
         },
+        {
+          id: 112,
+          start_year: 2022,
+          combo_id: 120,
+        },
       ],
       {}
     ),
