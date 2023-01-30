@@ -36,7 +36,7 @@ watch(
       !vueFlow.findNode(props.id)!.data.manual &&
       (visibleTargetIDs.value.length === 0 ||
         visibleTargetIDs.value.some(
-          (targetID) => vueFlow.findEdge(CustomEdge.createEdgeID(props.id, targetID))?.hidden
+          (targetID) => !vueFlow.findEdge(CustomEdge.createEdgeID(props.id, targetID))?.hidden
         ))
     ) {
       vueFlow.findNode(props.id)!.hidden = true;
@@ -49,8 +49,8 @@ watch(
 
 <template>
   <div class="outer node">
-    {{ visibleTargetIDs.some((targetID) => vueFlow.findEdge(CustomEdge.createEdgeID(props.id, targetID))?.hidden) }}
-    - {{ visibleTargetIDs.length === 0 }}
+    <!-- {{ visibleTargetIDs.some((targetID) => vueFlow.findEdge(CustomEdge.createEdgeID(props.id, targetID))?.hidden) }}
+    - {{ visibleTargetIDs.length === 0 }} -->
     <div
       :class="data.courses.length > 1 ? 'inner node flex justify-content-between' : 'flex justify-content-between'"
       v-for="course in data.courses"
@@ -62,7 +62,7 @@ watch(
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
       />
     </div>
-    {{ visibleTargetIDs }}
+    <!-- {{ visibleTargetIDs }} -->
     <Handle id="target" type="target" :position="Position.Left" :connectable="connectable" />
     <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />
   </div>
