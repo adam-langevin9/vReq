@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import type { Listing } from "@/classes/Listing";
 defineProps<{
-  detailedCourse: {
-    [x: string]: any;
-    type: { listings: Listing[]; selectedListing: number };
-    required: true;
-  };
+  detailedCourse: { listings: Listing[]; selectedListing: number };
 }>();
 </script>
 

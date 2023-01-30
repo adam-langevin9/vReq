@@ -1,24 +1,22 @@
 <script setup lang="ts">
 import { DetailedCoreq } from "@/classes/Coreq";
 import type { ICourseNodeData } from "@/classes/Node";
-import { useCourseFlow } from "@/stores/CoursFlowStore";
+import { useVueFlow } from "@vue-flow/core";
 import type { GraphNode } from "@vue-flow/core";
 import { computed, ref } from "vue";
+import AltSelectorGroup from "./AltSelectorGroup.vue";
 
-const courseFlow = useCourseFlow();
+const vueFlow = useVueFlow();
 
 const sidebar = ref({ visibile: false, position: "right" });
-const activeAccordion = ref([]);
-
-const sidebarPositionIcon = computed(() => {
-  return sidebar.value.position === "right" ? "pi pi-step-backward" : "pi pi-step-forward";
-});
+const activeAccordion: Array<number> = [];
 
 const altReqGroups = computed(() => {
-  return courseFlow.vueFlow.nodes
+  return vueFlow.getNodes.value
     .filter((node: GraphNode<ICourseNodeData>) => node.data.altReqs.length > 0)
     .map((node: GraphNode<ICourseNodeData>) => {
       return {
+        targetID: node.id,
         listings: new DetailedCoreq(+node.id, node.data.courses).getListingsString(),
         reqs: node.data.altReqs,
       };
@@ -26,6 +24,9 @@ const altReqGroups = computed(() => {
     .sort((a, b) => a.listings.localeCompare(b.listings));
 });
 
+const sidebarPositionIcon = computed(() => {
+  return sidebar.value.position === "right" ? "pi pi-step-backward" : "pi pi-step-forward";
+});
 function toggleSidebarPosition() {
   sidebar.value.position = sidebar.value.position === "right" ? "full" : "right";
 }
@@ -47,37 +48,7 @@ function toggleSidebarVisible() {
     </template>
     <PrimeAccordion :multiple="true" :active-index="activeAccordion">
       <PrimeAccordionTab v-for="altReqGroup in altReqGroups" :header="altReqGroup.listings">
-        <div v-for="reqIdx in altReqGroup.reqs.length">
-          <PrimeDivider v-if="reqIdx > 1" />
-          <div class="flex justify-content-center align-items-center">
-            <h3>Requirment {{ reqIdx }}</h3>
-          </div>
-          <div class="flex justify-content-center align-items-start flex-wrap">
-            <div
-              v-for="optIdx in altReqGroup.reqs[reqIdx - 1].opts.length"
-              class="flex flex-column justify-content-center align-items-center px-7 py-3"
-            >
-              <PrimeRadioButton
-                :name="'req'.concat(reqIdx.toString())"
-                :inputId="'opt'.concat(optIdx.toString())"
-                :value="altReqGroup.reqs[reqIdx - 1].opts[optIdx - 1]"
-                v-model="altReqGroup.reqs[reqIdx - 1].selectedOpt"
-                class="align-items-center"
-              />
-              <label
-                :for="'opt'.concat(optIdx.toString())"
-                class="flex flex-column justify-content-center align-items-center"
-              >
-                <div
-                  v-for="element in altReqGroup.reqs[reqIdx - 1].opts[optIdx - 1]"
-                  class="flex flex-column justify-content-center align-items-center"
-                >
-                  {{ element.getListingsString() }}
-                </div>
-              </label>
-            </div>
-          </div>
-        </div>
+        <AltSelectorGroup :altReqGroup="altReqGroup" />
       </PrimeAccordionTab>
     </PrimeAccordion>
   </PrimeSidebar>

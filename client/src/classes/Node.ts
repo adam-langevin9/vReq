@@ -9,14 +9,10 @@ import type {
   ExtendedParentExtent,
   GraphNode,
   NodeComponent,
-  NodeEventsHandler,
   Position,
   StyleFunc,
   Styles,
   ValidConnectionFunc,
-  Dimensions,
-  NodeHandleBounds,
-  XYZPosition,
   NodeTypesObject,
 } from "@vue-flow/core";
 import {
@@ -47,6 +43,7 @@ export interface ICourseNodeData extends ElementData {
   courses: DetailedCourse[];
   complete: boolean;
   manual: boolean;
+  selected: boolean;
   altReqs: AltReq[];
 }
 
@@ -82,9 +79,15 @@ export class CourseNode implements ICourseNode {
   zIndex?: number | undefined;
   ariaLabel?: string | undefined;
 
-  constructor(id: string, courses: DetailedCourse[], manual: boolean = true, hidden: boolean = false) {
+  constructor(
+    id: string,
+    courses: DetailedCourse[],
+    manual: boolean = true,
+    hidden: boolean = false,
+    selected: boolean
+  ) {
     this.id = id.toString();
-    this.data = { courses, manual, complete: false, altReqs: [] };
+    this.data = { courses, manual, selected, complete: false, altReqs: [] };
     this.width = courses.length === 1 ? "175px" : "185px";
     this.height = courses.length === 1 ? "45px" : (50 * courses.length + 5).toString().concat("px");
     this.hidden = hidden;

@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { VueFlow } from "@vue-flow/core";
+import { getOutgoers, VueFlow, type GraphEdge, type GraphNode } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
 import { nodeTypes } from "@/classes/Node";
 import { getIncomers, useVueFlow } from "@vue-flow/core";
+import { computed } from "vue";
 
 const viewMinHeight = "30rem";
 const viewMaxWidth = "80%";
@@ -16,6 +17,14 @@ function printFlowData() {
   console.log("----------");
   console.log(vueFlow.toObject());
   console.log("==========");
+  const self = vueFlow.findNode("242")!;
+  const allOutgoers = computed(() => {
+    const allElements = [];
+    allElements.push(...vueFlow.nodes.value);
+    allElements.push(...vueFlow.edges.value);
+    return getOutgoers(self, allElements);
+  });
+  console.log(allOutgoers.value.some((outgoer) => !outgoer.hidden));
 }
 </script>
 
