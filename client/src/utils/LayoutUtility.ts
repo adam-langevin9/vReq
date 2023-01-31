@@ -12,8 +12,8 @@ export function useLayout() {
     const isVertical = direction === "TB";
     dagreGraph.setGraph({ rankdir: direction });
 
-    getNodesInitialized.value.forEach((el) => {
-      dagreGraph.setNode(el.id, { width: el.dimensions.width, height: el.dimensions.height });
+    getNodesInitialized.value.forEach((elm) => {
+      dagreGraph.setNode(elm.id, { width: elm.dimensions.width, height: elm.dimensions.height });
     });
 
     getEdges.value.forEach((edge) => {
@@ -22,14 +22,14 @@ export function useLayout() {
 
     dagre.layout(dagreGraph);
 
-    getNodesInitialized.value.forEach((el) => {
-      const nodeWithPosition = dagreGraph.node(el.id);
-      const hasPredecessors = dagreGraph.predecessors(el.id)?.length;
-      el.targetPosition = isVertical ? Position.Left : Position.Top;
-      el.sourcePosition = isVertical ? Position.Right : Position.Bottom;
-      el.position = { x: nodeWithPosition.x, y: nodeWithPosition.y };
-      el.data = { ...el.data, hasPredecessors };
-      el.style = {
+    getNodesInitialized.value.forEach((elm) => {
+      const nodeWithPosition = dagreGraph.node(elm.id);
+      const hasPredecessors = dagreGraph.predecessors(elm.id)?.length;
+      elm.targetPosition = isVertical ? Position.Left : Position.Top;
+      elm.sourcePosition = isVertical ? Position.Right : Position.Bottom;
+      elm.position = { x: nodeWithPosition.x, y: nodeWithPosition.y };
+      elm.data = { ...elm.data, hasPredecessors };
+      elm.style = {
         opacity: 1,
       };
     });

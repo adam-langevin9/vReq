@@ -17,6 +17,8 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   const isNew = ref(true);
   const altsReqs: Ref<Array<AltReqGroup>> = ref([]);
 
+  const allNodesVisibility = ref(false);
+
   function retrieveCourse() {
     if (isNew.value) {
       isNew.value = false;
@@ -59,6 +61,7 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     isNew,
     altsReqs,
     vueFlow,
+    allNodesVisibility,
     retrieveCourse,
     addInputToFlow,
   };

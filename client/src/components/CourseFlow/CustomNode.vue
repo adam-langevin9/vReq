@@ -1,13 +1,23 @@
 <script lang="ts" setup>
-import { getIncomers, Handle, Position, VueFlow, type Elements, type HandleConnectable } from "@vue-flow/core";
+import {
+  getIncomers,
+  Handle,
+  Position,
+  VueFlow,
+  type Elements,
+  type GraphEdge,
+  type HandleConnectable,
+} from "@vue-flow/core";
 import ListingSelect from "./ListingSelect.vue";
 import NodeMenu from "./NodeMenu.vue";
 import type { ICourseNodeData } from "@/classes/Node";
 import { getOutgoers, useVueFlow } from "@vue-flow/core";
 import { computed, watch } from "vue";
 import { CustomEdge } from "@/classes/Edge";
+import { useCourseFlow } from "@/stores/CoursFlowStore";
 
 const vueFlow = useVueFlow();
+const courseFlow = useCourseFlow();
 
 const props = defineProps<{
   id: string;
@@ -15,42 +25,45 @@ const props = defineProps<{
   connectable: HandleConnectable | undefined;
 }>();
 
+const self = vueFlow.nodes.value.find((node) => node.id === props.id)!;
+
 const allElements = computed(() => {
-  const allElements = [];
-  allElements.push(...vueFlow.nodes.value);
-  allElements.push(...vueFlow.edges.value);
-  return allElements;
+  const elms = [];
+  elms.push(...vueFlow.nodes.value);
+  elms.push(...vueFlow.edges.value);
+  return elms as Elements;
 });
 
-const visibleTargetIDs = computed(() => {
-  return getOutgoers(vueFlow.findNode(props.id)!, allElements.value)
-    .filter((outgoer) => !outgoer.hidden)
-    .map((outgoer) => outgoer.id);
-});
+const hidden = computed(() => self.hidden);
+const allInNodes = computed(() => getIncomers(self, allElements.value));
+const outGoers = computed(() => getOutgoers(self, vueFlow.getElements.value));
+
+// watch(hidden, () => {
+//   if (hidden && !self.data.manual && outGoers.value.length === 0) {
+//     self.hidden = true;
+//     allInNodes.value.forEach((node) => {
+//       node.hidden = true;
+//     });
+//   } else {
+//     self.hidden = false;
+//     allInNodes.value.forEach((node) => {
+//       node.hidden = false;
+//     });
+//   }
+// });
 
 watch(
-  visibleTargetIDs,
+  () => courseFlow.allNodesVisibility,
   () => {
-    console.log(vueFlow.findNode(props.id)!);
-    if (
-      !vueFlow.findNode(props.id)!.data.manual &&
-      (visibleTargetIDs.value.length === 0 ||
-        visibleTargetIDs.value.some(
-          (targetID) => !vueFlow.findEdge(CustomEdge.createEdgeID(props.id, targetID))?.hidden
-        ))
-    ) {
-      vueFlow.findNode(props.id)!.hidden = true;
-    }
-    vueFlow.findNode(props.id)!.hidden = false;
-  },
-  { deep: true }
+    self.hidden = courseFlow.allNodesVisibility;
+    console.log(self.data.courses[0].listings[0]);
+  }
 );
 </script>
 
 <template>
   <div class="outer node">
-    <!-- {{ visibleTargetIDs.some((targetID) => vueFlow.findEdge(CustomEdge.createEdgeID(props.id, targetID))?.hidden) }}
-    - {{ visibleTargetIDs.length === 0 }} -->
+    {{ !self.data.manual && outGoers.length === 0 }}
     <div
       :class="data.courses.length > 1 ? 'inner node flex justify-content-between' : 'flex justify-content-between'"
       v-for="course in data.courses"
@@ -62,10 +75,10 @@ watch(
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
       />
     </div>
-    <!-- {{ visibleTargetIDs }} -->
     <Handle id="target" type="target" :position="Position.Left" :connectable="connectable" />
     <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />
   </div>
+  {{ props.id }}
 </template>
 
 <style scoped>
