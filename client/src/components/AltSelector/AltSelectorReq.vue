@@ -17,22 +17,14 @@ watch(
   (newOpt, oldOpt) => {
     oldOpt.forEach((coreq) => {
       const edge = vueFlow.findEdge(CustomEdge.createEdgeID(coreq.id.toString(), props.targetID));
-      const node = vueFlow.findNode(coreq.id.toString());
       if (edge) {
-        edge.hidden = true;
-      }
-      if (node && !node.data.manual && getOutgoers(node, vueFlow.getElements.value).length === 0) {
-        node.hidden = true;
+        edge.data.selected = false;
       }
     });
     newOpt.forEach((coreq) => {
       const edge = vueFlow.findEdge(CustomEdge.createEdgeID(coreq.id.toString(), props.targetID));
-      const node = vueFlow.findNode(coreq.id.toString());
-      if (node) {
-        node.hidden = false;
-      }
       if (edge) {
-        edge.hidden = false;
+        edge.data.selected = true;
       }
     });
   }

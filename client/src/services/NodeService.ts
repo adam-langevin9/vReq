@@ -1,6 +1,6 @@
 import type { DetailedCombo } from "@/classes/Combo";
 import { CoreqTitle, DetailedCoreq } from "@/classes/Coreq";
-import { CourseNode } from "@/classes/Node";
+import { CustomNode } from "@/classes/Node";
 import { CustomEdge } from "@/classes/Edge";
 import { AltReq, AltReqGroup } from "@/classes/AltReqGroup";
 import type { Req } from "@/classes/Req";
@@ -10,7 +10,6 @@ interface ICurr {
   target?: DetailedCoreq;
   edge?: Req;
   hidden: boolean;
-  selected: boolean;
 }
 
 function createAltReqGroup(detailedCoreq: DetailedCoreq): AltReqGroup {
@@ -56,10 +55,10 @@ function createAltReq(detailedCombo: DetailedCombo): AltReq {
 
 export module NodeFactory {
   export function createNodes(coreq: DetailedCoreq): {
-    nodes: Array<CourseNode>;
+    nodes: Array<CustomNode>;
     edges: Array<CustomEdge>;
   } {
-    const nodes: Array<CourseNode> = [];
+    const nodes: Array<CustomNode> = [];
     const edges: Array<CustomEdge> = [];
 
     if (!coreq) {
@@ -67,9 +66,9 @@ export module NodeFactory {
     }
 
     const stack: Array<ICurr> = [];
-    var curr: ICurr | undefined = { elm: coreq, hidden: false, selected: true };
+    var curr: ICurr | undefined = { elm: coreq, hidden: false };
 
-    nodes.push(new CourseNode(coreq.id.toString(), coreq.courses, true, false, true));
+    nodes.push(new CustomNode(coreq.id.toString(), coreq.courses, true, false));
 
     if ((curr.elm as DetailedCoreq).precoreq) {
       stack.push({
@@ -77,7 +76,6 @@ export module NodeFactory {
         target: curr.elm as DetailedCoreq,
         edge: "precoreq",
         hidden: false,
-        selected: true,
       });
     }
 
@@ -92,7 +90,6 @@ export module NodeFactory {
                   target: curr.target,
                   edge: curr.edge,
                   hidden: false,
-                  selected: true,
                 });
               } else {
                 stack.push({
@@ -100,19 +97,18 @@ export module NodeFactory {
                   target: curr.target,
                   edge: curr.edge,
                   hidden: true,
-                  selected: false,
                 });
               }
             }
           } else {
             curr.elm.elements.forEach((subElm) =>
-              stack.push({ elm: subElm, target: curr!.target, edge: curr?.edge, hidden: false, selected: true })
+              stack.push({ elm: subElm, target: curr!.target, edge: curr?.edge, hidden: false })
             );
           }
           curr = stack.pop();
         } else {
           if (!nodes.map((node) => node.id).includes(curr.elm.id.toString())) {
-            nodes.push(new CourseNode(curr.elm.id.toString(), curr.elm.courses, false, curr.hidden, curr.selected));
+            nodes.push(new CustomNode(curr.elm.id.toString(), curr.elm.courses, false, curr.hidden));
           }
 
           if (
@@ -122,7 +118,9 @@ export module NodeFactory {
               .map((edge) => edge.id)
               .includes(CustomEdge.createEdgeID(curr.elm.id.toString(), curr.target.id.toString()))
           ) {
-            edges.push(new CustomEdge(curr.elm.id.toString(), curr.target.id.toString(), curr.edge));
+            edges.push(
+              new CustomEdge(curr.elm.id.toString(), curr.target.id.toString(), curr.edge, curr.hidden, !curr.hidden)
+            );
           }
 
           const altReqGroup = createAltReqGroup(curr.elm);
@@ -137,7 +135,6 @@ export module NodeFactory {
               target: curr.elm,
               edge: "precoreq",
               hidden: curr.hidden,
-              selected: curr.selected,
             });
           }
           curr = {
@@ -145,7 +142,6 @@ export module NodeFactory {
             target: curr.elm,
             edge: "prereq",
             hidden: curr.hidden,
-            selected: curr.selected,
           };
         }
       } else {

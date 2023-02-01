@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { DetailedCoreq } from "@/classes/Coreq";
-import type { ICourseNodeData } from "@/classes/Node";
+import type { ICustomNodeData } from "@/classes/Node";
 import { useVueFlow } from "@vue-flow/core";
 import type { GraphNode } from "@vue-flow/core";
 import { computed, ref } from "vue";
@@ -9,12 +9,13 @@ import AltSelectorGroup from "./AltSelectorGroup.vue";
 const vueFlow = useVueFlow();
 
 const sidebar = ref({ visibile: false, position: "right" });
-const activeAccordion: Array<number> = [];
+const activeAccordion: number | undefined = undefined;
 
 const altReqGroups = computed(() => {
   return vueFlow.getNodes.value
-    .filter((node: GraphNode<ICourseNodeData>) => node.data.altReqs.length > 0)
-    .map((node: GraphNode<ICourseNodeData>) => {
+    .filter((node: GraphNode<ICustomNodeData>) => node.data.altReqs.length > 0)
+    .filter((node: GraphNode<ICustomNodeData>) => !node.data.hidden)
+    .map((node: GraphNode<ICustomNodeData>) => {
       return {
         targetID: node.id,
         listings: new DetailedCoreq(+node.id, node.data.courses).getListingsString(),
@@ -46,7 +47,7 @@ function toggleSidebarVisible() {
       />
       <h3 class="flex align-items-center justify-content-center flex-grow-1">Alternative Requirements</h3>
     </template>
-    <PrimeAccordion :multiple="true" :active-index="activeAccordion">
+    <PrimeAccordion :active-index="activeAccordion">
       <PrimeAccordionTab v-for="altReqGroup in altReqGroups" :header="altReqGroup.listings">
         <AltSelectorGroup :altReqGroup="altReqGroup" />
       </PrimeAccordionTab>

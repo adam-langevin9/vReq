@@ -1,12 +1,28 @@
 <script lang="ts" setup>
-import { getOutgoers, VueFlow, type GraphEdge, type GraphNode } from "@vue-flow/core";
+import {
+  VueFlow,
+  type EdgeComponent,
+  type EdgeTypesObject,
+  type NodeComponent,
+  type NodeTypesObject,
+} from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
-import { nodeTypes } from "@/classes/Node";
-import { getIncomers, useVueFlow } from "@vue-flow/core";
-import { computed } from "vue";
+import { CustomNode } from "@/classes/Node";
+import { useVueFlow } from "@vue-flow/core";
+import { markRaw } from "vue";
 import { useCourseFlow } from "@/stores/CoursFlowStore";
+import CourseEdge from "./CourseEdge.vue";
+import CourseNode from "./CourseNode.vue";
+import { CustomEdge } from "@/classes/Edge";
+
+const nodeTypes: NodeTypesObject = {
+  course: markRaw(CourseNode) as NodeComponent,
+};
+const edgeTypes: EdgeTypesObject = {
+  course: markRaw(CourseEdge) as EdgeComponent,
+};
 
 const courseFlow = useCourseFlow();
 
@@ -36,7 +52,14 @@ function printFlowData() {
   />
   <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 20px; left: 20px" />
   <div class="flex justify-content-center m-2">
-    <VueFlow class="visual" :node-types="nodeTypes" :default-zoom="1.5" :min-zoom="0.2" :max-zoom="4">
+    <VueFlow
+      class="visual"
+      :node-types="nodeTypes"
+      :edge-types="edgeTypes"
+      :default-zoom="1.5"
+      :min-zoom="0.2"
+      :max-zoom="4"
+    >
       <Background class="background" />
       <MiniMap />
       <Controls />

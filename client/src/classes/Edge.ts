@@ -1,21 +1,22 @@
-import { MarkerType, type ElementData } from "@vue-flow/core";
+import { MarkerType, Position, type EdgeComponent, type ElementData } from "@vue-flow/core";
 import type { DefaultEdge } from "@vue-flow/core";
 import { type Req, REQ } from "@/classes/Req";
 
-type CustomEdgeData = {
-  req: Req;
-  altID?: number;
-};
+export interface ICustomEdgeData {
+  hidden: boolean;
+  selected: boolean;
+}
 
-export interface ICustomEdge extends DefaultEdge<CustomEdgeData> {
+export interface ICustomEdge extends DefaultEdge<ICustomEdgeData> {
   id: string;
   source: string;
   target: string;
   animated: boolean;
   markerEnd: string;
   selectable: boolean;
-  hidden: boolean;
-  data: CustomEdgeData;
+  data: ICustomEdgeData;
+  sourcePostion: Position;
+  targetPosition: Position;
 }
 
 export class CustomEdge implements ICustomEdge {
@@ -23,20 +24,21 @@ export class CustomEdge implements ICustomEdge {
   source: string;
   target: string;
   animated: boolean;
-  markerEnd: string = MarkerType.ArrowClosed;
+  markerEnd: string = MarkerType.Arrow;
   selectable: boolean = false;
-  hidden: boolean;
-  data: CustomEdgeData;
+  data: ICustomEdgeData;
+  type: string = "course";
+  sourcePostion: Position = Position.Right;
+  targetPosition: Position = Position.Left;
 
   static createEdgeID(source_id: string, target_id: string): string {
     return source_id.toString().concat("-").concat(target_id.toString());
   }
-  constructor(source: string, target: string, req: Req, altID?: number, hidden = false) {
+  constructor(source: string, target: string, req: Req, hidden: boolean, selected: boolean) {
     this.id = CustomEdge.createEdgeID(source, target);
     this.source = source;
     this.target = target;
     this.animated = req === REQ.precoreq;
-    this.data = { req, altID };
-    this.hidden = hidden;
+    this.data = { hidden, selected };
   }
 }

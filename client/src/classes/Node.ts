@@ -1,4 +1,3 @@
-import CustomNode from "@/components/CourseFlow/CustomNode.vue";
 import type { AltReq } from "./AltReqGroup";
 import type {
   XYPosition,
@@ -13,23 +12,23 @@ import type {
   StyleFunc,
   Styles,
   ValidConnectionFunc,
-  NodeTypesObject,
 } from "@vue-flow/core";
-import {
-  type VNode,
-  type RendererNode,
-  type RendererElement,
-  type Component,
-  type ComputedOptions,
-  type MethodOptions,
-  markRaw,
-} from "vue";
+import type { VNode, RendererNode, RendererElement, Component, ComputedOptions, MethodOptions } from "vue";
 import type { DetailedCourse } from "./Course";
 
-interface ICourseNode extends Node<ICourseNodeData> {
+export interface ICustomNodeData extends ElementData {
+  courses: DetailedCourse[];
+  complete: boolean;
+  manual: boolean;
+  altReqs: AltReq[];
+  hidden: boolean;
+  selected: boolean;
+}
+
+interface ICustomNode extends Node<ICustomNodeData> {
   id: string;
   position: XYPosition;
-  data: ICourseNodeData;
+  data: ICustomNodeData;
   type: "course";
   width: "175px" | "185px";
   height: string;
@@ -39,24 +38,16 @@ interface ICourseNode extends Node<ICourseNodeData> {
   connectable: boolean;
 }
 
-export interface ICourseNodeData extends ElementData {
-  courses: DetailedCourse[];
-  complete: boolean;
-  manual: boolean;
-  selected: boolean;
-  altReqs: AltReq[];
-}
-
-export class CourseNode implements ICourseNode {
+export class CustomNode implements ICustomNode {
   readonly id: string;
   position: XYPosition = { x: 0, y: 0 };
-  readonly data: ICourseNodeData;
+  readonly data: ICustomNodeData;
   readonly type: "course" = "course";
   readonly width: "175px" | "185px";
   readonly height: string;
   draggable: boolean = true;
   deletable: boolean = false;
-  hidden: boolean;
+  readonly hidden: boolean = false;
   readonly connectable: boolean = false;
   label?:
     | string
@@ -84,16 +75,11 @@ export class CourseNode implements ICourseNode {
     courses: DetailedCourse[],
     manual: boolean = true,
     hidden: boolean = false,
-    selected: boolean
+    selected: boolean = false
   ) {
     this.id = id.toString();
-    this.data = { courses, manual, selected, complete: false, altReqs: [] };
+    this.data = { courses, manual, complete: false, altReqs: [], hidden, selected };
     this.width = courses.length === 1 ? "175px" : "185px";
     this.height = courses.length === 1 ? "45px" : (50 * courses.length + 5).toString().concat("px");
-    this.hidden = hidden;
   }
 }
-
-export const nodeTypes: NodeTypesObject = {
-  course: markRaw(CustomNode) as NodeComponent,
-};

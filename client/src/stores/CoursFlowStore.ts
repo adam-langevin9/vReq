@@ -1,13 +1,13 @@
-import { ref, watch, type Ref } from "vue";
+import { ref, type Ref } from "vue";
 import { defineStore } from "pinia";
-import { Position, useVueFlow, getOutgoers } from "@vue-flow/core";
+import { useVueFlow } from "@vue-flow/core";
 import { getDetailedCoreqFor } from "@/services/api/CoreqDataService";
 import { getCourseFor } from "@/services/api/CourseDataService";
 import { NodeFactory } from "@/services/NodeService";
 import type { AltReqGroup } from "@/classes/AltReqGroup";
 import type { DetailedCourse } from "@/classes/Course";
 import { useLayout } from "@/utils/LayoutUtility";
-import type { CourseNode } from "@/classes/Node";
+import type { CustomNode } from "@/classes/Node";
 
 export const useCourseFlow = defineStore("CourseFlow", () => {
   const vueFlow = useVueFlow();
@@ -28,13 +28,13 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     });
   }
 
-  function postNodes(newNodes: CourseNode[]) {
-    const uniqueNodes: CourseNode[] = [];
+  function postNodes(newNodes: CustomNode[]) {
+    const uniqueNodes: CustomNode[] = [];
     newNodes.forEach((newNode) => {
       const existingNode = vueFlow.findNode(newNode.id);
       if (existingNode) {
         existingNode.data.manual = existingNode.data.manual ? existingNode.data.manual : newNode.data.manual;
-        existingNode.hidden = existingNode.hidden ? newNode.hidden : existingNode.hidden;
+        existingNode.data.hidden = existingNode.data.hidden ? newNode.data.hidden : existingNode.data.hidden;
       } else {
         uniqueNodes.push(newNode);
       }
