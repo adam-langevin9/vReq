@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Handle, Position, type HandleConnectable, useNode } from "@vue-flow/core";
+import { Handle, Position, type HandleConnectable, useNode, useVueFlow } from "@vue-flow/core";
 import ListingSelect from "./ListingSelect.vue";
 import NodeMenu from "./NodeMenu.vue";
 import type { ICustomNodeData } from "@/classes/Node";
@@ -12,13 +12,22 @@ const props = defineProps<{
 }>();
 
 const self = useNode();
+const vueFlow = useVueFlow();
+
+const outEdges = computed(() => self.connectedEdges.value.filter((edge) => edge.source === props.id));
 const shouldHideNode = computed(
-  () =>
-    !self.node.data.manual &&
-    self.connectedEdges.value.filter((edge) => edge.source === props.id).every((edge) => edge.data.hidden)
+  () => !self.node.data.manual && outEdges.value.length > 0 && outEdges.value.every((edge) => edge.data.hidden)
 );
+const shouldDeleteNode = computed(() => !self.node.data.manual);
+const couldDeleteNode = computed(() => outEdges.value.length === 0);
+
 watchEffect(() => {
-  if (shouldHideNode.value) {
+  if (couldDeleteNode.value) {
+    self.node.deletable = true;
+  }
+  if (shouldDeleteNode.value) {
+    vueFlow.removeNodes([self.node]);
+  } else if (shouldHideNode.value) {
     props.data.hidden = true;
     self.node.style = { pointerEvents: "none" };
   } else {
@@ -29,12 +38,13 @@ watchEffect(() => {
 </script>
 
 <template>
+  {{ shouldDeleteNode }}
   <div v-if="!props.data.hidden" class="node">
     <div
       :class="data.courses.length > 1 ? 'inner node flex justify-content-between' : 'flex justify-content-between'"
       v-for="course in data.courses"
     >
-      <NodeMenu :group="data.courses.length > 1 ? true : false" />
+      <NodeMenu :group="data.courses.length > 1 ? true : false" :node="self.node" :vueFlow="vueFlow" />
       <ListingSelect :detailedCourse="course" class="listing flex align-items-center justify-content-center" />
       <PrimeButton
         icon="pi pi-search"
@@ -44,6 +54,7 @@ watchEffect(() => {
       <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />
     </div>
   </div>
+  {{ self.node.deletable }}
 </template>
 
 <style>

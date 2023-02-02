@@ -1,10 +1,14 @@
-<script lang="ts">
+<script setup lang="ts">
+import type { GraphNode, VueFlowStore } from "@vue-flow/core";
 import type Menu from "primevue/menu";
 
+defineProps<{
+  node: GraphNode<any, any>;
+  vueFlow: VueFlowStore;
+}>();
+</script>
+<script lang="ts">
 export default {
-  props: {
-    group: Boolean,
-  },
   data() {
     return {
       items: [
@@ -14,9 +18,20 @@ export default {
           icon: "pi pi-eye",
           command: () => {},
         },
-        { label: this.group ? "Remove Group" : "Remove Course", icon: "pi pi-trash", command: () => {} },
+        {
+          label: this.group ? "Remove Group" : "Remove Course",
+          icon: "pi pi-trash",
+          command: () => {
+            this.vueFlow.removeNodes([this.node]);
+          },
+        },
       ],
     };
+  },
+  computed: {
+    group() {
+      return this.node.data.courses.length > 1;
+    },
   },
   methods: {
     toggle(event: Event) {
