@@ -3,13 +3,14 @@ import { DetailedCoreq } from "@/classes/Coreq";
 import type { ICustomNodeData } from "@/classes/Node";
 import { useVueFlow } from "@vue-flow/core";
 import type { GraphNode } from "@vue-flow/core";
-import { computed, ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 import AltSelectorGroup from "./AltSelectorGroup.vue";
+import { useAltSelector } from "@/stores/AltSelectorStore";
 
 const vueFlow = useVueFlow();
+const altSelector = useAltSelector();
 
-const sidebar = ref({ visibile: false, position: "right" });
-const activeAccordion: number | undefined = undefined;
+const activeAccordion: Ref<number | undefined> = ref(undefined);
 
 const altReqGroups = computed(() => {
   return vueFlow.getNodes.value
@@ -26,19 +27,30 @@ const altReqGroups = computed(() => {
 });
 
 const sidebarPositionIcon = computed(() => {
-  return sidebar.value.position === "right" ? "pi pi-step-backward" : "pi pi-step-forward";
+  return altSelector.position === "right" ? "pi pi-step-backward" : "pi pi-step-forward";
 });
 function toggleSidebarPosition() {
-  sidebar.value.position = sidebar.value.position === "right" ? "full" : "right";
+  altSelector.position = altSelector.position === "right" ? "full" : "right";
 }
 function toggleSidebarVisible() {
-  sidebar.value.visibile = !sidebar.value.visibile;
+  altSelector.visible = !altSelector.visible;
 }
 </script>
 
 <template>
-  <PrimeButton type="button" label="Alts" @click="toggleSidebarVisible" style="position: fixed; top: 33%; right: 0" />
-  <PrimeSidebar v-model:visible="sidebar.visibile" :position="sidebar.position" :modal="false" class="p-sidebar-third">
+  <PrimeButton
+    type="button"
+    label="Alternative Requirements"
+    icon="pi pi-step-backward"
+    @click="toggleSidebarVisible"
+    class="alt-req-btn"
+  />
+  <PrimeSidebar
+    v-model:visible="altSelector.visible"
+    :position="altSelector.position"
+    :modal="false"
+    class="p-sidebar-third"
+  >
     <template #header>
       <PrimeButton
         :icon="sidebarPositionIcon"
@@ -67,5 +79,19 @@ function toggleSidebarVisible() {
 }
 .p-sidebar-right .p-sidebar-third {
   width: 30rem !important;
+}
+
+.alt-req-btn {
+  transition: right 1s ease-in-out !important;
+  position: fixed !important;
+  top: 25%;
+  right: -220px;
+}
+.alt-req-btn:hover {
+  transition: right 1s ease-in-out;
+  right: 0px;
+}
+.p-button .p-button-icon-left {
+  margin-right: 2rem !important;
 }
 </style>

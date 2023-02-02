@@ -9,13 +9,11 @@ import {
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
-import { CustomNode } from "@/classes/Node";
 import { useVueFlow } from "@vue-flow/core";
 import { markRaw } from "vue";
 import { useCourseFlow } from "@/stores/CoursFlowStore";
 import CourseEdge from "./CourseEdge.vue";
 import CourseNode from "./CourseNode.vue";
-import { CustomEdge } from "@/classes/Edge";
 
 const nodeTypes: NodeTypesObject = {
   course: markRaw(CourseNode) as NodeComponent,
@@ -26,8 +24,9 @@ const edgeTypes: EdgeTypesObject = {
 
 const courseFlow = useCourseFlow();
 
-const viewMinHeight = "30rem";
-const viewMaxWidth = "80%";
+const minHeight = "30rem";
+const maxHeight = "95%";
+const maxWidth = "80%";
 const vueFlow = useVueFlow();
 
 function printFlowData() {
@@ -36,21 +35,11 @@ function printFlowData() {
   console.log("----------");
   console.log(vueFlow.toObject());
   console.log("==========");
-  console.log(courseFlow.allNodesVisibility);
 }
 </script>
 
 <template>
-  <PrimeButton
-    label="Toggle Visibility"
-    @click="
-      () => {
-        courseFlow.allNodesVisibility = !courseFlow.allNodesVisibility;
-      }
-    "
-    style="position: fixed; top: 120px; left: 20px"
-  />
-  <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 20px; left: 20px" />
+  <!-- <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 20px; left: 20px" /> -->
   <div class="flex justify-content-center m-2">
     <VueFlow
       class="visual"
@@ -62,17 +51,20 @@ function printFlowData() {
     >
       <Background class="background" />
       <MiniMap />
-      <Controls />
+      <Controls :showInteractive="false" :fitViewParams="{ duration: 200 }" />
     </VueFlow>
   </div>
 </template>
 
 <style scoped>
 .visual {
-  min-height: v-bind(viewMinHeight);
-  max-width: v-bind(viewMaxWidth);
+  min-height: v-bind(minHeight);
+  max-height: v-bind(maxHeight);
+  max-width: v-bind(maxWidth);
+  height: auto;
+  overflow-y: auto;
 }
 .background {
-  min-height: v-bind(viewMinHeight);
+  min-height: v-bind(minHeight);
 }
 </style>

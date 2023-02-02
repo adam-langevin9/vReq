@@ -1,30 +1,47 @@
-import { useVueFlow, Position } from "@vue-flow/core";
+import { useVueFlow, Position, type VueFlowStore } from "@vue-flow/core";
 import dagre from "dagre";
 import { watch } from "vue";
 
-export function useLayout() {
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
+export class Layout {
+  dagreGraph: dagre.graphlib.Graph<{}>;
+  vueFlow: VueFlowStore;
+  direction: string;
 
-  const { getEdges, getNodesInitialized, fitView } = useVueFlow();
+  constructor(direction: string = "LR") {
+    this.dagreGraph = new dagre.graphlib.Graph();
+    this.dagreGraph.setDefaultEdgeLabel(() => ({}));
+    this.vueFlow = useVueFlow();
+    this.direction = direction;
+    watch(
+      [
+        this.vueFlow.getNodesInitialized,
+        this.vueFlow.getEdges,
+        () => this.vueFlow.getNodesInitialized.value.length,
+        () => this.vueFlow.getEdges.value.length,
+      ],
+      () => {
+        this.autoLayout();
+      }
+    );
+  }
 
-  const onLayout = (direction: string) => {
-    const isVertical = direction === "TB";
-    dagreGraph.setGraph({ rankdir: direction });
+  autoLayout = () => {
+    const isVertical = this.direction === "TB";
+    this.dagreGraph.setGraph({ rankdir: this.direction });
 
-    getNodesInitialized.value.forEach((elm) => {
-      dagreGraph.setNode(elm.id, { width: elm.dimensions.width, height: elm.dimensions.height });
+    this.vueFlow.getNodesInitialized.value.forEach((elm) => {
+      this.dagreGraph.setNode(elm.id, { width: elm.dimensions.width, height: elm.dimensions.height });
     });
 
-    getEdges.value.forEach((edge) => {
-      dagreGraph.setEdge(edge.source, edge.target);
+    this.vueFlow.getEdges.value.forEach((edge) => {
+      this.dagreGraph.setEdge(edge.source, edge.target);
     });
 
-    dagre.layout(dagreGraph);
+    dagre.layout(this.dagreGraph);
 
-    getNodesInitialized.value.forEach((elm) => {
-      const nodeWithPosition = dagreGraph.node(elm.id);
-      const hasPredecessors = dagreGraph.predecessors(elm.id)?.length;
+    this.vueFlow.getNodesInitialized.value.forEach((elm) => {
+      const nodeWithPosition = this.dagreGraph.node(elm.id);
+      const hasPredecessors = this.dagreGraph.predecessors(elm.id)?.length;
       elm.targetPosition = isVertical ? Position.Left : Position.Top;
       elm.sourcePosition = isVertical ? Position.Right : Position.Bottom;
       elm.position = { x: nodeWithPosition.x, y: nodeWithPosition.y };
@@ -34,10 +51,6 @@ export function useLayout() {
       };
     });
 
-    fitView();
+    this.vueFlow.fitView();
   };
-
-  watch([getNodesInitialized, getEdges, () => getNodesInitialized.value.length, () => getEdges.value.length], () => {
-    onLayout("LR");
-  });
 }

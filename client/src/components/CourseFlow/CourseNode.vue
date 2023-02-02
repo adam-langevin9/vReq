@@ -40,16 +40,14 @@ watchEffect(() => {
         icon="pi pi-search"
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
       />
+      <Handle id="target" type="target" :position="Position.Left" :connectable="connectable" />
+      <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />
     </div>
-    <Handle id="target" type="target" :position="Position.Left" :connectable="connectable" />
-    <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />
   </div>
 </template>
 
 <style>
 .node {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 1rem;
   color: #495057;
   border-radius: 3px;
@@ -69,5 +67,9 @@ watchEffect(() => {
 .hide {
   display: "none" !important;
   pointer-events: "none" !important;
+}
+
+.vue-flow__handle {
+  opacity: 0;
 }
 </style>

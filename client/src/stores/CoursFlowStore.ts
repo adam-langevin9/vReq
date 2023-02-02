@@ -6,18 +6,17 @@ import { getCourseFor } from "@/services/api/CourseDataService";
 import { NodeFactory } from "@/services/NodeService";
 import type { AltReqGroup } from "@/classes/AltReqGroup";
 import type { DetailedCourse } from "@/classes/Course";
-import { useLayout } from "@/utils/LayoutUtility";
+import { Layout } from "@/utils/LayoutUtility";
 import type { CustomNode } from "@/classes/Node";
 
 export const useCourseFlow = defineStore("CourseFlow", () => {
   const vueFlow = useVueFlow();
-  useLayout();
   const input = ref({ subj: "", num: "" });
   const searchResult: Ref<DetailedCourse | undefined> = ref();
   const isNew = ref(true);
   const altsReqs: Ref<Array<AltReqGroup>> = ref([]);
-
-  const allNodesVisibility = ref(false);
+  const layout = new Layout();
+  layout.autoLayout();
 
   function retrieveCourse() {
     if (isNew.value) {
@@ -61,7 +60,7 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     isNew,
     altsReqs,
     vueFlow,
-    allNodesVisibility,
+    layout,
     retrieveCourse,
     addInputToFlow,
   };

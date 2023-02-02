@@ -29,6 +29,8 @@ import AccordionTab from "primevue/accordiontab";
 import RadioButton from "primevue/radiobutton";
 import Divider from "primevue/divider";
 import Sidebar from "primevue/sidebar";
+import SplitButton from "primevue/splitbutton";
+import Chips from "primevue/chips";
 
 const app = createApp(App);
 
@@ -43,5 +45,7 @@ app
   .component("PrimeAccordionTab", AccordionTab)
   .component("PrimeRadioButton", RadioButton)
   .component("PrimeDivider", Divider)
-  .component("PrimeSidebar", Sidebar);
+  .component("PrimeSidebar", Sidebar)
+  .component("PrimeSplitButton", SplitButton)
+  .component("PrimeChips", Chips);
 app.mount("#app");
