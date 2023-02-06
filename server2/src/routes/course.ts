@@ -1,7 +1,7 @@
 import course from "../controllers/course";
 import express, { Express } from "express";
 
-export default (app: Express): void => {
+export default async (app: Express): Promise<void> => {
   const router = express.Router();
 
   // Retrieve all Course
@@ -11,7 +11,7 @@ export default (app: Express): void => {
   router.get("/:id", course.findByPK);
 
   // Retrieve a single Course with listing
-  router.get("/subj/:subj/num/:num", course.findDetailedCourse);
+  router.get("/:subj/:num", course.findListingCourse);
 
   app.use("/api/course", router);
 };

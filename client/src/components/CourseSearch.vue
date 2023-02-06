@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCourseFlow } from "@/stores/CoursFlowStore";
-import { useVueFlow, type GraphEdge } from "@vue-flow/core";
-import { ref, type Ref } from "vue";
+import { useVueFlow } from "@vue-flow/core";
+import { ref } from "vue";
 const courseFlow = useCourseFlow();
 const vueFlow = useVueFlow();
 

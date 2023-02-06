@@ -2,12 +2,12 @@
 import { Handle, Position, type HandleConnectable, useNode, useVueFlow } from "@vue-flow/core";
 import ListingSelect from "./ListingSelect.vue";
 import NodeMenu from "./NodeMenu.vue";
-import type { ICustomNodeData } from "@/classes/Node";
+import type { CustomNodeData } from "@/classes/CustomNode";
 import { computed, watchEffect } from "vue";
 
 const props = defineProps<{
   id: string;
-  data: ICustomNodeData;
+  data: CustomNodeData;
   connectable: HandleConnectable | undefined;
 }>();
 
@@ -24,11 +24,11 @@ const couldDeleteNode = computed(() => outEdges.value.length === 0);
 watchEffect(() => {
   if (couldDeleteNode.value) {
     self.node.deletable = true;
-  }
-  if (shouldDeleteNode.value) {
-    vueFlow.removeNodes([self.node]);
+    if (shouldDeleteNode.value) {
+      vueFlow.removeNodes([self.node]);
+    }
   } else if (shouldHideNode.value) {
-    props.data.hidden = true;
+    self.node.data.hidden = true;
     self.node.style = { pointerEvents: "none" };
   } else {
     props.data.hidden = false;
@@ -38,8 +38,8 @@ watchEffect(() => {
 </script>
 
 <template>
-  {{ shouldDeleteNode }}
   <div v-if="!props.data.hidden" class="node">
+    {{ props.id }}
     <div
       :class="data.courses.length > 1 ? 'inner node flex justify-content-between' : 'flex justify-content-between'"
       v-for="course in data.courses"
@@ -54,7 +54,6 @@ watchEffect(() => {
       <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />
     </div>
   </div>
-  {{ self.node.deletable }}
 </template>
 
 <style>

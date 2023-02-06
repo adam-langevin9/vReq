@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { Listing } from "@/classes/Listing";
+import type { ListingFlowDTO } from "@/services/FlowDataService";
+
 defineProps<{
-  detailedCourse: { listings: Listing[]; selectedListing: number };
+  detailedCourse: { listings: Array<ListingFlowDTO>; selectedListing: number };
 }>();
 </script>
 
@@ -10,13 +11,13 @@ export default {
   data() {
     return {
       selection: this.listingObjToString(this.detailedCourse.listings[this.detailedCourse.selectedListing]),
-      options: this.detailedCourse.listings.map((listing: Listing) =>
+      options: this.detailedCourse.listings.map((listing: ListingFlowDTO) =>
         listing.subj.concat(" ").concat(listing.num.toString())
       ),
     };
   },
   methods: {
-    listingObjToString(listing: Listing) {
+    listingObjToString(listing: ListingFlowDTO) {
       return listing.subj.concat(" ").concat(listing.num.toString());
     },
   },

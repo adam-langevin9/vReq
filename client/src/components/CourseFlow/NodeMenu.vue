@@ -12,9 +12,9 @@ export default {
   data() {
     return {
       items: [
-        { label: this.group ? "Mark Complete" : "Mark Complete", icon: "pi pi-check", command: () => {} },
+        { label: "Mark Complete", icon: "pi pi-check", command: () => {} },
         {
-          label: this.group ? "View Alternates" : "View Alternates",
+          label: "View Alternates",
           icon: "pi pi-eye",
           command: () => {},
         },
@@ -50,5 +50,3 @@ export default {
   />
   <PrimeMenu ref="menu" :model="items" :popup="true" />
 </template>
-
-<style scoped></style>

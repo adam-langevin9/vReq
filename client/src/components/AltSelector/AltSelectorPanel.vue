@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { DetailedCoreq } from "@/classes/Coreq";
-import type { ICustomNodeData } from "@/classes/Node";
+import type { CustomNodeData } from "@/classes/CustomNode";
 import { useVueFlow } from "@vue-flow/core";
 import type { GraphNode } from "@vue-flow/core";
 import { computed, ref, type Ref } from "vue";
@@ -14,16 +13,16 @@ const activeAccordion: Ref<number | undefined> = ref(undefined);
 
 const altReqGroups = computed(() => {
   return vueFlow.getNodes.value
-    .filter((node: GraphNode<ICustomNodeData>) => node.data.altReqs.length > 0)
-    .filter((node: GraphNode<ICustomNodeData>) => !node.data.hidden)
-    .map((node: GraphNode<ICustomNodeData>) => {
+    .filter((node: GraphNode<CustomNodeData>) => node.data.altReqs.length > 0)
+    .filter((node: GraphNode<CustomNodeData>) => !node.data.hidden)
+    .map((node: GraphNode<CustomNodeData>) => {
       return {
         targetID: node.id,
-        listings: new DetailedCoreq(+node.id, node.data.courses).getListingsString(),
+        listings: [],
         reqs: node.data.altReqs,
       };
-    })
-    .sort((a, b) => a.listings.localeCompare(b.listings));
+    });
+  //.sort((a, b) => a.listings.localeCompare(b.listings));
 });
 
 const sidebarPositionIcon = computed(() => {
@@ -49,6 +48,7 @@ function toggleSidebarVisible() {
     v-model:visible="altSelector.visible"
     :position="altSelector.position"
     :modal="false"
+    :dismissable="false"
     class="p-sidebar-third"
   >
     <template #header>

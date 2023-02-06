@@ -1,20 +1,7 @@
 "use strict";
 
 import { Sequelize, Options } from "sequelize";
-import {
-  initModels,
-  ComboCombo,
-  ComboCoreq,
-  Combo,
-  Coreq,
-  Course,
-  Degree,
-  Listing,
-  Node,
-  Req,
-  User,
-  Visual,
-} from "./init-models";
+import { initModels } from "./init-models";
 import config from "../configs/config";
 
 const sequelize = new Sequelize(
@@ -24,7 +11,8 @@ const sequelize = new Sequelize(
   config as Options
 );
 
-initModels(sequelize);
+const { ComboCombo, ComboCoreq, Combo, Coreq, Course, Degree, Listing, Node, Req, User, Visual } =
+  initModels(sequelize);
 
 export default {
   Sequelize,

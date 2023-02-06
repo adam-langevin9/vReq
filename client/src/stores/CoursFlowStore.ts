@@ -1,18 +1,17 @@
 import { ref, type Ref } from "vue";
 import { defineStore } from "pinia";
 import { useVueFlow } from "@vue-flow/core";
-import { getDetailedCoreqFor } from "@/services/api/CoreqDataService";
-import { getCourseFor } from "@/services/api/CourseDataService";
-import { NodeFactory } from "@/services/NodeService";
+import { getCourseFor } from "@/services/CourseDataService";
 import type { AltReqGroup } from "@/classes/AltReqGroup";
-import type { DetailedCourse } from "@/classes/Course";
+import type { CourseDTO } from "@/services/CourseDataService";
 import { Layout } from "@/utils/LayoutUtility";
-import type { CustomNode } from "@/classes/Node";
+import type { CustomNode } from "@/classes/CustomNode";
+import { getFlowFor } from "@/services/FlowDataService";
 
 export const useCourseFlow = defineStore("CourseFlow", () => {
   const vueFlow = useVueFlow();
   const input = ref({ subj: "", num: "" });
-  const searchResult: Ref<DetailedCourse | undefined> = ref();
+  const searchResult: Ref<CourseDTO | undefined> = ref();
   const isNew = ref(true);
   const altsReqs: Ref<Array<AltReqGroup>> = ref([]);
   const layout = new Layout();
@@ -42,16 +41,12 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   }
 
   function addInputToFlow() {
-    getDetailedCoreqFor(input.value.subj, +input.value.num)
-      .then((detailedCoreq) => {
-        if (detailedCoreq) {
-          const { nodes, edges } = NodeFactory.createNodes(detailedCoreq);
-          postNodes(nodes);
-          vueFlow.addEdges(edges);
-        } else {
-        }
-      })
-      .catch((_e) => {});
+    getFlowFor(input.value.subj, +input.value.num).then((flow) => {
+      if (flow) {
+        postNodes(flow.nodes);
+        vueFlow.addEdges(flow.edges);
+      }
+    });
   }
 
   return {

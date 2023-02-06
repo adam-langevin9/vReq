@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { AltReq } from "@/classes/AltReqGroup";
-import { ref, watch, type Ref } from "vue";
-import { getOutgoers, useVueFlow } from "@vue-flow/core";
-import { CustomEdge } from "@/classes/Edge";
+import { watch } from "vue";
+import { useVueFlow } from "@vue-flow/core";
+import { CustomEdge } from "@/classes/CustomEdge";
 
 const vueFlow = useVueFlow();
 
@@ -52,5 +52,3 @@ watch(
     </div>
   </div>
 </template>
-
-<style scoped></style>

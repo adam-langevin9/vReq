@@ -1,9 +1,7 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import courseRoute from "./routes/course";
-import reqRoute from "./routes/req";
-import comboRoute from "./routes/combo";
-import coreqRoute from "./routes/coreq";
+import flowRoute from "./routes/flow";
 
 import db from "./models/index";
 import * as dotenv from "dotenv";
@@ -30,9 +28,7 @@ app.use(function (_req, res, next) {
 
 // routes
 courseRoute(app);
-reqRoute(app);
-comboRoute(app);
-coreqRoute(app);
+flowRoute(app);
 
 dotenv.config();
 const port = process.env.OUT_PORT ?? 3000;

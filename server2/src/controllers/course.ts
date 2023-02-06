@@ -1,7 +1,6 @@
 import db from "../models";
 import type { Request, Response } from "express";
-import { CourseAttributes, ListingAttributes } from "../models/init-models";
-import { getDetailedCourse } from "../middleware/CourseUtility";
+import { CourseAttributes } from "../models/init-models";
 
 const Course = db.Course;
 const Listing = db.Listing;
@@ -72,12 +71,15 @@ export default {
       });
   },
 
-  async findDetailedCourse(req: Request, res: Response): Promise<void> {
+  async findListingCourse(req: Request, res: Response): Promise<void> {
     const subj = req.params.subj;
     const num = +req.params.num;
     const condition = { subj, num };
 
-    const selectedListing = await Listing.findOne({ where: condition });
+    const selectedListing = await Listing.findOne({
+      where: condition,
+      include: { model: Course, as: "course", attributes: { exclude: ["id", "coreq_id"] } },
+    });
     if (!selectedListing) {
       res.status(404).send({
         message: `Cannot find Listing ${subj} ${num}.`,
@@ -85,6 +87,6 @@ export default {
       return;
     }
 
-    res.send(await getDetailedCourse(await selectedListing.getCourse(), selectedListing));
+    res.send(selectedListing.course);
   },
 };

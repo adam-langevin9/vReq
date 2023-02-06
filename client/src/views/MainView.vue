@@ -3,7 +3,6 @@ import CourseSearch from "../components/CourseSearch.vue";
 import CourseFlow from "../components/CourseFlow/CourseFlow.vue";
 import { useCourseFlow } from "@/stores/CoursFlowStore";
 import AltSelectorPanel from "@/components/AltSelector/AltSelectorPanel.vue";
-import AddCoursesButton from "@/components/AddCourses.vue";
 import { useAltSelector } from "@/stores/AltSelectorStore";
 
 const courseFlow = useCourseFlow();
@@ -20,7 +19,6 @@ const altSelector = useAltSelector();
   </div> -->
   <main :class="altSelector.isOpenThird ? 'condense' : ''">
     <CourseSearch />
-    <AddCoursesButton />
     <CourseFlow />
   </main>
   <AltSelectorPanel />

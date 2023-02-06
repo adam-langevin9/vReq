@@ -1,4 +1,5 @@
-import coreq from "../controllers/coreq";
+import flow from "../controllers/flow";
+
 import express, { Express } from "express";
 
 export default (app: Express): void => {
@@ -6,7 +7,7 @@ export default (app: Express): void => {
 
   // Retrieve a Coreq's courses and listings by listing
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  router.get("/subj/:subj/num/:num", coreq.findDetailedCoreq);
+  router.get("/:subj/:num/:startYear", flow.findFlow);
 
-  app.use("/api/coreq", router);
+  app.use("/api/flow", router);
 };

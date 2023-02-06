@@ -1,8 +1,9 @@
-import { Req } from "../models/init-models";
+import { Combo, Req } from "../models/init-models";
 
 export async function getRecentReq(req_id: number, start_year?: number): Promise<Req | null> {
   return await Req.findOne({
     where: { id: req_id, start_year: await getReqYear(req_id, start_year) },
+    include: { model: Combo, as: "combo" },
   });
 }
 
