@@ -15,11 +15,10 @@ import type {
 import type { VNode, RendererNode, RendererElement, Component, ComputedOptions, MethodOptions } from "vue";
 import type { CourseFlowDTO, NodeDTO } from "@/services/FlowDataService";
 
-export type CustomNodeData = ElementData &
-  Omit<NodeDTO, "id"> & {
-    complete: boolean;
-    hidden: boolean;
-  };
+export type CustomNodeData = Omit<NodeDTO, "id"> & {
+  complete: boolean;
+  hidden: boolean;
+};
 
 interface ICustomNode extends Node<CustomNodeData> {
   id: string;
@@ -71,6 +70,7 @@ export class CustomNode implements ICustomNode {
       courses: nodeDTO.courses,
       manual: nodeDTO.manual,
       complete: false,
+      hidden: false,
     };
     this.width = nodeDTO.courses.length === 1 ? "175px" : "185px";
     this.height = nodeDTO.courses.length === 1 ? "45px" : (50 * nodeDTO.courses.length + 5).toString().concat("px");

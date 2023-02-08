@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Handle, Position, type HandleConnectable, useNode } from "@vue-flow/core";
 import ListingSelect from "./ListingSelect.vue";
-import NodeMenu from "./NodeMenu.vue";
 import type { CustomNodeData } from "@/classes/CustomNode";
 import { computed, watchEffect } from "vue";
 import { useCourseFlow } from "@/stores/CourseFlowStore";
@@ -13,7 +12,7 @@ const props = defineProps<{
 }>();
 
 const self = useNode();
-const vueFlow = useCourseFlow();
+const courseFlow = useCourseFlow();
 
 const outEdges = computed(() => self.connectedEdges.value.filter((edge) => edge.source === props.id));
 const shouldHideNode = computed(
@@ -26,7 +25,7 @@ watchEffect(() => {
   if (couldDeleteNode.value) {
     self.node.deletable = true;
     if (shouldDeleteNode.value) {
-      vueFlow.removeNodes([self.node]);
+      courseFlow.removeNodes([self.node]);
     }
   } else if (shouldHideNode.value) {
     self.node.data.hidden = true;
@@ -40,16 +39,28 @@ watchEffect(() => {
 
 <template>
   <div class="node">
-    {{ props.id }}
     <div
       :class="data.courses.length > 1 ? 'inner node flex justify-content-between' : 'flex justify-content-between'"
       v-for="course in data.courses"
     >
-      <NodeMenu :node="self.node" />
-      <ListingSelect :detailedCourse="course" class="listing flex align-items-center justify-content-center" />
+      <PrimeButton
+        icon="pi pi-check"
+        class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
+        @click="
+          () => {
+            self.node.data.complete = !self.node.data.complete;
+          }
+        "
+      />
+      <ListingSelect
+        :detailedCourse="course"
+        class="listing flex align-items-center"
+        :complete="self.node.data.complete"
+      />
       <PrimeButton
         icon="pi pi-search"
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
+        @click="() => courseFlow.search(course)"
       />
       <Handle id="target" type="target" :position="Position.Left" :connectable="connectable" />
       <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />

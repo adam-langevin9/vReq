@@ -3,6 +3,7 @@ import type { ListingFlowDTO } from "@/services/FlowDataService";
 
 defineProps<{
   detailedCourse: { listings: Array<ListingFlowDTO>; selectedListing: number };
+  complete: boolean;
 }>();
 </script>
 
@@ -25,10 +26,15 @@ export default {
 </script>
 
 <template>
-  <div v-if="detailedCourse.listings.length > 1">
-    <PrimeDropdown v-model="selection" :options="options" dropdownIcon="" class="crosslisting" />
+  <div v-if="detailedCourse.listings.length > 1" class="justify-content-left">
+    <PrimeDropdown
+      v-model="selection"
+      :options="options"
+      class="crosslisting"
+      :inputStyle="complete ? 'text-decoration: line-through' : ''"
+    />
   </div>
-  <div v-else class="single-listing">
+  <div v-else class="single-listing justify-content-center" :style="complete ? 'text-decoration: line-through' : ''">
     {{ selection }}
   </div>
 </template>
@@ -40,6 +46,18 @@ export default {
 }
 .crosslisting:hover {
   background: rgba(100, 116, 139, 0.04);
+}
+.p-inputtext {
+  padding: 0.75rem 0.25rem 0.75rem 0.25rem !important;
+  text-align: left;
+}
+.p-dropdown .p-inputtext {
+  border-radius: 0 !important;
+  width: 6rem !important;
+}
+.p-dropdown-trigger-icon.pi.pi-chevron-down {
+  position: relative;
+  right: 0.75rem;
 }
 .p-dropdown:not(.p-focus),
 .p-dropdown.p-disabled {

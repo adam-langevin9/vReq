@@ -10,8 +10,8 @@ import {
 import { getCourseFor } from "@/services/CourseDataService";
 import type { CourseDTO } from "@/services/CourseDataService";
 import { Layout } from "@/utils/LayoutUtility";
-import type { CustomNode } from "@/classes/CustomNode";
-import { getFlowFor } from "@/services/FlowDataService";
+import type { CustomNode, CustomNodeData } from "@/classes/CustomNode";
+import { getFlowFor, type CourseFlowDTO } from "@/services/FlowDataService";
 import CourseNode from "@/components/CourseFlow/CourseNode.vue";
 import CourseEdge from "@/components/CourseFlow/CourseEdge.vue";
 import type { CustomEdge } from "@/classes/CustomEdge";
@@ -46,12 +46,19 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   const layout = new Layout();
   layout.autoLayout();
 
-  function clear() {
-    edges.value = [];
-    nodes.value = [];
+  function search(course: CourseFlowDTO) {
+    if (isNew.value) {
+      isNew.value = false;
+    }
+    input.value = {
+      subj: course.listings[course.selectedListing].subj,
+      num: course.listings[course.selectedListing].num.toString(),
+    };
+    searchResult.value = { title: course.title, hours: course.hours, descr: course.descr };
   }
 
   function retrieveCourse() {
+    console.log("gottem");
     if (isNew.value) {
       isNew.value = false;
     }
@@ -84,6 +91,11 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     });
   }
 
+  function clear() {
+    edges.value = [];
+    nodes.value = [];
+  }
+
   return {
     nodeTypes,
     edgeTypes,
@@ -95,6 +107,7 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     getEdges,
     getNodesInitialized,
     vueFlow,
+    search,
     fitView,
     findNode,
     retrieveCourse,
