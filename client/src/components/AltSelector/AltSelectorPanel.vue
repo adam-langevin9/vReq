@@ -1,39 +1,46 @@
 <script setup lang="ts">
-import type { CustomNodeData } from "@/classes/CustomNode";
-import { useVueFlow } from "@vue-flow/core";
-import type { GraphNode } from "@vue-flow/core";
-import { computed, ref, type Ref } from "vue";
+import { computed, ref, watchEffect, type Ref } from "vue";
 import AltSelectorGroup from "./AltSelectorGroup.vue";
 import { useAltSelector } from "@/stores/AltSelectorStore";
+import { useCourseFlow } from "@/stores/CourseFlowStore";
+import type { CustomEdgeData } from "@/classes/CustomEdge";
+import type { GraphEdge } from "@vue-flow/core";
+import { getListings } from "@/classes/CustomNode";
 
-const vueFlow = useVueFlow();
 const altSelector = useAltSelector();
+const courseFlow = useCourseFlow();
 
 const activeAccordion: Ref<number | undefined> = ref(undefined);
 
-const altReqGroups = computed(() => {
-  return vueFlow.getNodes.value
-    .filter((node: GraphNode<CustomNodeData>) => node.data.altReqs.length > 0)
-    .filter((node: GraphNode<CustomNodeData>) => !node.data.hidden)
-    .map((node: GraphNode<CustomNodeData>) => {
-      return {
-        targetID: node.id,
-        listings: [],
-        reqs: node.data.altReqs,
-      };
-    });
-  //.sort((a, b) => a.listings.localeCompare(b.listings));
-});
-
-const sidebarPositionIcon = computed(() => {
-  return altSelector.position === "right" ? "pi pi-step-backward" : "pi pi-step-forward";
-});
-function toggleSidebarPosition() {
+const allAltReqs = computed(() =>
+  (courseFlow.getEdges as GraphEdge<CustomEdgeData, any>[]).filter((edge) => edge.data.altCombo)
+);
+const altReqTargetIDs = computed(() =>
+  Array.from(new Set(allAltReqs.value.map((altReq) => altReq.target))).sort((a, b) =>
+    getListings(courseFlow.findNode(a)!).localeCompare(getListings(courseFlow.findNode(b)!))
+  )
+);
+const sidebarPositionIcon = computed(() =>
+  altSelector.position === "right" ? "pi pi-step-backward" : "pi pi-step-forward"
+);
+const toggleSidebarPosition = () => {
   altSelector.position = altSelector.position === "right" ? "full" : "right";
-}
-function toggleSidebarVisible() {
+};
+const toggleSidebarVisible = () => {
   altSelector.visible = !altSelector.visible;
-}
+};
+const getAltReqsFor = (targetID: string) => allAltReqs.value.filter((altReq) => altReq.target === targetID);
+</script>
+
+<script lang="ts">
+export default {
+  computed: {
+    isGroupDisabled(targetID: string) {
+      return useCourseFlow().findNode(targetID)?.data.hidden;
+    },
+  },
+  // rest of the component code...
+};
 </script>
 
 <template>
@@ -60,8 +67,12 @@ function toggleSidebarVisible() {
       <h3 class="flex align-items-center justify-content-center flex-grow-1">Alternative Requirements</h3>
     </template>
     <PrimeAccordion :active-index="activeAccordion">
-      <PrimeAccordionTab v-for="altReqGroup in altReqGroups" :header="altReqGroup.listings">
-        <AltSelectorGroup :altReqGroup="altReqGroup" />
+      <PrimeAccordionTab
+        v-for="targetID in altReqTargetIDs"
+        :header="getListings(courseFlow.findNode(targetID)!)"
+        :disabled="courseFlow.getEdges.filter(edge=>edge.target===targetID)!.every(edge=>(edge.targetNode.data as CustomEdgeData).hidden)"
+      >
+        <AltSelectorGroup :altReqs="getAltReqsFor(targetID)" />
       </PrimeAccordionTab>
     </PrimeAccordion>
   </PrimeSidebar>

@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useCourseFlow } from "@/stores/CoursFlowStore";
-import { useVueFlow } from "@vue-flow/core";
+import { useCourseFlow } from "@/stores/CourseFlowStore";
 import { ref } from "vue";
 const courseFlow = useCourseFlow();
-const vueFlow = useVueFlow();
 
 const buttonItems = ref([
   {
@@ -15,8 +13,7 @@ const buttonItems = ref([
     label: "Clear All",
     icon: "pi pi-times",
     command: () => {
-      vueFlow.edges.value = [];
-      vueFlow.nodes.value = [];
+      courseFlow.clear();
     },
   },
 ]);

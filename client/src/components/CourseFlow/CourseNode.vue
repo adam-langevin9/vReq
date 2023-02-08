@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Handle, Position, type HandleConnectable, useNode, useVueFlow } from "@vue-flow/core";
+import { Handle, Position, type HandleConnectable, useNode } from "@vue-flow/core";
 import ListingSelect from "./ListingSelect.vue";
 import NodeMenu from "./NodeMenu.vue";
 import type { CustomNodeData } from "@/classes/CustomNode";
 import { computed, watchEffect } from "vue";
+import { useCourseFlow } from "@/stores/CourseFlowStore";
 
 const props = defineProps<{
   id: string;
@@ -12,7 +13,7 @@ const props = defineProps<{
 }>();
 
 const self = useNode();
-const vueFlow = useVueFlow();
+const vueFlow = useCourseFlow();
 
 const outEdges = computed(() => self.connectedEdges.value.filter((edge) => edge.source === props.id));
 const shouldHideNode = computed(
@@ -29,7 +30,7 @@ watchEffect(() => {
     }
   } else if (shouldHideNode.value) {
     self.node.data.hidden = true;
-    self.node.style = { pointerEvents: "none" };
+    self.node.style = { pointerEvents: "none", opacity: "0" };
   } else {
     props.data.hidden = false;
     self.node.style = { pointerEvents: "all" };
@@ -38,13 +39,13 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="!props.data.hidden" class="node">
+  <div class="node">
     {{ props.id }}
     <div
       :class="data.courses.length > 1 ? 'inner node flex justify-content-between' : 'flex justify-content-between'"
       v-for="course in data.courses"
     >
-      <NodeMenu :group="data.courses.length > 1 ? true : false" :node="self.node" :vueFlow="vueFlow" />
+      <NodeMenu :node="self.node" />
       <ListingSelect :detailedCourse="course" class="listing flex align-items-center justify-content-center" />
       <PrimeButton
         icon="pi pi-search"
@@ -72,14 +73,5 @@ watchEffect(() => {
   width: 175px;
   height: 45px;
   margin: 4px;
-}
-
-.hide {
-  display: "none" !important;
-  pointer-events: "none" !important;
-}
-
-.vue-flow__handle {
-  opacity: 0;
 }
 </style>

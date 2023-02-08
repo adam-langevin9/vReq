@@ -30,7 +30,7 @@ import RadioButton from "primevue/radiobutton";
 import Divider from "primevue/divider";
 import Sidebar from "primevue/sidebar";
 import SplitButton from "primevue/splitbutton";
-import Chips from "primevue/chips";
+import Chip from "primevue/chip";
 
 const app = createApp(App);
 
@@ -47,5 +47,5 @@ app
   .component("PrimeDivider", Divider)
   .component("PrimeSidebar", Sidebar)
   .component("PrimeSplitButton", SplitButton)
-  .component("PrimeChips", Chips);
+  .component("PrimeChip", Chip);
 app.mount("#app");

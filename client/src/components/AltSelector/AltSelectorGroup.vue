@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import type { AltReq } from "@/classes/AltReqGroup";
+import type { CustomEdgeData } from "@/classes/CustomEdge";
+import { ref } from "vue";
 import AltSelectorReq from "./AltSelectorReq.vue";
 
-defineProps<{
-  altReqGroup: {
-    targetID: string;
-    listings: string;
-    reqs: AltReq[];
-  };
+const props = defineProps<{
+  altReqs: Array<{ id: string; target: string; source: string; data: CustomEdgeData }>;
 }>();
+
+const altReqComboIDs = ref(Array.from(new Set(props.altReqs.map((altReq) => altReq.data.altCombo!.comboID))));
+const getReqIdx = (comboID: number) => altReqComboIDs.value.indexOf(comboID) + 1;
+const getOptionsFor = (comboID: number) => props.altReqs.filter((altReq) => altReq.data.altCombo!.comboID === comboID);
 </script>
 
 <template>
-  <div v-for="reqIdx in altReqGroup.reqs.length">
-    <PrimeDivider v-if="reqIdx > 1" />
-    <AltSelectorReq :targetID="altReqGroup.targetID" :reqIdx="reqIdx" :req="altReqGroup.reqs[reqIdx - 1]" />
+  <div v-for="comboID in altReqComboIDs">
+    <PrimeDivider v-if="getReqIdx(comboID) > 1" />
+    <AltSelectorReq :reqIdx="getReqIdx(comboID)" :options="getOptionsFor(comboID)" />
   </div>
 </template>
 

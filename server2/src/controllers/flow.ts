@@ -1,6 +1,6 @@
 import db from "../models";
 import type { Request, Response } from "express";
-import { getFlow } from "../middleware/FlowUtility";
+import { getFlow, initializeSelectedOptions } from "../middleware/FlowUtility";
 import { Coreq, Course } from "../models/init-models";
 
 const Listing = db.Listing;
@@ -36,6 +36,10 @@ export default {
       return;
     }
 
-    res.send(await getFlow(selectedListing, startYear));
+    const flow = await getFlow(selectedListing, startYear);
+
+    initializeSelectedOptions(flow.edges);
+
+    res.send(flow);
   },
 };

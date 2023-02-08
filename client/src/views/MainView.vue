@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import CourseSearch from "../components/CourseSearch.vue";
-import CourseFlow from "../components/CourseFlow/CourseFlow.vue";
-import { useCourseFlow } from "@/stores/CoursFlowStore";
+import CourseSearch from "@/components/CourseSearch.vue";
+import CourseFlow from "@/components/CourseFlow/CourseFlow.vue";
 import AltSelectorPanel from "@/components/AltSelector/AltSelectorPanel.vue";
 import { useAltSelector } from "@/stores/AltSelectorStore";
 
-const courseFlow = useCourseFlow();
 const altSelector = useAltSelector();
 </script>
 
 <template>
   <!-- <div class="surface-section px-4 py-8 md:px-6 lg:px-8">
     <div class="text-700 text-center">
-      <div class="text-900 font-bold text-5xl mb-3">Vue Flow</div>
+      <div class="text-900 font-bold text-5xl mb-3">Course Flow</div>
       <div class="text-700 text-2xl mb-5">Map out your future.</div>
       <img src="@/../public/favicon.ico" />
     </div>

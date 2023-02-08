@@ -438,14 +438,6 @@ export default {
           coreq_id: 11,
         },
         {
-          combo_id: 69,
-          coreq_id: 41,
-        },
-        {
-          combo_id: 69,
-          coreq_id: 42,
-        },
-        {
           combo_id: 70,
           coreq_id: 143,
         },
@@ -784,6 +776,10 @@ export default {
         {
           combo_id: 109,
           coreq_id: 32,
+        },
+        {
+          combo_id: 109,
+          coreq_id: 33,
         },
         {
           combo_id: 120,

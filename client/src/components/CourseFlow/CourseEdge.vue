@@ -20,12 +20,15 @@ const props = defineProps<{
 
 const path = computed(() => getBezierPath(props as GetBezierPathParams));
 const self = useEdge();
-const shouldHideEdge = computed(() => (self.edge.targetNode.data as CustomEdgeData).hidden || !props.data.selected);
 watchEffect(() => {
-  props.data.hidden = shouldHideEdge.value;
+  props.data.hidden =
+    (self.edge.targetNode.data as CustomEdgeData).hidden ||
+    props.data.altCombo?.selectedOptionID !== props.data.altCombo?.optionID;
 });
 </script>
 
 <template>
   <BaseEdge v-if="!props.data.hidden" :id="id" :path="path[0]" :marker-end="markerEnd" />
 </template>
+
+<style></style>

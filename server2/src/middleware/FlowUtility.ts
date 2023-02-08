@@ -3,12 +3,32 @@ import { Coreq, Course, Listing } from "../models/init-models";
 import { isParsedComboCoreq, createParsedComboCoreq, ParsedComboCoreq } from "./ParsedComboCoreqFactory";
 
 interface FlowComponents {
-  edges: EdgeData[];
-  nodes: NodeData[];
+  edges: Array<EdgeData>;
+  nodes: Array<NodeData>;
 }
 
-export const getFlow = async (inputListing: Listing, startYear?: number): Promise<FlowComponents> =>
-  await createComponenets(inputListing.course.coreq, true, inputListing, startYear);
+export const initializeSelectedOptions = (edges: Array<EdgeData>) => {
+  const altEdges = edges.filter((edge) => edge.altCombo);
+  for (var i = 0; i < altEdges.length; i++) {
+    altEdges[i].altCombo!.selectedOptionID = altEdges.filter(
+      (otherEdge) => otherEdge.altCombo!.comboID === altEdges[i].altCombo!.comboID
+    )[0].altCombo!.optionID;
+  }
+};
+
+export const getFlow = async (inputListing: Listing, startYear?: number): Promise<FlowComponents> => {
+  const { edges, nodes } = await createComponenets(inputListing.course.coreq, true, inputListing, startYear);
+  return { edges: uniqueIDs(edges), nodes: uniqueIDs(nodes) };
+};
+
+function uniqueIDs(data: Array<NodeData>): Array<NodeData>;
+function uniqueIDs(data: Array<EdgeData>): Array<EdgeData>;
+function uniqueIDs(data: Array<NodeData | EdgeData>): Array<NodeData | EdgeData> {
+  return data.reduce(
+    (acc, curr) => (acc.map((accItem) => accItem.id).includes(curr.id) ? acc : [...acc, curr]),
+    new Array<NodeData | EdgeData>()
+  );
+}
 
 const createComponenets = async (
   targetCoreq: Coreq,
@@ -145,15 +165,24 @@ class CourseData {
 interface AltCombo {
   comboID: number;
   optionID: number;
+  selectedOptionID?: number;
 }
 
 class EdgeData {
+  id: string;
   target: number;
   source: number;
   animated: boolean;
   altCombo?: AltCombo;
 
+  static createEdgeID(source: string, target: string): string;
+  static createEdgeID(source: number, target: number): string;
+  static createEdgeID(source: number | string, target: number | string): string {
+    return source.toString().concat("-").concat(target.toString());
+  }
+
   constructor(target: number, type: "prereq" | "precoreq", source: number, comboID?: number, optionID?: number) {
+    this.id = EdgeData.createEdgeID(source, target);
     this.source = source;
     this.target = target;
     this.animated = type === "precoreq";

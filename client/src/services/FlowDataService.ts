@@ -1,10 +1,10 @@
 import http from "../http-common";
-import type { Response } from "@/classes/Response";
+import type { AxiosResponse } from "axios";
 import { CustomNode } from "@/classes/CustomNode";
 import { CustomEdge } from "@/classes/CustomEdge";
 
 export type ListingFlowDTO = { id: number; subj: string; num: number };
-type CourseFlowDTO = {
+export type CourseFlowDTO = {
   id: number;
   title: string;
   descr: string;
@@ -15,13 +15,13 @@ type CourseFlowDTO = {
 type CoreqFlowDTO = { id: number; courses: Array<CourseFlowDTO>; manual: boolean };
 export type NodeDTO = CoreqFlowDTO;
 
-export type AltCombo = { comboID: number; optionID: number };
-export type EdgeDTO = { source: number; target: number; animated: false; altCombo: AltCombo };
+export type AltComboDTO = { comboID: number; optionID: number; selectedOptionID: number };
+export type EdgeDTO = { id: string; source: number; target: number; animated: false; altCombo: AltComboDTO };
 
 export type FlowDTO = { edges: Array<EdgeDTO>; nodes: Array<NodeDTO> };
 
 async function getFlowDTOsFor(subj: string, num: number, startYear: number): Promise<FlowDTO | undefined> {
-  const response: Response<FlowDTO> = await http.get(`/flow/${subj}/${num}/${startYear}`);
+  const response: AxiosResponse<FlowDTO> = await http.get(`/flow/${subj}/${num}/${startYear}`);
   return response?.data;
 }
 

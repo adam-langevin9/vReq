@@ -2,6 +2,7 @@ import { Coreq, Course, Listing, Combo, ComboCombo } from "../models/init-models
 
 export const isParsedComboCoreq = (obj: Coreq | ParsedComboCoreq): obj is ParsedComboCoreq => "op" in obj;
 export type { ParsedComboCoreq };
+
 export async function createParsedComboCoreq(rootCombo: Combo): Promise<ParsedComboCoreq> {
   const elements: Array<Coreq | ParsedComboCoreq> = [];
   // Traverses ParsedComboCoreq

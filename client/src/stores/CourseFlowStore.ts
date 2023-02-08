@@ -1,21 +1,55 @@
-import { ref, type Ref } from "vue";
+import { markRaw, ref, type Ref } from "vue";
 import { defineStore } from "pinia";
-import { useVueFlow } from "@vue-flow/core";
+import {
+  useVueFlow,
+  type EdgeComponent,
+  type EdgeTypesObject,
+  type NodeComponent,
+  type NodeTypesObject,
+} from "@vue-flow/core";
 import { getCourseFor } from "@/services/CourseDataService";
-import type { AltReqGroup } from "@/classes/AltReqGroup";
 import type { CourseDTO } from "@/services/CourseDataService";
 import { Layout } from "@/utils/LayoutUtility";
 import type { CustomNode } from "@/classes/CustomNode";
 import { getFlowFor } from "@/services/FlowDataService";
+import CourseNode from "@/components/CourseFlow/CourseNode.vue";
+import CourseEdge from "@/components/CourseFlow/CourseEdge.vue";
+import type { CustomEdge } from "@/classes/CustomEdge";
 
 export const useCourseFlow = defineStore("CourseFlow", () => {
-  const vueFlow = useVueFlow();
+  const {
+    edges,
+    nodes,
+    getNodes,
+    getEdges,
+    getNodesInitialized,
+    fitView,
+    findNode,
+    findEdge,
+    addNodes,
+    addEdges,
+    removeNodes,
+  } = useVueFlow({ id: "course-flow" });
+
+  const vueFlow = useVueFlow({ id: "course-flow" });
+
+  const nodeTypes: NodeTypesObject = {
+    course: markRaw(CourseNode) as NodeComponent,
+  };
+  const edgeTypes: EdgeTypesObject = {
+    course: markRaw(CourseEdge) as EdgeComponent,
+  };
+
   const input = ref({ subj: "", num: "" });
   const searchResult: Ref<CourseDTO | undefined> = ref();
   const isNew = ref(true);
-  const altsReqs: Ref<Array<AltReqGroup>> = ref([]);
   const layout = new Layout();
   layout.autoLayout();
+
+  function clear() {
+    edges.value = [];
+    nodes.value = [];
+  }
 
   function retrieveCourse() {
     if (isNew.value) {
@@ -29,7 +63,7 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   function postNodes(newNodes: CustomNode[]) {
     const uniqueNodes: CustomNode[] = [];
     newNodes.forEach((newNode) => {
-      const existingNode = vueFlow.findNode(newNode.id);
+      const existingNode = findNode(newNode.id);
       if (existingNode) {
         existingNode.data.manual = existingNode.data.manual ? existingNode.data.manual : newNode.data.manual;
         existingNode.data.hidden = existingNode.data.hidden ? newNode.data.hidden : existingNode.data.hidden;
@@ -37,26 +71,36 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
         uniqueNodes.push(newNode);
       }
     });
-    vueFlow.addNodes(uniqueNodes);
+    addNodes(uniqueNodes);
   }
 
   function addInputToFlow() {
     getFlowFor(input.value.subj, +input.value.num).then((flow) => {
       if (flow) {
         postNodes(flow.nodes);
-        vueFlow.addEdges(flow.edges);
+        addEdges(flow.edges);
+        layout.autoLayout();
       }
     });
   }
 
   return {
+    nodeTypes,
+    edgeTypes,
     input,
     searchResult,
     isNew,
-    altsReqs,
-    vueFlow,
     layout,
+    getNodes,
+    getEdges,
+    getNodesInitialized,
+    vueFlow,
+    fitView,
+    findNode,
     retrieveCourse,
     addInputToFlow,
+    findEdge,
+    removeNodes,
+    clear,
   };
 });

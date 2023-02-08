@@ -10,7 +10,7 @@ export class Layout {
   constructor(direction: string = "LR") {
     this.dagreGraph = new dagre.graphlib.Graph();
     this.dagreGraph.setDefaultEdgeLabel(() => ({}));
-    this.vueFlow = useVueFlow();
+    this.vueFlow = useVueFlow({ id: "course-flow" });
     this.direction = direction;
     watch(
       [
