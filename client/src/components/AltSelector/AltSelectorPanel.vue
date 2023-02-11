@@ -128,14 +128,14 @@ watch(altReqHeaders, (newHeaders, oldHeaders) => {
 .alt-req-btn {
   transition: right 1s ease-in-out !important;
   position: fixed !important;
-  top: 25%;
+  top: 2rem;
   right: -220px;
 }
 .alt-req-btn:hover {
   transition: right 1s ease-in-out;
-  right: 0px;
+  right: -10px;
 }
 .p-button .p-button-icon-left {
-  margin-right: 2rem !important;
+  margin-right: 1.25rem !important;
 }
 </style>

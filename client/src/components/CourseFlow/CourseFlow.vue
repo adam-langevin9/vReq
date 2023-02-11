@@ -20,7 +20,7 @@ function printFlowData() {
 </script>
 
 <template>
-  <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 20px; left: 20px" />
+  <!-- <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 20px; left: 20px" /> -->
 
   <CourseChips />
 
