@@ -1,4 +1,4 @@
-import { markRaw, ref, type Ref } from "vue";
+import { markRaw, ref, watch, type Ref } from "vue";
 import { defineStore } from "pinia";
 import {
   useVueFlow,
@@ -10,11 +10,10 @@ import {
 import { getCourseFor } from "@/services/CourseDataService";
 import type { CourseDTO } from "@/services/CourseDataService";
 import { Layout } from "@/utils/LayoutUtility";
-import type { CustomNode, CustomNodeData } from "@/classes/CustomNode";
+import type { CustomNode } from "@/classes/CustomNode";
 import { getFlowFor, type CourseFlowDTO } from "@/services/FlowDataService";
 import CourseNode from "@/components/CourseFlow/CourseNode.vue";
 import CourseEdge from "@/components/CourseFlow/CourseEdge.vue";
-import type { CustomEdge } from "@/classes/CustomEdge";
 
 export const useCourseFlow = defineStore("CourseFlow", () => {
   const {
@@ -23,15 +22,36 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     getNodes,
     getEdges,
     getNodesInitialized,
+    setNodes,
+    setEdges,
+    setTransform,
     fitView,
     findNode,
     findEdge,
     addNodes,
     addEdges,
     removeNodes,
+    toObject,
   } = useVueFlow({ id: "course-flow" });
 
   const vueFlow = useVueFlow({ id: "course-flow" });
+
+  const storedFlow = localStorage.getItem("flow");
+  if (storedFlow) {
+    const flow = JSON.parse(storedFlow);
+    const [x = 0, y = 0] = flow.position;
+    setNodes(flow.nodes);
+    setEdges(flow.edges);
+    setTransform({ x, y, zoom: flow.zoom || 0 });
+  }
+
+  watch(
+    () => toObject(),
+    (flow) => {
+      localStorage.setItem("flow", JSON.stringify(flow));
+    },
+    { deep: true }
+  );
 
   const nodeTypes: NodeTypesObject = {
     course: markRaw(CourseNode) as NodeComponent,
@@ -46,6 +66,8 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   const layout = new Layout();
   layout.autoLayout();
 
+  const courseChips = new Array<string>();
+
   function search(course: CourseFlowDTO) {
     if (isNew.value) {
       isNew.value = false;
@@ -58,7 +80,6 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   }
 
   function retrieveCourse() {
-    console.log("gottem");
     if (isNew.value) {
       isNew.value = false;
     }

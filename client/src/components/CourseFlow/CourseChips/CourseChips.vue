@@ -1,23 +1,28 @@
 <script setup lang="ts">
-import { getListings } from "@/classes/CustomNode";
+import { getSelectedListings } from "@/classes/CustomNode";
 import { useCourseFlow } from "@/stores/CourseFlowStore";
+import CourseChip from "./CourseChip.vue";
 const courseFlow = useCourseFlow();
+</script>
+<script lang="ts">
+export default {
+  methods: {
+    forceUpdate() {
+      console.log("forcing update");
+      this.$forceUpdate();
+    },
+  },
+};
 </script>
 <template>
   <div class="flex flex-row flex-wrap m-2 align-items-center justify-content-center">
     <div class="flex flex-row flex-wrap m-2 chips">
-      <PrimeChip
+      <CourseChip
         v-for="node in courseFlow.getNodes
           .filter((node) => node.data.manual)
-          .sort((a, b) => getListings(a).localeCompare(getListings(b)))"
-        :label="getListings(node)"
-        @remove="
-          () => {
-            node.data.manual = false;
-          }
-        "
+          .sort((a, b) => getSelectedListings(a).localeCompare(getSelectedListings(b)))"
+        :node="node"
         class="flex align-items-center justify-content-center m-1"
-        removable
       />
     </div>
   </div>

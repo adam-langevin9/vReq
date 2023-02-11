@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import type { CustomEdgeData } from "@/classes/CustomEdge";
 import { useCourseFlow } from "@/stores/CourseFlowStore";
-import { getListings } from "@/classes/CustomNode";
+import { getSelectedListings } from "@/classes/CustomNode";
 
 const courseFlow = useCourseFlow();
 
@@ -45,7 +45,7 @@ export default {
           v-for="element in options.filter(edge=>edge.data.altCombo!.optionID===optionID)"
           class="flex flex-column justify-content-center align-items-center"
         >
-          {{ getListings(courseFlow.findNode(element.source)!) }}
+          {{ getSelectedListings(courseFlow.findNode(element.source)!) }}
         </div>
       </label>
     </div>

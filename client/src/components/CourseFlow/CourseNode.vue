@@ -14,6 +14,9 @@ const props = defineProps<{
 const self = useNode();
 const courseFlow = useCourseFlow();
 
+if (self.node.data.manual) {
+}
+
 const outEdges = computed(() => self.connectedEdges.value.filter((edge) => edge.source === props.id));
 const shouldHideNode = computed(
   () => !self.node.data.manual && outEdges.value.length > 0 && outEdges.value.every((edge) => edge.data.hidden)

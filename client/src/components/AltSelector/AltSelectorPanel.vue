@@ -1,24 +1,41 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect, type Ref } from "vue";
+import { computed, ref, watch, type Ref } from "vue";
 import AltSelectorGroup from "./AltSelectorGroup.vue";
 import { useAltSelector } from "@/stores/AltSelectorStore";
 import { useCourseFlow } from "@/stores/CourseFlowStore";
 import type { CustomEdgeData } from "@/classes/CustomEdge";
 import type { GraphEdge } from "@vue-flow/core";
-import { getListings } from "@/classes/CustomNode";
+import { getSelectedListings } from "@/classes/CustomNode";
+
+type Headers = {
+  targetID: string;
+  disabled: boolean;
+  active: boolean;
+}[];
 
 const altSelector = useAltSelector();
 const courseFlow = useCourseFlow();
 
-const activeAccordion: Ref<number | undefined> = ref(undefined);
+const activeAccordion: Ref<Array<number>> = ref([]);
 
 const allAltReqs = computed(() =>
   (courseFlow.getEdges as GraphEdge<CustomEdgeData, any>[]).filter((edge) => edge.data.altCombo)
 );
 const altReqTargetIDs = computed(() =>
   Array.from(new Set(allAltReqs.value.map((altReq) => altReq.target))).sort((a, b) =>
-    getListings(courseFlow.findNode(a)!).localeCompare(getListings(courseFlow.findNode(b)!))
+    getSelectedListings(courseFlow.findNode(a)!).localeCompare(getSelectedListings(courseFlow.findNode(b)!))
   )
+);
+const altReqHeaders = computed(() =>
+  altReqTargetIDs.value.map((targetID, idx) => {
+    return {
+      targetID,
+      disabled: courseFlow.getEdges
+        .filter((edge) => edge.target === targetID)!
+        .every((edge) => (edge.targetNode.data as CustomEdgeData).hidden),
+      active: activeAccordion.value.includes(idx),
+    };
+  })
 );
 const sidebarPositionIcon = computed(() =>
   altSelector.position === "right" ? "pi pi-step-backward" : "pi pi-step-forward"
@@ -30,17 +47,32 @@ const toggleSidebarVisible = () => {
   altSelector.visible = !altSelector.visible;
 };
 const getAltReqsFor = (targetID: string) => allAltReqs.value.filter((altReq) => altReq.target === targetID);
-</script>
 
-<script lang="ts">
-export default {
-  computed: {
-    isGroupDisabled(targetID: string) {
-      return useCourseFlow().findNode(targetID)?.data.hidden;
-    },
-  },
-  // rest of the component code...
+const shouldUpdateHeaders = (oldHeaders: Headers, newHeaders: Headers) => {
+  if (oldHeaders.length !== newHeaders.length) {
+    return true;
+  }
+  for (var idx = 0; idx < oldHeaders.length; idx++) {
+    if (oldHeaders[idx].disabled !== newHeaders[idx].disabled) {
+      return true;
+    }
+    if (oldHeaders[idx].targetID !== newHeaders[idx].targetID) {
+      return true;
+    }
+    return false;
+  }
 };
+
+watch(altReqHeaders, (newHeaders, oldHeaders) => {
+  if (shouldUpdateHeaders(oldHeaders, newHeaders)) {
+    const oldActiveTransposed = newHeaders.map(
+      (newHeader) => oldHeaders.find((oldHeader) => oldHeader.targetID === newHeader.targetID)?.active ?? false
+    );
+    const newAbled = newHeaders.map((header) => !header.disabled);
+    const newActive = oldActiveTransposed.map((active, idx) => active && newAbled[idx]);
+    activeAccordion.value = newActive.map((active, idx) => (active ? idx : -1)).filter((idx) => idx !== -1);
+  }
+});
 </script>
 
 <template>
@@ -66,13 +98,14 @@ export default {
       />
       <h3 class="flex align-items-center justify-content-center flex-grow-1">Alternative Requirements</h3>
     </template>
-    <PrimeAccordion :active-index="activeAccordion">
+    <PrimeAccordion v-model:active-index="activeAccordion" :multiple="true">
       <PrimeAccordionTab
-        v-for="targetID in altReqTargetIDs"
-        :header="getListings(courseFlow.findNode(targetID)!)"
-        :disabled="courseFlow.getEdges.filter(edge=>edge.target===targetID)!.every(edge=>(edge.targetNode.data as CustomEdgeData).hidden)"
+        v-for="(header, index) in altReqHeaders"
+        :key="index"
+        :header="getSelectedListings(courseFlow.findNode(header.targetID)!)"
+        :disabled="header.disabled"
       >
-        <AltSelectorGroup :altReqs="getAltReqsFor(targetID)" />
+        <AltSelectorGroup :altReqs="getAltReqsFor(header.targetID)" />
       </PrimeAccordionTab>
     </PrimeAccordion>
   </PrimeSidebar>

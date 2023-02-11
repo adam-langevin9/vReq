@@ -1,0 +1,22 @@
+<script setup lang="ts">
+import type { CustomNodeData } from "@/classes/CustomNode";
+import { getSelectedListings } from "@/classes/CustomNode";
+import type { GraphNode } from "@vue-flow/core";
+import { computed } from "vue";
+
+const props = defineProps<{ node: GraphNode<CustomNodeData, any> }>();
+const removeNode = () => {
+  props.node.data.manual = false;
+};
+const selectedListings = computed(() => getSelectedListings(props.node));
+</script>
+<template>
+  <div
+    class="p-chip p-component flex align-items-center justify-content-center m-1"
+    aria-label="{{ selectedListings }}"
+  >
+    <div class="p-chip-text">{{ selectedListings }}</div>
+    <span tabindex="0" class="p-chip-remove-icon pi pi-times-circle" @click="removeNode"></span>
+  </div>
+</template>
+<style scoped></style>

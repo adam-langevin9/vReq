@@ -30,7 +30,7 @@ export class Course extends Model<CourseAttributes, CourseCreationAttributes> im
   createCoreq!: Sequelize.BelongsToCreateAssociationMixin<Coreq>;
   // Course hasMany Listing via course_id
   listings!: Listing[];
-  getListings!: Sequelize.HasManyGetAssociationsMixin<Listing>;
+  getSelectedListings!: Sequelize.HasManyGetAssociationsMixin<Listing>;
   setListings!: Sequelize.HasManySetAssociationsMixin<Listing, ListingId>;
   addListing!: Sequelize.HasManyAddAssociationMixin<Listing, ListingId>;
   addListings!: Sequelize.HasManyAddAssociationsMixin<Listing, ListingId>;

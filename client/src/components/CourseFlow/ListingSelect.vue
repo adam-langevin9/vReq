@@ -1,41 +1,29 @@
 <script setup lang="ts">
 import type { ListingFlowDTO } from "@/services/FlowDataService";
 
-defineProps<{
-  detailedCourse: { listings: Array<ListingFlowDTO>; selectedListing: number };
+type DetailedCourseProp = { listings: Array<ListingFlowDTO>; selectedListing: number };
+
+const props = defineProps<{
+  detailedCourse: DetailedCourseProp;
   complete: boolean;
 }>();
-</script>
-
-<script lang="ts">
-export default {
-  data() {
-    return {
-      selection: this.listingObjToString(this.detailedCourse.listings[this.detailedCourse.selectedListing]),
-      options: this.detailedCourse.listings.map((listing: ListingFlowDTO) =>
-        listing.subj.concat(" ").concat(listing.num.toString())
-      ),
-    };
-  },
-  methods: {
-    listingObjToString(listing: ListingFlowDTO) {
-      return listing.subj.concat(" ").concat(listing.num.toString());
-    },
-  },
-};
+const optionLabel = (option: ListingFlowDTO) => option.subj.concat(" ").concat(option.num.toString());
+const optionValue = (option: ListingFlowDTO) => props.detailedCourse.listings.indexOf(option);
 </script>
 
 <template>
   <div v-if="detailedCourse.listings.length > 1" class="justify-content-left">
     <PrimeDropdown
-      v-model="selection"
-      :options="options"
+      v-model="props.detailedCourse.selectedListing"
+      :options="detailedCourse.listings"
+      :optionLabel="optionLabel"
+      :optionValue="optionValue"
       class="crosslisting"
       :inputStyle="complete ? 'text-decoration: line-through' : ''"
     />
   </div>
   <div v-else class="single-listing justify-content-center" :style="complete ? 'text-decoration: line-through' : ''">
-    {{ selection }}
+    {{ optionLabel(detailedCourse.listings[detailedCourse.selectedListing]) }}
   </div>
 </template>
 

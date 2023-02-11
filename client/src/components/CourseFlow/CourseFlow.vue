@@ -4,7 +4,7 @@ import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
 import { useCourseFlow } from "@/stores/CourseFlowStore";
-import CourseChips from "@/components/CourseFlow/CourseChips.vue";
+import CourseChips from "@/components/CourseFlow/CourseChips/CourseChips.vue";
 
 const minHeight = "30rem";
 const maxWidth = "80%";

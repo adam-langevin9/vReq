@@ -13,7 +13,7 @@ import type {
   ValidConnectionFunc,
 } from "@vue-flow/core";
 import type { VNode, RendererNode, RendererElement, Component, ComputedOptions, MethodOptions } from "vue";
-import type { CourseFlowDTO, NodeDTO } from "@/services/FlowDataService";
+import type { CourseFlowDTO, ListingFlowDTO, NodeDTO } from "@/services/FlowDataService";
 
 export type CustomNodeData = Omit<NodeDTO, "id"> & {
   complete: boolean;
@@ -77,7 +77,7 @@ export class CustomNode implements ICustomNode {
   }
 }
 
-export function getListings(node: GraphNode<CustomNodeData, any>): string {
+export function getAllListings(node: GraphNode<CustomNodeData, any>): string {
   return node.data.courses
     .reduce(
       (listings: string, course: CourseFlowDTO) =>
@@ -86,5 +86,12 @@ export function getListings(node: GraphNode<CustomNodeData, any>): string {
         ),
       ""
     )
+    .slice(0, -3);
+}
+
+export function getSelectedListings(node: GraphNode<CustomNodeData, any>): string {
+  return node.data.courses
+    .map((course) => course.listings[course.selectedListing])
+    .reduce((listings: string, listing: ListingFlowDTO) => listings.concat(`${listing.subj} ${listing.num} / `), "")
     .slice(0, -3);
 }
