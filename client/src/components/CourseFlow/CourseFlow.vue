@@ -24,7 +24,7 @@ function printFlowData() {
 
   <CourseChips />
 
-  <div class="flex justify-content-center m-2">
+  <div class="flex justify-content-center m-2 mb-8">
     <VueFlow
       id="course-flow"
       class="visual"

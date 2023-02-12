@@ -555,6 +555,26 @@ export default {
           start_year: 2022,
           combo_id: 120,
         },
+        {
+          id: 113,
+          start_year: 2022,
+          combo_id: 121,
+        },
+        {
+          id: 114,
+          start_year: 2022,
+          combo_id: 122,
+        },
+        {
+          id: 115,
+          start_year: 2022,
+          combo_id: 123,
+        },
+        {
+          id: 116,
+          start_year: 2022,
+          combo_id: 131,
+        },
       ],
       {}
     ),

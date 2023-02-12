@@ -785,6 +785,238 @@ export default {
           combo_id: 120,
           coreq_id: 137,
         },
+        {
+          combo_id: 121,
+          coreq_id: 137,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 138,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 143,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 144,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 153,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 155,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 156,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 163,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 167,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 168,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 177,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 181,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 184,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 248,
+        },
+        {
+          combo_id: 121,
+          coreq_id: 249,
+        },
+        {
+          combo_id: 124,
+          coreq_id: 34,
+        },
+        {
+          combo_id: 124,
+          coreq_id: 264,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 137,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 138,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 143,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 144,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 153,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 157,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 163,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 167,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 168,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 177,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 181,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 184,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 248,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 249,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 41,
+        },
+        {
+          combo_id: 122,
+          coreq_id: 42,
+        },
+        {
+          combo_id: 126,
+          coreq_id: 259,
+        },
+        {
+          combo_id: 126,
+          coreq_id: 260,
+        },
+        {
+          combo_id: 127,
+          coreq_id: 41,
+        },
+        {
+          combo_id: 127,
+          coreq_id: 42,
+        },
+        {
+          combo_id: 128,
+          coreq_id: 23,
+        },
+        {
+          combo_id: 128,
+          coreq_id: 24,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 41,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 42,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 7,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 11,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 20,
+        },
+        {
+          combo_id: 129,
+          coreq_id: 5,
+        },
+        {
+          combo_id: 129,
+          coreq_id: 8,
+        },
+        {
+          combo_id: 129,
+          coreq_id: 21,
+        },
+        {
+          combo_id: 129,
+          coreq_id: 56,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 23,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 24,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 25,
+        },
+        {
+          combo_id: 130,
+          coreq_id: 271,
+        },
+        {
+          combo_id: 130,
+          coreq_id: 18,
+        },
+        {
+          combo_id: 131,
+          coreq_id: 25,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 271,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 273,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 269,
+        },
+        {
+          combo_id: 123,
+          coreq_id: 248,
+        },
       ],
       {}
     ),

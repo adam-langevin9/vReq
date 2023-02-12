@@ -1607,6 +1607,30 @@ export default {
           num: 439,
           course_id: 66,
         },
+        {
+          id: 251282,
+          subj: "CHM",
+          num: 212,
+          course_id: 286,
+        },
+        {
+          id: 251311,
+          subj: "CHML",
+          num: 212,
+          course_id: 287,
+        },
+        {
+          id: 252799,
+          subj: "PHY",
+          num: 101,
+          course_id: 288,
+        },
+        {
+          id: 252800,
+          subj: "PHY",
+          num: 102,
+          course_id: 289,
+        },
       ],
       {}
     ),

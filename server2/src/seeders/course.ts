@@ -2087,6 +2087,38 @@ export default {
           hours: "3",
           coreq_id: 265,
         },
+        {
+          id: 286,
+          title: "Organic Chemistry II",
+          descr:
+            "Reactions and reaction mechanisms of organic compounds. A ‘C’ or better in CHM 212 is required to take certain advanced courses in chemistry. ",
+          hours: "3",
+          coreq_id: 271,
+        },
+        {
+          id: 287,
+          title: "Organic Chemistry Laboratory II",
+          descr:
+            "Reactions of organic compounds and the use of spectroscopic methods in the laboratory. This course is the lab for CHM 212",
+          hours: "1",
+          coreq_id: 271,
+        },
+        {
+          id: 288,
+          title: "Elementary College Physics I",
+          descr:
+            "First semester of a two semester algebra-based introduction to the fundamental principles of physics. Topics include kinematics, Newtonian statics and dynamics, gravitation, oscillations, and mechanical waves.",
+          hours: "0 or 4",
+          coreq_id: 272,
+        },
+        {
+          id: 289,
+          title: "Elementary College Physics II",
+          descr:
+            "Second semester of a two semester algebra-based introduction to the fundamental principles of physics. Topics include electric and magnetic fields, circuits, electromagnetic waves, and optics.",
+          hours: "4",
+          coreq_id: 273,
+        },
       ],
       {}
     ),

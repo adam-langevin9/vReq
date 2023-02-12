@@ -41,6 +41,42 @@ export default {
           combo_id: 96,
           sub_combo_id: 119,
         },
+        {
+          combo_id: 121,
+          sub_combo_id: 124,
+        },
+        {
+          combo_id: 122,
+          sub_combo_id: 124,
+        },
+        {
+          combo_id: 123,
+          sub_combo_id: 124,
+        },
+        {
+          combo_id: 121,
+          sub_combo_id: 125,
+        },
+        {
+          combo_id: 125,
+          sub_combo_id: 126,
+        },
+        {
+          combo_id: 125,
+          sub_combo_id: 127,
+        },
+        {
+          combo_id: 125,
+          sub_combo_id: 128,
+        },
+        {
+          combo_id: 123,
+          sub_combo_id: 129,
+        },
+        {
+          combo_id: 129,
+          sub_combo_id: 130,
+        },
       ],
       {}
     ),

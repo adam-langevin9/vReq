@@ -1165,6 +1165,21 @@ export default {
           prereq_id: 98,
           precoreq_id: null,
         },
+        {
+          id: 271,
+          prereq_id: 116,
+          precoreq_id: null,
+        },
+        {
+          id: 272,
+          prereq_id: null,
+          precoreq_id: null,
+        },
+        {
+          id: 273,
+          prereq_id: null,
+          precoreq_id: null,
+        },
       ],
       {}
     ),

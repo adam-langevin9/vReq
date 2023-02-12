@@ -485,6 +485,50 @@ export default {
           id: 120,
           op: "ONE",
         },
+        {
+          id: 121,
+          op: "AND",
+        },
+        {
+          id: 122,
+          op: "AND",
+        },
+        {
+          id: 123,
+          op: "AND",
+        },
+        {
+          id: 124,
+          op: "OR",
+        },
+        {
+          id: 125,
+          op: "OR",
+        },
+        {
+          id: 126,
+          op: "AND",
+        },
+        {
+          id: 127,
+          op: "AND",
+        },
+        {
+          id: 128,
+          op: "AND",
+        },
+        {
+          id: 129,
+          op: "OR",
+        },
+        {
+          id: 130,
+          op: "OR",
+        },
+        {
+          id: 131,
+          op: "ONE",
+        },
       ],
       {}
     ),
