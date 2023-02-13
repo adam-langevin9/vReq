@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { CustomEdgeData } from "@/classes/CustomEdge";
-import { useCourseFlow } from "@/stores/CourseFlowStore";
-import { getSelectedListings } from "@/classes/CustomNode";
+import { useFlow } from "@/stores/FlowStore";
+import { getSelectedName } from "@/classes/CustomNode";
 
-const courseFlow = useCourseFlow();
+const flow = useFlow();
 
 const props = defineProps<{
   reqIdx: number;
@@ -12,7 +12,7 @@ const props = defineProps<{
 }>();
 
 const selectedOption = ref(props.options[0].data.altCombo!.selectedOptionID);
-props.options.forEach((option) => (courseFlow.findEdge(option.id)!.data.altCombo.selectedOptionID = selectedOption));
+props.options.forEach((option) => (flow.findEdge(option.id)!.data.altCombo.selectedOptionID = selectedOption));
 
 const selectEdges = () =>
   props.options.forEach((option) => (option.data.altCombo!.selectedOptionID = selectedOption.value));
@@ -45,7 +45,7 @@ export default {
           v-for="element in options.filter(edge=>edge.data.altCombo!.optionID===optionID)"
           class="flex flex-column justify-content-center align-items-center"
         >
-          {{ getSelectedListings(courseFlow.findNode(element.source)!) }}
+          {{ getSelectedName(flow.findNode(element.source)!) }}
         </div>
       </label>
     </div>

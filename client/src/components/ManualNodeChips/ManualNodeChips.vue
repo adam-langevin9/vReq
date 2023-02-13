@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { getSelectedListings } from "@/classes/CustomNode";
-import { useCourseFlow } from "@/stores/CourseFlowStore";
-import CourseChip from "./CourseChip.vue";
-const courseFlow = useCourseFlow();
+import { getSelectedName } from "@/classes/CustomNode";
+import { useFlow } from "@/stores/FlowStore";
+import ManualNodeChip from "./ManualNodeChip.vue";
+const flow = useFlow();
 </script>
 <script lang="ts">
 export default {
@@ -17,10 +17,10 @@ export default {
 <template>
   <div class="flex flex-row flex-wrap m-2 align-items-center justify-content-center">
     <div class="flex flex-row flex-wrap m-2 chips">
-      <CourseChip
-        v-for="node in courseFlow.getNodes
+      <ManualNodeChip
+        v-for="node in flow.getNodes
           .filter((node) => node.data.manual)
-          .sort((a, b) => getSelectedListings(a).localeCompare(getSelectedListings(b)))"
+          .sort((a, b) => getSelectedName(a).localeCompare(getSelectedName(b)))"
         :node="node"
         class="flex align-items-center justify-content-center m-1"
       />

@@ -2,8 +2,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import courseRoute from "./routes/course";
 import flowRoute from "./routes/flow";
+import degreeRoute from "./routes/degree";
 
-import db from "./models/index";
+import db from "./models";
 import * as dotenv from "dotenv";
 import express from "express";
 
@@ -29,6 +30,7 @@ app.use(function (_req, res, next) {
 // routes
 courseRoute(app);
 flowRoute(app);
+degreeRoute(app);
 
 dotenv.config();
 const port = process.env.OUT_PORT ?? 3000;

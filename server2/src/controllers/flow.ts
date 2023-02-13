@@ -1,13 +1,9 @@
-import db from "../models";
 import type { Request, Response } from "express";
-import { getFlow, initializeSelectedOptions } from "../middleware/FlowUtility";
-import { Coreq, Course } from "../models/init-models";
-
-const Listing = db.Listing;
+import { getCoreqFlow, getDegreeFlow } from "../middleware/FlowUtilities";
+import { Combo, Coreq, Course, Degree, Req, Listing } from "../models/init-models";
 
 export default {
-  // Find a set of Courses and Listings withing a single coreq group
-  async findFlow(req: Request, res: Response): Promise<void> {
+  async findListingFlow(req: Request, res: Response): Promise<void> {
     const subj = req.params.subj;
     const num = +req.params.num;
     const startYear = +req.params.startYear;
@@ -18,15 +14,19 @@ export default {
       include: {
         model: Course,
         as: "course",
-        include: {
-          model: Coreq,
-          as: "coreq",
-          include: {
-            model: Course,
-            as: "courses",
-            include: { model: Listing, as: "listings" },
+        include: [
+          {
+            model: Coreq,
+            as: "coreq",
+            include: [
+              {
+                model: Course,
+                as: "courses",
+                include: [{ model: Listing, as: "listings" }],
+              },
+            ],
           },
-        },
+        ],
       },
     });
     if (!selectedListing) {
@@ -36,9 +36,37 @@ export default {
       return;
     }
 
-    const flow = await getFlow(selectedListing, startYear);
+    const flow = await getCoreqFlow(selectedListing.course.coreq, selectedListing, startYear);
 
-    initializeSelectedOptions(flow.edges);
+    res.send(flow);
+  },
+
+  async findDegreeFlow(req: Request, res: Response): Promise<void> {
+    const degree_id = +req.params.degree_id;
+    const startYear = +req.params.startYear;
+
+    const degree = await Degree.findByPk(degree_id, {
+      include: [
+        {
+          model: Req,
+          as: "req",
+          include: [
+            {
+              model: Combo,
+              as: "combo",
+            },
+          ],
+        },
+      ],
+    });
+    if (!degree) {
+      res.status(404).send({
+        message: `Cannot find Degree ${degree_id}.`,
+      });
+      return;
+    }
+
+    const flow = await getDegreeFlow(degree, startYear);
 
     res.send(flow);
   },

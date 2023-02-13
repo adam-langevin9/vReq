@@ -1,19 +1,24 @@
 <script setup lang="ts">
+// Components
 import CourseSearch from "@/components/CourseSearch.vue";
-import CourseFlow from "@/components/CourseFlow/CourseFlow.vue";
+import Flow from "@/components/Flow/Flow.vue";
 import AltSelectorPanel from "@/components/AltSelector/AltSelectorPanel.vue";
-import Menu from "@/components/CourseFlow/Menu.vue";
+import Menu from "@/components/Menu.vue";
 
+// Stores
 import { useAltSelector } from "@/stores/AltSelectorStore";
+import AddCourseButton from "@/components/AddCourseButton.vue";
 
 const altSelector = useAltSelector();
 </script>
 
 <template>
   <main :class="altSelector.isOpenThird ? 'condense' : ''">
-    <Menu />
+    <Menu :onSave="() => {}" :onOpen="() => {}" :onExport="() => {}" />
+    <PrimeDynamicDialog />
     <CourseSearch />
-    <CourseFlow />
+    <AddCourseButton />
+    <Flow />
   </main>
   <AltSelectorPanel />
 </template>

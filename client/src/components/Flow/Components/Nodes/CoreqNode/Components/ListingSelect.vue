@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { ListingFlowDTO } from "@/services/FlowDataService";
+import type { ListingDataDTO } from "@/services/FlowDataService";
 
-type DetailedCourseProp = { listings: Array<ListingFlowDTO>; selectedListing: number };
+type DetailedCourseProp = { listings: Array<ListingDataDTO>; selectedListing: number };
 
 const props = defineProps<{
   detailedCourse: DetailedCourseProp;
   complete: boolean;
 }>();
-const optionLabel = (option: ListingFlowDTO) => option.subj.concat(" ").concat(option.num.toString());
-const optionValue = (option: ListingFlowDTO) => props.detailedCourse.listings.indexOf(option);
+const optionLabel = (option: ListingDataDTO) => option.subj.concat(" ").concat(option.num.toString());
+const optionValue = (option: ListingDataDTO) => props.detailedCourse.listings.indexOf(option);
 </script>
 
 <template>

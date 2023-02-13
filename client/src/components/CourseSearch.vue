@@ -1,22 +1,6 @@
 <script setup lang="ts">
-import { useCourseFlow } from "@/stores/CourseFlowStore";
-import { ref } from "vue";
-const courseFlow = useCourseFlow();
-
-const buttonItems = ref([
-  {
-    label: "Refresh Layout",
-    icon: "pi pi-refresh",
-    command: courseFlow.layout.autoLayout,
-  },
-  {
-    label: "Clear All",
-    icon: "pi pi-times",
-    command: () => {
-      courseFlow.clear();
-    },
-  },
-]);
+import { useFlow } from "@/stores/FlowStore";
+const flow = useFlow();
 </script>
 <template>
   <div id="course-search" class="flex justify-content-center flex-wrap card-container mt-5">
@@ -27,7 +11,7 @@ const buttonItems = ref([
             <PrimeInputMask
               id="subject"
               class="max-w-12rem"
-              v-model="courseFlow.input.subj"
+              v-model="flow.input.subj"
               mask="aaa?a"
               slotChar=""
               style="text-transform: uppercase"
@@ -38,21 +22,21 @@ const buttonItems = ref([
 
         <div class="col-4 p-2">
           <span class="p-float-label">
-            <PrimeInputMask id="number" class="max-w-12rem" v-model="courseFlow.input.num" mask="999" slotChar="" />
+            <PrimeInputMask id="number" class="max-w-12rem" v-model="flow.input.num" mask="999" slotChar="" />
             <label for="number">Course Number</label>
           </span>
         </div>
 
         <div class="col-4 p-2">
           <PrimeButton
-            @click="courseFlow.retrieveCourse"
+            @click="flow.retrieveCourse"
             label="Search"
             icon="pi pi-search"
             iconPos="right"
             class="p-button-secondary"
           />
         </div>
-        <PrimeCard v-if="courseFlow.isNew" class="m-2 flex-grow-1">
+        <PrimeCard v-if="flow.isNew" class="m-2 flex-grow-1">
           <!-- Welcome Message -->
           <template #content>
             To get started, enter a course's subject and number into the fields above.
@@ -70,32 +54,29 @@ const buttonItems = ref([
             </ul>
           </template>
         </PrimeCard>
-        <PrimeCard v-else-if="courseFlow.searchResult">
+        <PrimeCard v-else-if="flow.searchResult">
           <!-- Search Result -->
           <template #title>
-            {{ courseFlow.searchResult.title }}
+            {{ flow.searchResult.title }}
           </template>
           <template #subtitle
-            ><span v-if="courseFlow.searchResult.hours">Credit Hours:</span>
-            {{ courseFlow.searchResult.hours }}
+            ><span v-if="flow.searchResult.hours">Credit Hours:</span>
+            {{ flow.searchResult.hours }}
           </template>
           <template #content>
-            {{ courseFlow.searchResult.descr }}
+            {{ flow.searchResult.descr }}
           </template>
         </PrimeCard>
         <PrimeCard v-else>
           <!-- Error Message -->
           <template #title> Course Not Found </template>
           <template #content>
-            {{ courseFlow.input.subj.toUpperCase() }} {{ courseFlow.input.num }} could not be found. Please check that
-            you entered the course correctly or try a different course.
+            {{ flow.input.subj.toUpperCase() }} {{ flow.input.num }} could not be found. Please check that you entered
+            the course correctly or try a different course.
           </template>
         </PrimeCard>
       </div>
     </div>
-  </div>
-  <div class="flex justify-content-center">
-    <PrimeSplitButton label="Add Course(s)" class="m-2" @click="courseFlow.addInputToFlow" :model="buttonItems" />
   </div>
 </template>
 <style scoped>

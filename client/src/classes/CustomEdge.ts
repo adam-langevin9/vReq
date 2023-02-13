@@ -1,4 +1,4 @@
-import { MarkerType, Position } from "@vue-flow/core";
+import { MarkerType } from "@vue-flow/core";
 import type { DefaultEdge } from "@vue-flow/core";
 import type { AltComboDTO, EdgeDTO } from "@/services/FlowDataService";
 
@@ -9,17 +9,16 @@ export type CustomEdgeData = {
   altCombo?: altCombo;
 };
 
-export interface ICustomEdge extends DefaultEdge<CustomEdgeData> {
-  id: string;
-  source: string;
-  target: string;
-  animated: boolean;
-  markerEnd: string;
-  selectable: boolean;
-  data: CustomEdgeData;
-}
+export type CustomEdge = DefaultEdge<CustomEdgeData> &
+  Omit<EdgeDTO, "altCombo"> & {
+    markerEnd: string;
+    selectable: boolean;
+  };
 
-export class CustomEdge implements ICustomEdge {
+export const createEdge = (edgeDTO: EdgeDTO): CoreqEdge | DegreeEdge =>
+  edgeDTO.target.slice(undefined, 1) === "c" ? new CoreqEdge(edgeDTO) : new DegreeEdge(edgeDTO);
+
+class CoreqEdge implements CustomEdge {
   id: string;
   source: string;
   target: string;
@@ -27,17 +26,31 @@ export class CustomEdge implements ICustomEdge {
   markerEnd: string = MarkerType.Arrow;
   selectable: boolean = false;
   data: CustomEdgeData;
-  type: string = "course";
+  type: string = "coreq";
 
-  static createEdgeID(source_id: string, target_id: string): string;
-  static createEdgeID(source_id: number, target_id: number): string;
-  static createEdgeID(source_id: number | string, target_id: number | string): string {
-    return source_id.toString().concat("-").concat(target_id.toString());
-  }
   constructor(edgeDTO: EdgeDTO) {
     this.id = edgeDTO.id;
-    this.source = edgeDTO.source.toString();
-    this.target = edgeDTO.target.toString();
+    this.source = edgeDTO.source;
+    this.target = edgeDTO.target;
+    this.animated = edgeDTO.animated;
+    this.data = { hidden: false, altCombo: edgeDTO.altCombo };
+  }
+}
+
+class DegreeEdge implements CustomEdge {
+  id: string;
+  source: string;
+  target: string;
+  animated: boolean;
+  markerEnd: string = MarkerType.Arrow;
+  selectable: boolean = false;
+  data: CustomEdgeData;
+  type: string = "degree";
+
+  constructor(edgeDTO: EdgeDTO) {
+    this.id = edgeDTO.id;
+    this.source = edgeDTO.source;
+    this.target = edgeDTO.target;
     this.animated = edgeDTO.animated;
     this.data = { hidden: false, altCombo: edgeDTO.altCombo };
   }

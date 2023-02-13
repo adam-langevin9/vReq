@@ -1,4 +1,4 @@
-import { Coreq, Course, Listing, Combo, ComboCombo } from "../models/init-models";
+import { Coreq, Course, Listing, Combo } from "../models/init-models";
 
 export const isParsedComboCoreq = (obj: Coreq | ParsedComboCoreq): obj is ParsedComboCoreq => "op" in obj;
 export type { ParsedComboCoreq };

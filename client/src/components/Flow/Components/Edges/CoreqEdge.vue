@@ -2,7 +2,7 @@
 import type { CustomEdgeData } from "@/classes/CustomEdge";
 import { BaseEdge, getBezierPath, Position, useEdge } from "@vue-flow/core";
 import type { GetBezierPathParams } from "@vue-flow/core/dist/components/Edges/utils";
-import { computed, ref, watchEffect } from "vue";
+import { computed, watchEffect } from "vue";
 
 const props = defineProps<{
   id: String;

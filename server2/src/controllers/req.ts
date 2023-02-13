@@ -1,9 +1,6 @@
-import db from "../models";
+import { Req } from "../models/init-models";
 import type { Request, Response } from "express";
 import { ReqAttributes } from "../models/init-models";
-
-const Req = db.Req;
-
 export default {
   // Create and Save a new Req
   create(req: Request, res: Response): void {

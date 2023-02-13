@@ -3,40 +3,43 @@ import { VueFlow } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
-import { useCourseFlow } from "@/stores/CourseFlowStore";
-import CourseChips from "@/components/CourseFlow/CourseChips/CourseChips.vue";
+import { useFlow } from "@/stores/FlowStore";
+import ManualNodeChips from "@/components/ManualNodeChips/ManualNodeChips.vue";
 
 const minHeight = "30rem";
 const maxWidth = "80%";
-const courseFlow = useCourseFlow();
+const flow = useFlow();
 
 function printFlowData() {
   console.log("==========");
   console.log("Flow Data");
   console.log("----------");
-  console.log(courseFlow.vueFlow.toObject());
+  console.log(flow.toObject());
   console.log("==========");
 }
 </script>
 
 <template>
-  <!-- <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 20px; left: 20px" /> -->
+  <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 100px; left: 20px" />
 
-  <CourseChips />
+  <ManualNodeChips />
 
   <div class="flex justify-content-center m-2 mb-8">
     <VueFlow
       id="course-flow"
-      class="visual"
-      :node-types="courseFlow.nodeTypes"
-      :edge-types="courseFlow.edgeTypes"
+      class="visual flex justify-content-center align-items-center"
+      :node-types="flow.nodeTypes"
+      :edge-types="flow.edgeTypes"
       :default-zoom="1.5"
       :min-zoom="0.2"
       :max-zoom="4"
     >
-      <Background class="background" />
-      <MiniMap />
-      <Controls :showInteractive="false" :fitViewParams="{ duration: 200 }" />
+      <PrimeSpinner v-if="flow.isLoadingFlow" style="z-index: 10" />
+      <div class="">
+        <Background class="background" />
+        <MiniMap />
+        <Controls :showInteractive="false" :fitViewParams="{ duration: 200 }" />
+      </div>
     </VueFlow>
   </div>
 </template>

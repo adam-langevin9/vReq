@@ -2,10 +2,10 @@
 import { computed, ref, watch, type Ref } from "vue";
 import AltSelectorGroup from "./AltSelectorGroup.vue";
 import { useAltSelector } from "@/stores/AltSelectorStore";
-import { useCourseFlow } from "@/stores/CourseFlowStore";
+import { useFlow } from "@/stores/FlowStore";
 import type { CustomEdgeData } from "@/classes/CustomEdge";
 import type { GraphEdge } from "@vue-flow/core";
-import { getSelectedListings } from "@/classes/CustomNode";
+import { getSelectedName } from "@/classes/CustomNode";
 
 type Headers = {
   targetID: string;
@@ -14,23 +14,23 @@ type Headers = {
 }[];
 
 const altSelector = useAltSelector();
-const courseFlow = useCourseFlow();
+const flow = useFlow();
 
 const activeAccordion: Ref<Array<number>> = ref([]);
 
 const allAltReqs = computed(() =>
-  (courseFlow.getEdges as GraphEdge<CustomEdgeData, any>[]).filter((edge) => edge.data.altCombo)
+  (flow.getEdges as GraphEdge<CustomEdgeData, any>[]).filter((edge) => edge.data.altCombo)
 );
 const altReqTargetIDs = computed(() =>
   Array.from(new Set(allAltReqs.value.map((altReq) => altReq.target))).sort((a, b) =>
-    getSelectedListings(courseFlow.findNode(a)!).localeCompare(getSelectedListings(courseFlow.findNode(b)!))
+    getSelectedName(flow.findNode(a)!).localeCompare(getSelectedName(flow.findNode(b)!))
   )
 );
 const altReqHeaders = computed(() =>
   altReqTargetIDs.value.map((targetID, idx) => {
     return {
       targetID,
-      disabled: courseFlow.getEdges
+      disabled: flow.getEdges
         .filter((edge) => edge.target === targetID)!
         .every((edge) => (edge.targetNode.data as CustomEdgeData).hidden),
       active: activeAccordion.value.includes(idx),
@@ -102,7 +102,7 @@ watch(altReqHeaders, (newHeaders, oldHeaders) => {
       <PrimeAccordionTab
         v-for="(header, index) in altReqHeaders"
         :key="index"
-        :header="getSelectedListings(courseFlow.findNode(header.targetID)!)"
+        :header="getSelectedName(flow.findNode(header.targetID)!)"
         :disabled="header.disabled"
       >
         <AltSelectorGroup :altReqs="getAltReqsFor(header.targetID)" />

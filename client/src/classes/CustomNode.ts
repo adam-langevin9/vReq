@@ -1,7 +1,6 @@
 import type {
   XYPosition,
   Node,
-  ElementData,
   ClassFunc,
   CoordinateExtent,
   ExtendedParentExtent,
@@ -13,37 +12,87 @@ import type {
   ValidConnectionFunc,
 } from "@vue-flow/core";
 import type { VNode, RendererNode, RendererElement, Component, ComputedOptions, MethodOptions } from "vue";
-import type { CourseFlowDTO, ListingFlowDTO, NodeDTO } from "@/services/FlowDataService";
+import type { CoreqNodeDTO, CourseDataDTO, DegreeNodeDTO, ListingDataDTO, NodeDTO } from "@/services/FlowDataService";
 
-export type CustomNodeData = Omit<NodeDTO, "id"> & {
+export type CustomNode = CoreqNode | DegreeNode;
+
+export const createNode = (nodeDTO: NodeDTO) => {
+  if ("courses" in nodeDTO) {
+    return new CoreqNode(nodeDTO);
+  }
+  return new DegreeNode(nodeDTO);
+};
+
+export const getAllListings = (node: GraphNode<CoreqNodeData, any>): string => {
+  return node.data.courses
+    .reduce(
+      (listings: string, course: CourseDataDTO) =>
+        listings.concat(
+          course.listings.reduce((subListings, listing) => subListings.concat(`${listing.subj} ${listing.num} / `), "")
+        ),
+      ""
+    )
+    .slice(0, -3);
+};
+
+export const getSelectedName = (node: GraphNode<CustomNodeData, any>): string => {
+  return "courses" in node.data ? getSelectedListing(node as GraphNode<CoreqNodeData, any>) : node.data.title;
+};
+
+const getSelectedListing = (node: GraphNode<CoreqNodeData, any>): string => {
+  return node.data.courses
+    .map((course) => course.listings[course.selectedListing])
+    .reduce((listings: string, listing: ListingDataDTO) => listings.concat(`${listing.subj} ${listing.num} / `), "")
+    .slice(0, -3);
+};
+
+export type CustomNodeData = (Omit<CoreqNodeDTO, "id"> | Omit<DegreeNodeDTO, "id">) & {
   complete: boolean;
   hidden: boolean;
 };
+
+export type CoreqNodeData = Omit<CoreqNodeDTO, "id"> & CustomNodeData;
+
+export type DegreeNodeData = Omit<DegreeNodeDTO, "id"> & CustomNodeData;
 
 interface ICustomNode extends Node<CustomNodeData> {
   id: string;
   position: XYPosition;
   data: CustomNodeData;
-  type: "course";
+  type: "coreq" | "degree";
   width: "175px" | "185px";
   height: string;
   draggable: boolean;
-  deletable: boolean;
-  hidden: boolean;
-  connectable: boolean;
+  hidden: false;
+  connectable: false;
 }
 
-export class CustomNode implements ICustomNode {
-  readonly id: string;
-  position: XYPosition = { x: 0, y: 0 };
-  readonly data: CustomNodeData;
-  readonly type: "course" = "course";
+interface IDegreeNode extends ICustomNode {
+  data: DegreeNodeData;
+  type: "degree";
+  width: "175px";
+  height: "auto";
+  deletable: true;
+}
+
+interface ICoreqNode extends ICustomNode {
+  data: CoreqNodeData;
+  type: "coreq";
+  width: "175px" | "185px";
+  height: string;
+}
+
+class CoreqNode implements ICoreqNode {
+  readonly id;
+  position = { x: 0, y: 0 };
+  readonly data: CoreqNodeData;
+  readonly type = "coreq";
   readonly width: "175px" | "185px";
   readonly height: string;
   draggable: boolean = true;
   deletable: boolean = false;
-  readonly hidden: boolean = false;
-  readonly connectable: boolean = false;
+  readonly hidden = false;
+  readonly connectable = false;
   label?:
     | string
     | VNode<RendererNode, RendererElement, { [key: string]: any }>
@@ -64,7 +113,7 @@ export class CustomNode implements ICustomNode {
   zIndex?: number;
   ariaLabel?: string;
 
-  constructor(nodeDTO: NodeDTO) {
+  constructor(nodeDTO: CoreqNodeDTO) {
     this.id = nodeDTO.id.toString();
     this.data = {
       courses: nodeDTO.courses,
@@ -77,21 +126,45 @@ export class CustomNode implements ICustomNode {
   }
 }
 
-export function getAllListings(node: GraphNode<CustomNodeData, any>): string {
-  return node.data.courses
-    .reduce(
-      (listings: string, course: CourseFlowDTO) =>
-        listings.concat(
-          course.listings.reduce((subListings, listing) => subListings.concat(`${listing.subj} ${listing.num} / `), "")
-        ),
-      ""
-    )
-    .slice(0, -3);
-}
+class DegreeNode implements IDegreeNode {
+  readonly id;
+  position = { x: 0, y: 0 };
+  readonly data;
+  readonly type = "degree";
+  readonly width = "175px";
+  readonly height = "auto";
+  draggable = true;
+  readonly deletable = true;
+  readonly hidden = false;
+  readonly connectable = false;
+  label?:
+    | string
+    | VNode<RendererNode, RendererElement, { [key: string]: any }>
+    | Component<any, any, any, ComputedOptions, MethodOptions>;
+  targetPosition?: Position;
+  sourcePosition?: Position;
+  selectable?: boolean;
+  focusable?: boolean;
+  dragHandle?: string;
+  isValidTargetPos?: ValidConnectionFunc;
+  isValidSourcePos?: ValidConnectionFunc;
+  extent?: CoordinateExtent | ExtendedParentExtent | "parent";
+  expandParent?: boolean;
+  parentNode?: string;
+  class?: string | ClassFunc<GraphNode<any, any>>;
+  style?: Styles | StyleFunc<GraphNode<any, any>> = { pointerEvents: "none", opacity: "0" };
+  template?: NodeComponent;
+  zIndex?: number;
+  ariaLabel?: string;
 
-export function getSelectedListings(node: GraphNode<CustomNodeData, any>): string {
-  return node.data.courses
-    .map((course) => course.listings[course.selectedListing])
-    .reduce((listings: string, listing: ListingFlowDTO) => listings.concat(`${listing.subj} ${listing.num} / `), "")
-    .slice(0, -3);
+  constructor(degreeNodeDTO: DegreeNodeDTO) {
+    this.id = degreeNodeDTO.id;
+    this.data = {
+      title: degreeNodeDTO.title,
+      otherReqs: degreeNodeDTO.otherReqs,
+      complete: false,
+      hidden: false,
+      manual: true,
+    };
+  }
 }

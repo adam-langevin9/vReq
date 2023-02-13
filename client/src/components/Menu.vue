@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { computed, ref, type ComputedRef } from "vue";
+import { ref } from "vue";
+
+const props = defineProps<{
+  onSave: () => void;
+  onOpen: () => void;
+  onExport: () => void;
+}>();
 
 const menu = ref();
 const items = ref([
-  { label: "Save", icon: "pi pi-save" },
-  { label: "Open", icon: "pi pi-folder-open" },
-  { label: "Import Major", icon: "pi pi-map" },
-  { label: "Export Image", icon: "pi pi-file-export" },
+  { label: "Open", icon: "pi pi-folder-open", command: props.onOpen },
+  { label: "Save", icon: "pi pi-save", command: props.onSave },
+  { label: "Export", icon: "pi pi-file-export", command: props.onExport },
 ]);
 
 const toggle = (e: Event) => {

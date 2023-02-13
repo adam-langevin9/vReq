@@ -1,7 +1,6 @@
-import db from "../models";
+import { Listing } from "../models/init-models";
 import type { Request, Response } from "express";
 import type { ListingAttributes } from "../models/init-models";
-const Listing = db.Listing;
 export default {
   // Create and Save a new Listing
   create(req: Request, res: Response): void {

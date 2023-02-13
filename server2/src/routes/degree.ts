@@ -1,4 +1,4 @@
-import flow from "../controllers/flow";
+import degree from "../controllers/degree";
 
 import express, { Express } from "express";
 
@@ -7,8 +7,7 @@ export default (app: Express): void => {
 
   // Retrieve a Coreq's courses and listings by listing
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  router.get("/:subj/:num/:startYear", flow.findListingFlow);
-  router.get("/:degree_id/:startYear", flow.findDegreeFlow);
+  router.get("/", degree.findAll);
 
-  app.use("/api/flow", router);
+  app.use("/api/degree", router);
 };

@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { Handle, Position, type HandleConnectable, useNode } from "@vue-flow/core";
-import ListingSelect from "./ListingSelect.vue";
-import type { CustomNodeData } from "@/classes/CustomNode";
+import ListingSelect from "./Components/ListingSelect.vue";
+import type { CoreqNodeData } from "@/classes/CustomNode";
 import { computed, watchEffect } from "vue";
-import { useCourseFlow } from "@/stores/CourseFlowStore";
+import { useFlow } from "@/stores/FlowStore";
 
 const props = defineProps<{
   id: string;
-  data: CustomNodeData;
+  data: CoreqNodeData;
   connectable: HandleConnectable | undefined;
 }>();
 
 const self = useNode();
-const courseFlow = useCourseFlow();
+const flow = useFlow();
 
 if (self.node.data.manual) {
 }
@@ -28,7 +28,7 @@ watchEffect(() => {
   if (couldDeleteNode.value) {
     self.node.deletable = true;
     if (shouldDeleteNode.value) {
-      courseFlow.removeNodes([self.node]);
+      flow.removeNodes([self.node]);
     }
   } else if (shouldHideNode.value) {
     self.node.data.hidden = true;
@@ -63,7 +63,7 @@ watchEffect(() => {
       <PrimeButton
         icon="pi pi-search"
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
-        @click="() => courseFlow.search(course)"
+        @click="() => flow.search(course)"
       />
       <Handle id="target" type="target" :position="Position.Left" :connectable="connectable" />
       <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />

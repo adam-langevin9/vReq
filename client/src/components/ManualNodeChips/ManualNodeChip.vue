@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { CustomNodeData } from "@/classes/CustomNode";
-import { getSelectedListings } from "@/classes/CustomNode";
+import { getSelectedName, type CustomNodeData } from "@/classes/CustomNode";
 import type { GraphNode } from "@vue-flow/core";
 import { computed } from "vue";
 
@@ -8,7 +7,7 @@ const props = defineProps<{ node: GraphNode<CustomNodeData, any> }>();
 const removeNode = () => {
   props.node.data.manual = false;
 };
-const selectedListings = computed(() => getSelectedListings(props.node));
+const selectedListings = computed(() => getSelectedName(props.node));
 </script>
 <template>
   <div

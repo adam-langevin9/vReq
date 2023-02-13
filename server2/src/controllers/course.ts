@@ -1,9 +1,6 @@
-import db from "../models";
+import { Course, Listing } from "../models/init-models";
 import type { Request, Response } from "express";
 import { CourseAttributes } from "../models/init-models";
-
-const Course = db.Course;
-const Listing = db.Listing;
 
 export default {
   // Create and Save a new Course

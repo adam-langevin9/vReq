@@ -5,6 +5,7 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 import PrimeVue from "primevue/config";
+import DialogService from "primevue/dialogservice";
 
 // Assets
 import "primevue/resources/themes/lara-light-teal/theme.css";
@@ -31,10 +32,13 @@ import Divider from "primevue/divider";
 import Sidebar from "primevue/sidebar";
 import SplitButton from "primevue/splitbutton";
 import Chip from "primevue/chip";
+import ProgressSpinner from "primevue/progressspinner";
+import DynamicDialog from "primevue/dynamicdialog";
+import Skeleton from "primevue/skeleton";
 
 const app = createApp(App);
 
-app.use(createPinia()).use(router).use(PrimeVue);
+app.use(createPinia()).use(router).use(PrimeVue).use(DialogService);
 app
   .component("PrimeButton", Button)
   .component("PrimeInputMask", InputMask)
@@ -47,5 +51,9 @@ app
   .component("PrimeDivider", Divider)
   .component("PrimeSidebar", Sidebar)
   .component("PrimeSplitButton", SplitButton)
-  .component("PrimeChip", Chip);
+  .component("PrimeChip", Chip)
+  .component("PrimeSpinner", ProgressSpinner)
+  .component("PrimeDynamicDialog", DynamicDialog)
+  .component("PrimeSkeleton", Skeleton);
+
 app.mount("#app");

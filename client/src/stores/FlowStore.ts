@@ -1,26 +1,39 @@
-import { markRaw, ref, watch, type Ref } from "vue";
+import { markRaw, ref, watch, type ComputedRef, type Ref } from "vue";
 import { defineStore } from "pinia";
 import {
   useVueFlow,
   type EdgeComponent,
   type EdgeTypesObject,
+  type GraphEdge,
+  type GraphNode,
   type NodeComponent,
   type NodeTypesObject,
 } from "@vue-flow/core";
 import { getCourseFor } from "@/services/CourseDataService";
 import type { CourseDTO } from "@/services/CourseDataService";
 import { Layout } from "@/utils/LayoutUtility";
-import type { CustomNode } from "@/classes/CustomNode";
-import { getFlowFor, type CourseFlowDTO } from "@/services/FlowDataService";
-import CourseNode from "@/components/CourseFlow/CourseNode.vue";
-import CourseEdge from "@/components/CourseFlow/CourseEdge.vue";
+import type { CustomNode, CustomNodeData } from "@/classes/CustomNode";
+import { getCoreqFlow, getDegreeFlow, type CourseDataDTO } from "@/services/FlowDataService";
+import CoreqNode from "@/components/Flow/Components/Nodes/CoreqNode/CoreqNode.vue";
+import DegreeNode from "@/components/Flow/Components/Nodes/DegreeNode.vue";
+import CoreqEdge from "@/components/Flow/Components/Edges/CoreqEdge.vue";
+import DegreeEdge from "@/components/Flow/Components/Edges/DegreeEdge.vue";
+import type { CustomEdgeData } from "@/classes/CustomEdge";
 
-export const useCourseFlow = defineStore("CourseFlow", () => {
+export const useFlow = defineStore("Flow", () => {
+  const nodeTypes: NodeTypesObject = {
+    coreq: markRaw(CoreqNode) as NodeComponent,
+    degree: markRaw(DegreeNode) as NodeComponent,
+  };
+  const edgeTypes: EdgeTypesObject = {
+    coreq: markRaw(CoreqEdge) as EdgeComponent,
+    degree: markRaw(DegreeEdge) as EdgeComponent,
+  };
   const {
     edges,
     nodes,
-    getNodes,
-    getEdges,
+    getNodes: _getNodes,
+    getEdges: _getEdges,
     getNodesInitialized,
     setNodes,
     setEdges,
@@ -32,9 +45,9 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     addEdges,
     removeNodes,
     toObject,
-  } = useVueFlow({ id: "course-flow" });
-
-  const vueFlow = useVueFlow({ id: "course-flow" });
+  } = useVueFlow({ id: "course-flow", edgeTypes, nodeTypes });
+  const getEdges: ComputedRef<GraphEdge<CustomEdgeData, any>[]> = _getEdges;
+  const getNodes: ComputedRef<GraphNode<CustomNodeData, any>[]> = _getNodes;
 
   const storedFlow = localStorage.getItem("flow");
   if (storedFlow) {
@@ -44,7 +57,6 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     setEdges(flow.edges);
     setTransform({ x, y, zoom: flow.zoom || 0 });
   }
-
   watch(
     () => toObject(),
     (flow) => {
@@ -53,22 +65,14 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     { deep: true }
   );
 
-  const nodeTypes: NodeTypesObject = {
-    course: markRaw(CourseNode) as NodeComponent,
-  };
-  const edgeTypes: EdgeTypesObject = {
-    course: markRaw(CourseEdge) as EdgeComponent,
-  };
-
   const input = ref({ subj: "", num: "" });
   const searchResult: Ref<CourseDTO | undefined> = ref();
   const isNew = ref(true);
+  const isLoadingFlow = ref(false);
   const layout = new Layout();
   layout.autoLayout();
 
-  const courseChips = new Array<string>();
-
-  function search(course: CourseFlowDTO) {
+  function search(course: CourseDataDTO) {
     if (isNew.value) {
       isNew.value = false;
     }
@@ -92,7 +96,7 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     const uniqueNodes: CustomNode[] = [];
     newNodes.forEach((newNode) => {
       const existingNode = findNode(newNode.id);
-      if (existingNode) {
+      if (existingNode && "courses" in newNode.data) {
         existingNode.data.manual = existingNode.data.manual ? existingNode.data.manual : newNode.data.manual;
         existingNode.data.hidden = existingNode.data.hidden ? newNode.data.hidden : existingNode.data.hidden;
       } else {
@@ -102,14 +106,26 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     addNodes(uniqueNodes);
   }
 
-  function addInputToFlow() {
-    getFlowFor(input.value.subj, +input.value.num).then((flow) => {
-      if (flow) {
-        postNodes(flow.nodes);
-        addEdges(flow.edges);
-        layout.autoLayout();
-      }
-    });
+  async function addInputToFlow() {
+    isLoadingFlow.value = true;
+    const flow = await getCoreqFlow(input.value.subj, +input.value.num);
+    if (flow) {
+      postNodes(flow.nodes);
+      addEdges(flow.edges);
+      layout.autoLayout();
+    }
+    isLoadingFlow.value = false;
+  }
+
+  async function addDegreeToFlow(id: number) {
+    isLoadingFlow.value = true;
+    const flow = await getDegreeFlow(id);
+    if (flow) {
+      postNodes(flow.nodes);
+      addEdges(flow.edges);
+      layout.autoLayout();
+    }
+    isLoadingFlow.value = false;
   }
 
   function clear() {
@@ -123,18 +139,20 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     input,
     searchResult,
     isNew,
+    isLoadingFlow,
     layout,
     getNodes,
     getEdges,
     getNodesInitialized,
-    vueFlow,
     search,
     fitView,
     findNode,
     retrieveCourse,
     addInputToFlow,
+    addDegreeToFlow,
     findEdge,
     removeNodes,
     clear,
+    toObject,
   };
 });
