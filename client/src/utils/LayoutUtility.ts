@@ -25,7 +25,7 @@ export class Layout {
     );
   }
 
-  autoLayout = () => {
+  autoLayout = (): void => {
     const isVertical = this.direction === "TB";
     this.dagreGraph.setGraph({ rankdir: this.direction });
 

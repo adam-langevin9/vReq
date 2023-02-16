@@ -1,12 +1,12 @@
 import { getDegrees } from "@/services/DegreeDataService";
 import { defineStore } from "pinia";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 
-export const useAddDegreeModal = defineStore("AddDegree", () => {
+export const useEditorMenu = defineStore("EditorMenu", () => {
   const degrees = ref();
   const selectedDegree = ref();
 
-  const fillDegrees = async () => {
+  const fillDegrees = async (): Promise<void> => {
     degrees.value = await getDegrees();
   };
 

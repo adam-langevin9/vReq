@@ -3,6 +3,7 @@ import cors from "cors";
 import courseRoute from "./routes/course";
 import flowRoute from "./routes/flow";
 import degreeRoute from "./routes/degree";
+import userRoute from "./routes/user";
 
 import db from "./models";
 import * as dotenv from "dotenv";
@@ -31,6 +32,7 @@ app.use(function (_req, res, next) {
 courseRoute(app);
 flowRoute(app);
 degreeRoute(app);
+userRoute(app);
 
 dotenv.config();
 const port = process.env.OUT_PORT ?? 3000;

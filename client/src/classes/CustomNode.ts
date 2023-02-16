@@ -16,7 +16,7 @@ import type { CoreqNodeDTO, CourseDataDTO, DegreeNodeDTO, ListingDataDTO, NodeDT
 
 export type CustomNode = CoreqNode | DegreeNode;
 
-export const createNode = (nodeDTO: NodeDTO) => {
+export const createNode = (nodeDTO: NodeDTO): CustomNode => {
   if ("courses" in nodeDTO) {
     return new CoreqNode(nodeDTO);
   }
@@ -97,6 +97,7 @@ class CoreqNode implements ICoreqNode {
     | string
     | VNode<RendererNode, RendererElement, { [key: string]: any }>
     | Component<any, any, any, ComputedOptions, MethodOptions>;
+
   targetPosition?: Position;
   sourcePosition?: Position;
   selectable?: boolean;
@@ -141,6 +142,7 @@ class DegreeNode implements IDegreeNode {
     | string
     | VNode<RendererNode, RendererElement, { [key: string]: any }>
     | Component<any, any, any, ComputedOptions, MethodOptions>;
+
   targetPosition?: Position;
   sourcePosition?: Position;
   selectable?: boolean;

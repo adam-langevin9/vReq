@@ -20,7 +20,7 @@ import CoreqEdge from "@/components/Flow/Components/Edges/CoreqEdge.vue";
 import DegreeEdge from "@/components/Flow/Components/Edges/DegreeEdge.vue";
 import type { CustomEdgeData } from "@/classes/CustomEdge";
 
-export const useFlow = defineStore("Flow", () => {
+export const useCourseFlow = defineStore("CourseFlow", () => {
   const nodeTypes: NodeTypesObject = {
     coreq: markRaw(CoreqNode) as NodeComponent,
     degree: markRaw(DegreeNode) as NodeComponent,
@@ -46,8 +46,8 @@ export const useFlow = defineStore("Flow", () => {
     removeNodes,
     toObject,
   } = useVueFlow({ id: "course-flow", edgeTypes, nodeTypes });
-  const getEdges: ComputedRef<GraphEdge<CustomEdgeData, any>[]> = _getEdges;
-  const getNodes: ComputedRef<GraphNode<CustomNodeData, any>[]> = _getNodes;
+  const getEdges: ComputedRef<Array<GraphEdge<CustomEdgeData, any>>> = _getEdges;
+  const getNodes: ComputedRef<Array<GraphNode<CustomNodeData, any>>> = _getNodes;
 
   const storedFlow = localStorage.getItem("flow");
   if (storedFlow) {
@@ -72,7 +72,7 @@ export const useFlow = defineStore("Flow", () => {
   const layout = new Layout();
   layout.autoLayout();
 
-  function search(course: CourseDataDTO) {
+  function searchLoaded(course: CourseDataDTO): void {
     if (isNew.value) {
       isNew.value = false;
     }
@@ -83,16 +83,14 @@ export const useFlow = defineStore("Flow", () => {
     searchResult.value = { title: course.title, hours: course.hours, descr: course.descr };
   }
 
-  function retrieveCourse() {
+  async function retrieveCourse(): Promise<void> {
     if (isNew.value) {
       isNew.value = false;
     }
-    getCourseFor(input.value.subj, +input.value.num).then((course) => {
-      searchResult.value = course;
-    });
+    searchResult.value = await getCourseFor(input.value.subj, +input.value.num);
   }
 
-  function postNodes(newNodes: CustomNode[]) {
+  function postNodes(newNodes: CustomNode[]): void {
     const uniqueNodes: CustomNode[] = [];
     newNodes.forEach((newNode) => {
       const existingNode = findNode(newNode.id);
@@ -106,7 +104,7 @@ export const useFlow = defineStore("Flow", () => {
     addNodes(uniqueNodes);
   }
 
-  async function addInputToFlow() {
+  async function addInputToFlow(): Promise<void> {
     isLoadingFlow.value = true;
     const flow = await getCoreqFlow(input.value.subj, +input.value.num);
     if (flow) {
@@ -117,7 +115,7 @@ export const useFlow = defineStore("Flow", () => {
     isLoadingFlow.value = false;
   }
 
-  async function addDegreeToFlow(id: number) {
+  async function addDegreeToFlow(id: number): Promise<void> {
     isLoadingFlow.value = true;
     const flow = await getDegreeFlow(id);
     if (flow) {
@@ -128,7 +126,7 @@ export const useFlow = defineStore("Flow", () => {
     isLoadingFlow.value = false;
   }
 
-  function clear() {
+  function clear(): void {
     edges.value = [];
     nodes.value = [];
   }
@@ -144,7 +142,7 @@ export const useFlow = defineStore("Flow", () => {
     getNodes,
     getEdges,
     getNodesInitialized,
-    search,
+    searchLoaded,
     fitView,
     findNode,
     retrieveCourse,

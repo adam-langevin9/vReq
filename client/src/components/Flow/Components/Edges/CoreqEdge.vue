@@ -30,5 +30,3 @@ watchEffect(() => {
 <template>
   <BaseEdge v-if="!props.data.hidden" :id="id" :path="path[0]" :marker-end="markerEnd" />
 </template>
-
-<style></style>

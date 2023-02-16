@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { getSelectedName, type CustomNodeData } from "@/classes/CustomNode";
+import type { CustomNodeData } from "@/classes/CustomNode";
+import { getSelectedName } from "@/classes/CustomNode";
 import type { GraphNode } from "@vue-flow/core";
 import { computed } from "vue";
 

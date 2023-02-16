@@ -1,6 +1,5 @@
-import { Req } from "../models/init-models";
+import { Req, ReqAttributes } from "../models/init-models";
 import type { Request, Response } from "express";
-import { ReqAttributes } from "../models/init-models";
 export default {
   // Create and Save a new Req
   create(req: Request, res: Response): void {

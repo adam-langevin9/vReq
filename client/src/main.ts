@@ -35,6 +35,9 @@ import Chip from "primevue/chip";
 import ProgressSpinner from "primevue/progressspinner";
 import DynamicDialog from "primevue/dynamicdialog";
 import Skeleton from "primevue/skeleton";
+import Toast from "primevue/toast";
+import Dock from "primevue/dock";
+import Password from "primevue/password";
 
 const app = createApp(App);
 
@@ -54,6 +57,9 @@ app
   .component("PrimeChip", Chip)
   .component("PrimeSpinner", ProgressSpinner)
   .component("PrimeDynamicDialog", DynamicDialog)
-  .component("PrimeSkeleton", Skeleton);
+  .component("PrimeSkeleton", Skeleton)
+  .component("PrimeToast", Toast)
+  .component("PrimeDock", Dock)
+  .component("PrimePassword", Password);
 
 app.mount("#app");

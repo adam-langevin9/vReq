@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Handle, Position, type HandleConnectable, useNode } from "@vue-flow/core";
+import type { HandleConnectable } from "@vue-flow/core";
+import { Handle, Position, useNode } from "@vue-flow/core";
 import type { DegreeNodeData } from "@/classes/CustomNode";
 import { computed, watchEffect } from "vue";
-import { useFlow } from "@/stores/FlowStore";
+import { useCourseFlow } from "@/stores/CourseFlow.store";
 
 defineProps<{
   id: string;
@@ -11,14 +12,14 @@ defineProps<{
 }>();
 
 const self = useNode();
-const flow = useFlow();
+const courseFlow = useCourseFlow();
 
 const shouldDeleteNode = computed(() => !self.node.data.manual);
 self.node.style = { pointerEvents: "none", opacity: "0" };
 
 watchEffect(() => {
   if (shouldDeleteNode.value) {
-    flow.removeNodes([self.node]);
+    courseFlow.removeNodes([self.node]);
   }
 });
 </script>
@@ -31,15 +32,9 @@ watchEffect(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .node {
-  font-size: 1rem;
-  color: #495057;
-  border-radius: 3px;
-  text-align: center;
-  border-width: 1px;
-  border-style: solid;
-  background: #fff;
-  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
 }
 </style>

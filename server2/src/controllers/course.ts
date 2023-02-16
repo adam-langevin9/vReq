@@ -1,6 +1,5 @@
-import { Course, Listing } from "../models/init-models";
+import { Course, Listing, CourseAttributes } from "../models/init-models";
 import type { Request, Response } from "express";
-import { CourseAttributes } from "../models/init-models";
 
 export default {
   // Create and Save a new Course

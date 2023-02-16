@@ -2,15 +2,15 @@ import { getRecentReq } from "./ReqUtilities";
 import { Coreq, Course, Degree, Listing } from "../models/init-models";
 import { isParsedComboCoreq, createParsedComboCoreq, ParsedComboCoreq } from "./ParsedComboCoreqFactory";
 
-type DegreeFlowComponents = {
-  edges: Array<EdgeData>;
+interface DegreeFlowComponents {
+  edges: EdgeData[];
   nodes: Array<CoreqNodeData | DegreeNodeData>;
-};
+}
 
-type CoreqFlowComponents = {
-  edges: Array<EdgeData>;
-  nodes: Array<CoreqNodeData>;
-};
+interface CoreqFlowComponents {
+  edges: EdgeData[];
+  nodes: CoreqNodeData[];
+}
 
 export const getDegreeFlow = async (targetDegree: Degree, startYear?: number): Promise<DegreeFlowComponents> => {
   const edges: EdgeData[] = [];
@@ -50,9 +50,9 @@ export const getCoreqFlow = async (
   return { edges: initializeSelectedOptions(uniqueIDs(edges)), nodes: uniqueIDs(nodes) };
 };
 
-const initializeSelectedOptions = (edges: Array<EdgeData>) => {
+const initializeSelectedOptions = (edges: EdgeData[]): EdgeData[] => {
   const altEdges = edges.filter((edge) => edge.altCombo);
-  for (var i = 0; i < altEdges.length; i++) {
+  for (let i = 0; i < altEdges.length; i++) {
     altEdges[i].altCombo!.selectedOptionID = altEdges.filter(
       (otherEdge) => otherEdge.altCombo!.comboID === altEdges[i].altCombo!.comboID
     )[0].altCombo!.optionID;
@@ -60,8 +60,8 @@ const initializeSelectedOptions = (edges: Array<EdgeData>) => {
   return edges;
 };
 
-function uniqueIDs(data: Array<CoreqNodeData>): Array<CoreqNodeData>;
-function uniqueIDs(data: Array<EdgeData>): Array<EdgeData>;
+function uniqueIDs(data: CoreqNodeData[]): CoreqNodeData[];
+function uniqueIDs(data: EdgeData[]): EdgeData[];
 function uniqueIDs(data: Array<CoreqNodeData | EdgeData>): Array<CoreqNodeData | EdgeData> {
   return data.reduce(
     (acc, curr) => (acc.map((accItem) => accItem.id).includes(curr.id) ? acc : [...acc, curr]),
@@ -229,13 +229,13 @@ class EdgeData {
   animated: boolean;
   altCombo?: AltCombo;
 
-  private static createEdgeID = (source: Coreq, target: Coreq | Degree): string =>
+  private static readonly createEdgeID = (source: Coreq, target: Coreq | Degree): string =>
     "c" + source.id.toString() + "-" + EdgeData.getTargetID(target);
 
-  private static getTargetID = (target: Coreq | Degree) =>
+  private static readonly getTargetID = (target: Coreq | Degree) =>
     "prereq_id" in target ? "c" + target.id.toString() : "d" + target.id.toString();
 
-  private static getSourceID = (target: Coreq) => "c" + target.id.toString();
+  private static readonly getSourceID = (target: Coreq) => "c" + target.id.toString();
 
   constructor(target: Coreq | Degree, type: "prereq" | "precoreq", source: Coreq, comboID?: number, optionID?: number) {
     this.id = EdgeData.createEdgeID(source, target);

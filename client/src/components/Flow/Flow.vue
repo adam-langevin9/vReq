@@ -3,38 +3,33 @@ import { VueFlow } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
-import { useFlow } from "@/stores/FlowStore";
-import ManualNodeChips from "@/components/ManualNodeChips/ManualNodeChips.vue";
+import { useCourseFlow } from "@/stores/CourseFlow.store";
 
-const minHeight = "30rem";
-const maxWidth = "80%";
-const flow = useFlow();
+const courseFlow = useCourseFlow();
 
 function printFlowData() {
   console.log("==========");
   console.log("Flow Data");
   console.log("----------");
-  console.log(flow.toObject());
+  console.log(courseFlow.toObject());
   console.log("==========");
 }
 </script>
 
 <template>
-  <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 100px; left: 20px" />
+  <!-- <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 100px; left: 20px" /> -->
 
-  <ManualNodeChips />
-
-  <div class="flex justify-content-center m-2 mb-8">
+  <div class="flow-container flex justify-content-center flex-column">
     <VueFlow
       id="course-flow"
-      class="visual flex justify-content-center align-items-center"
-      :node-types="flow.nodeTypes"
-      :edge-types="flow.edgeTypes"
+      class="visual flex justify-content-center align-items-center align-self-stretch flex-grow-1"
+      :node-types="courseFlow.nodeTypes"
+      :edge-types="courseFlow.edgeTypes"
       :default-zoom="1.5"
       :min-zoom="0.2"
       :max-zoom="4"
     >
-      <PrimeSpinner v-if="flow.isLoadingFlow" style="z-index: 10" />
+      <PrimeSpinner v-if="courseFlow.isLoadingFlow" style="z-index: 10" />
       <div class="">
         <Background class="background" />
         <MiniMap />
@@ -45,11 +40,15 @@ function printFlowData() {
 </template>
 
 <style scoped>
+.flow-container {
+  min-height: 100vh;
+  padding: 4vh 5vw 4vh 9vw;
+}
 .visual {
-  max-width: v-bind(maxWidth);
-  min-height: v-bind(minHeight);
+  width: 100%;
+  height: 100%;
 }
 .background {
-  min-height: v-bind(minHeight);
+  height: 100%;
 }
 </style>

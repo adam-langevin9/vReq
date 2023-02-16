@@ -3,30 +3,59 @@ import type { AxiosResponse } from "axios";
 import { createNode, type CustomNode } from "@/classes/CustomNode";
 import { createEdge, type CustomEdge } from "@/classes/CustomEdge";
 
-export type ListingDataDTO = { id: number; subj: string; num: number };
-export type CourseDataDTO = {
+export interface ListingDataDTO {
+  id: number;
+  subj: string;
+  num: number;
+}
+export interface CourseDataDTO {
   id: number;
   title: string;
   descr: string;
   hours: string;
-  listings: Array<ListingDataDTO>;
+  listings: ListingDataDTO[];
   selectedListing: number;
-};
-export type CoreqNodeDTO = { id: string; courses: Array<CourseDataDTO>; manual: boolean };
-export type DegreeNodeDTO = { id: string; title: string; otherReqs?: string; manual: boolean };
+}
+export interface CoreqNodeDTO {
+  id: string;
+  courses: CourseDataDTO[];
+  manual: boolean;
+}
+export interface DegreeNodeDTO {
+  id: string;
+  title: string;
+  otherReqs?: string;
+  manual: boolean;
+}
 export type NodeDTO = CoreqNodeDTO | DegreeNodeDTO;
 
-export type AltComboDTO = { comboID: number; optionID: number; selectedOptionID: number };
-export type EdgeDTO = { id: string; source: string; target: string; animated: boolean; altCombo: AltComboDTO };
+export interface AltComboDTO {
+  comboID: number;
+  optionID: number;
+  selectedOptionID: number;
+}
+export interface EdgeDTO {
+  id: string;
+  source: string;
+  target: string;
+  animated: boolean;
+  altCombo: AltComboDTO;
+}
 
-type CoreqFlowDTO = { edges: Array<EdgeDTO>; nodes: Array<CoreqNodeDTO> };
-export type FlowDTO = { edges: Array<EdgeDTO>; nodes: Array<NodeDTO> };
+interface CoreqFlowDTO {
+  edges: EdgeDTO[];
+  nodes: CoreqNodeDTO[];
+}
+export interface FlowDTO {
+  edges: EdgeDTO[];
+  nodes: NodeDTO[];
+}
 
 export async function getCoreqFlow(
   subj: string,
   num: number,
   startYear: number = new Date().getFullYear()
-): Promise<{ nodes: Array<CustomNode>; edges: Array<CustomEdge> } | undefined> {
+): Promise<{ nodes: CustomNode[]; edges: CustomEdge[] } | undefined> {
   const flowDTOs = await getCoreqFlowDTOsFor(subj, num, startYear);
   if (!flowDTOs) {
     return;
@@ -39,7 +68,7 @@ export async function getCoreqFlow(
 export async function getDegreeFlow(
   degree_id: number,
   startYear: number = new Date().getFullYear()
-): Promise<{ nodes: Array<CustomNode>; edges: Array<CustomEdge> } | undefined> {
+): Promise<{ nodes: CustomNode[]; edges: CustomEdge[] } | undefined> {
   const flowDTOs = await getDegreeFlowDTOsFor(degree_id, startYear);
   if (!flowDTOs) {
     return;

@@ -3,9 +3,7 @@ import { DataTypes, Model } from "sequelize";
 import type { ComboCombo, ComboComboId } from "./combo_combo";
 import type { ComboCoreq, ComboCoreqId } from "./combo_coreq";
 import type { Coreq, CoreqId } from "./coreq";
-import type { Node } from "./node";
 import type { Req, ReqId } from "./req";
-import type { Visual, VisualId } from "./visual";
 
 export interface ComboAttributes {
   id: number;
@@ -134,16 +132,6 @@ export class Combo extends Model<ComboAttributes, ComboCreationAttributes> imple
   hasCoreq_id_coreqs!: Sequelize.BelongsToManyHasAssociationsMixin<Coreq, CoreqId>;
 
   countCoreq_id_coreqs!: Sequelize.BelongsToManyCountAssociationsMixin;
-  // Combo hasMany Node via selected_precoreqs
-  nodes!: Node[];
-  getNodes!: Sequelize.HasManyGetAssociationsMixin<Node>;
-  createNode!: Sequelize.HasManyCreateAssociationMixin<Node>;
-  countNodes!: Sequelize.HasManyCountAssociationsMixin;
-  // Combo hasMany Node via selected_prereqs
-  selected_prereqs_nodes!: Node[];
-  getSelected_prereqs_nodes!: Sequelize.HasManyGetAssociationsMixin<Node>;
-  createSelected_prereqs_node!: Sequelize.HasManyCreateAssociationMixin<Node>;
-  countSelected_prereqs_nodes!: Sequelize.HasManyCountAssociationsMixin;
   // Combo hasMany Req via combo_id
   reqs!: Req[];
   getReqs!: Sequelize.HasManyGetAssociationsMixin<Req>;
@@ -156,18 +144,6 @@ export class Combo extends Model<ComboAttributes, ComboCreationAttributes> imple
   hasReq!: Sequelize.HasManyHasAssociationMixin<Req, ReqId>;
   hasReqs!: Sequelize.HasManyHasAssociationsMixin<Req, ReqId>;
   countReqs!: Sequelize.HasManyCountAssociationsMixin;
-  // Combo hasMany Visual via selected_reqs
-  visuals!: Visual[];
-  getVisuals!: Sequelize.HasManyGetAssociationsMixin<Visual>;
-  setVisuals!: Sequelize.HasManySetAssociationsMixin<Visual, VisualId>;
-  addVisual!: Sequelize.HasManyAddAssociationMixin<Visual, VisualId>;
-  addVisuals!: Sequelize.HasManyAddAssociationsMixin<Visual, VisualId>;
-  createVisual!: Sequelize.HasManyCreateAssociationMixin<Visual>;
-  removeVisual!: Sequelize.HasManyRemoveAssociationMixin<Visual, VisualId>;
-  removeVisuals!: Sequelize.HasManyRemoveAssociationsMixin<Visual, VisualId>;
-  hasVisual!: Sequelize.HasManyHasAssociationMixin<Visual, VisualId>;
-  hasVisuals!: Sequelize.HasManyHasAssociationsMixin<Visual, VisualId>;
-  countVisuals!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof Combo {
     return Combo.init(

@@ -1,9 +1,5 @@
 import * as Sequelize from "sequelize";
 import { DataTypes, Model, Optional } from "sequelize";
-import type { Combo, ComboId } from "./combo";
-import type { Degree, DegreeId } from "./degree";
-import { ListingId } from "./listing";
-import type { Node } from "./node";
 import type { User, UserId } from "./user";
 
 export interface VisualAttributes {
@@ -11,13 +7,12 @@ export interface VisualAttributes {
   title: string;
   user_id: string;
   start_year: number;
-  selected_reqs?: number;
-  degree_id?: number;
+  elements: JSON;
 }
 
 export type VisualPk = "id";
 export type VisualId = Visual[VisualPk];
-export type VisualOptionalAttributes = "id" | "selected_reqs" | "degree_id";
+export type VisualOptionalAttributes = "id";
 export type VisualCreationAttributes = Optional<VisualAttributes, VisualOptionalAttributes>;
 
 export class Visual extends Model<VisualAttributes, VisualCreationAttributes> implements VisualAttributes {
@@ -25,37 +20,13 @@ export class Visual extends Model<VisualAttributes, VisualCreationAttributes> im
   title!: string;
   user_id!: string;
   start_year!: number;
-  selected_reqs?: number;
-  degree_id?: number;
+  elements!: JSON;
 
-  // Visual belongsTo Combo via selected_reqs
-  selected_reqs_combo!: Combo;
-  getSelected_reqs_combo!: Sequelize.BelongsToGetAssociationMixin<Combo>;
-  setSelected_reqs_combo!: Sequelize.BelongsToSetAssociationMixin<Combo, ComboId>;
-
-  createSelected_reqs_combo!: Sequelize.BelongsToCreateAssociationMixin<Combo>;
-  // Visual belongsTo Degree via degree_id
-  degree!: Degree;
-  getDegree!: Sequelize.BelongsToGetAssociationMixin<Degree>;
-  setDegree!: Sequelize.BelongsToSetAssociationMixin<Degree, DegreeId>;
-  createDegree!: Sequelize.BelongsToCreateAssociationMixin<Degree>;
   // Visual belongsTo User via user_id
   user!: User;
   getUser!: Sequelize.BelongsToGetAssociationMixin<User>;
   setUser!: Sequelize.BelongsToSetAssociationMixin<User, UserId>;
   createUser!: Sequelize.BelongsToCreateAssociationMixin<User>;
-  // Visual hasMany Node via vis_id
-  nodes!: Node[];
-  getNodes!: Sequelize.HasManyGetAssociationsMixin<Node>;
-  setNodes!: Sequelize.HasManySetAssociationsMixin<Node, ListingId>;
-  addNode!: Sequelize.HasManyAddAssociationMixin<Node, ListingId>;
-  addNodes!: Sequelize.HasManyAddAssociationsMixin<Node, ListingId>;
-  createNode!: Sequelize.HasManyCreateAssociationMixin<Node>;
-  removeNode!: Sequelize.HasManyRemoveAssociationMixin<Node, ListingId>;
-  removeNodes!: Sequelize.HasManyRemoveAssociationsMixin<Node, ListingId>;
-  hasNode!: Sequelize.HasManyHasAssociationMixin<Node, ListingId>;
-  hasNodes!: Sequelize.HasManyHasAssociationsMixin<Node, ListingId>;
-  countNodes!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof Visual {
     return Visual.init(
@@ -82,21 +53,9 @@ export class Visual extends Model<VisualAttributes, VisualCreationAttributes> im
           type: DataTypes.INTEGER.UNSIGNED,
           allowNull: false,
         },
-        selected_reqs: {
-          type: DataTypes.INTEGER.UNSIGNED,
-          allowNull: true,
-          references: {
-            model: "Combos",
-            key: "id",
-          },
-        },
-        degree_id: {
-          type: DataTypes.INTEGER.UNSIGNED,
-          allowNull: true,
-          references: {
-            model: "Degrees",
-            key: "id",
-          },
+        elements: {
+          type: DataTypes.JSON,
+          allowNull: false,
         },
       },
       {
@@ -115,16 +74,6 @@ export class Visual extends Model<VisualAttributes, VisualCreationAttributes> im
             unique: true,
             using: "BTREE",
             fields: [{ name: "title" }, { name: "user_id" }],
-          },
-          {
-            name: "vis_combo_fk_idx",
-            using: "BTREE",
-            fields: [{ name: "selected_reqs" }],
-          },
-          {
-            name: "vis_degree_fk_idx",
-            using: "BTREE",
-            fields: [{ name: "degree_id" }],
           },
           {
             name: "vis_user_fk_idx",

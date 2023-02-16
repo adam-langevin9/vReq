@@ -1,26 +1,20 @@
 <script setup lang="ts">
 // Components
-import CourseSearch from "@/components/CourseSearch.vue";
 import Flow from "@/components/Flow/Flow.vue";
-import AltSelectorPanel from "@/components/AltSelector/AltSelectorPanel.vue";
-import Menu from "@/components/Menu.vue";
 
 // Stores
-import { useAltSelector } from "@/stores/AltSelectorStore";
-import AddCourseButton from "@/components/AddCourseButton.vue";
+import MenuDock from "@/components/Menus/MenuDock.vue";
+import { useMenuDock } from "@/stores/Menus/MenuDock.store";
 
-const altSelector = useAltSelector();
+const menuDock = useMenuDock();
 </script>
 
 <template>
-  <main :class="altSelector.isOpenThird ? 'condense' : ''">
-    <Menu :onSave="() => {}" :onOpen="() => {}" :onExport="() => {}" />
-    <PrimeDynamicDialog />
-    <CourseSearch />
-    <AddCourseButton />
+  <main :class="menuDock.displayMenu ? 'condense' : ''">
+    <MenuDock />
+    <PrimeToast />
     <Flow />
   </main>
-  <AltSelectorPanel />
 </template>
 
 <style>
@@ -30,15 +24,14 @@ html {
 }
 main {
   width: 100%;
-  -webkit-transition: width 0.25s ease-in-out;
-  -moz-transition: width 0.25s ease-in-out;
-  -o-transition: width 0.25s ease-in-out;
+  transform: translateX(0) scaleX(1);
+  transform-origin: left;
   transition: width 0.25s ease-in-out;
+  transition: transform 0.25s ease-in-out;
 }
 .condense {
-  width: -webkit-calc(100% - 480px);
-  width: -moz-calc(100% - 480px);
-  width: -o-calc(100% - 480px);
-  width: calc(100% - 480px);
+  width: calc(100% - 30rem);
+  transform: translateX(30rem);
+  transform-origin: left;
 }
 </style>

@@ -2,7 +2,7 @@ import flow from "../controllers/flow";
 
 import express, { Express } from "express";
 
-export default (app: Express): void => {
+export default async (app: Express): Promise<void> => {
   const router = express.Router();
 
   // Retrieve a Coreq's courses and listings by listing

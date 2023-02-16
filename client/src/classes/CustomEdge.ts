@@ -4,10 +4,10 @@ import type { AltComboDTO, EdgeDTO } from "@/services/FlowDataService";
 
 export type altCombo = AltComboDTO;
 
-export type CustomEdgeData = {
+export interface CustomEdgeData {
   hidden: boolean;
   altCombo?: altCombo;
-};
+}
 
 export type CustomEdge = DefaultEdge<CustomEdgeData> &
   Omit<EdgeDTO, "altCombo"> & {

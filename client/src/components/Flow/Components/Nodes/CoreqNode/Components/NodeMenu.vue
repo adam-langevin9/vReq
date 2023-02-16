@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { GraphNode } from "@vue-flow/core";
 import type Menu from "primevue/menu";
-import { useFlow } from "@/stores/FlowStore";
+import { useCourseFlow } from "@/stores/CourseFlow.store";
 
 defineProps<{
   node: GraphNode<any, any>;
@@ -22,7 +22,7 @@ export default {
           label: this.isCoreq() ? "Remove Group" : "Remove Course",
           icon: "pi pi-trash",
           command: () => {
-            useFlow().removeNodes([this.node]);
+            useCourseFlow().removeNodes([this.node]);
           },
         },
       ],

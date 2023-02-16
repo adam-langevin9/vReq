@@ -27,7 +27,7 @@ const optionValue = (option: ListingDataDTO) => props.detailedCourse.listings.in
   </div>
 </template>
 
-<style>
+<style scoped>
 .single-listing {
   padding: 0.75rem;
   min-width: 6rem;
@@ -35,26 +35,26 @@ const optionValue = (option: ListingDataDTO) => props.detailedCourse.listings.in
 .crosslisting:hover {
   background: rgba(100, 116, 139, 0.04);
 }
-.p-inputtext {
+.crosslisting:deep(.p-inputtext) {
   padding: 0.75rem 0.25rem 0.75rem 0.25rem !important;
   text-align: left;
 }
-.p-dropdown .p-inputtext {
+.crosslisting:deep(.p-inputtext) {
   border-radius: 0 !important;
   width: 6rem !important;
 }
-.p-dropdown-trigger-icon.pi.pi-chevron-down {
+.crosslisting:deep(.p-dropdown-trigger-icon.pi.pi-chevron-down) {
   position: relative;
   right: 0.75rem;
 }
 .p-dropdown:not(.p-focus),
-.p-dropdown.p-disabled {
+.crosslisting:deep(.p-dropdown .p-disabled) {
   border-width: 0 !important;
   box-shadow: unset !important;
   border-color: transparent !important;
   min-width: 6rem !important;
 }
-.p-dropdown .p-dropdown-trigger {
+.crosslisting:deep(.p-dropdown-trigger) {
   width: 0 !important;
 }
 .start {
