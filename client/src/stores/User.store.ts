@@ -2,16 +2,16 @@ import { defineStore } from "pinia";
 import type { Ref } from "vue";
 import { ref } from "vue";
 import { createUser, loginUser } from "@/services/UserDataService";
+import { useFileMenu } from "./Menus/FileMenu.store";
 
 export const useUser = defineStore("User", () => {
   const id: Ref<string | undefined> = ref("aml");
-  const visuals = ref();
 
   const login = async (username: string, password: string): Promise<void> => {
-    const someVisuals = await loginUser(username, password);
-    if (someVisuals !== undefined) {
-      id.value = username;
-      visuals.value = visuals;
+    const response = await loginUser(username, password);
+    if (response !== undefined) {
+      id.value = response.id;
+      useFileMenu().visuals = response.visuals;
     }
   };
   const create = async (username: string, password: string): Promise<void> => {
@@ -21,5 +21,5 @@ export const useUser = defineStore("User", () => {
     }
   };
 
-  return { id, visuals, login, create };
+  return { id, login, create };
 });

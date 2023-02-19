@@ -4,13 +4,12 @@ import { Combo, Coreq, Course, Degree, Req, Listing } from "../models/init-model
 
 export default {
   async findListingFlow(req: Request, res: Response): Promise<void> {
-    const subj = req.params.subj;
-    const num = +req.params.num;
-    const startYear = +req.params.startYear;
-    const condition = { subj, num };
+    const subj = req.query.subj as string;
+    const num = +req.query.num!;
+    const start_year = req.query.start_year ? +req.query.start_year : undefined;
 
     const selectedListing = await Listing.findOne({
-      where: condition,
+      where: { subj, num },
       include: {
         model: Course,
         as: "course",
@@ -36,14 +35,14 @@ export default {
       return;
     }
 
-    const flow = await getCoreqFlow(selectedListing.course.coreq, selectedListing, startYear);
+    const flow = await getCoreqFlow(selectedListing.course.coreq, selectedListing, start_year);
 
-    res.send(flow);
+    res.status(200).send(flow);
   },
 
   async findDegreeFlow(req: Request, res: Response): Promise<void> {
-    const degree_id = +req.params.degree_id;
-    const startYear = +req.params.startYear;
+    const degree_id = +req.query.degreeId!;
+    const start_year = req.query.startYear ? +req.query.startYear : undefined;
 
     const degree = await Degree.findByPk(degree_id, {
       include: [
@@ -66,8 +65,8 @@ export default {
       return;
     }
 
-    const flow = await getDegreeFlow(degree, startYear);
+    const flow = await getDegreeFlow(degree, start_year);
 
-    res.send(flow);
+    res.status(200).send(flow);
   },
 };

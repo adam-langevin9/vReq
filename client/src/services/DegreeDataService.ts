@@ -5,6 +5,6 @@ export interface DegreeDTO {
   title: string;
 }
 export async function getDegrees(): Promise<DegreeDTO[]> {
-  const response: AxiosResponse<DegreeDTO[]> = await http.get("/degree/");
+  const response: AxiosResponse<DegreeDTO[]> = await http.get("/degree");
   return response?.data;
 }

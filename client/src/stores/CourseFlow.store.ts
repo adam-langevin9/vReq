@@ -65,6 +65,7 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     { deep: true }
   );
 
+  const startYear = ref(new Date().getFullYear());
   const input = ref({ subj: "", num: "" });
   const searchResult: Ref<CourseDTO | undefined> = ref();
   const isNew = ref(true);
@@ -134,6 +135,7 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   return {
     nodeTypes,
     edgeTypes,
+    startYear,
     input,
     searchResult,
     isNew,

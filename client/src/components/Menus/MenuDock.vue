@@ -7,6 +7,7 @@ import { useAlternativesMenu } from "@/stores/Menus/AlternativesMenu.store";
 import AltSelectorGroup from "./AltSelector/AltSelectorGroup.vue";
 import UserMenu from "./UserMenu.vue";
 import { useUser } from "@/stores/User.store";
+import FileMenu from "./FileMenu.vue";
 
 const menuDock = useMenuDock();
 const altMenu = useAlternativesMenu();
@@ -67,7 +68,7 @@ const dockItems = ref([
       </PrimeAccordionTab>
     </PrimeAccordion>
   </MenuPanel>
-  <MenuPanel title="File" v-model="menuDock.displayFile" />
+  <MenuPanel title="File" v-model="menuDock.displayFile"><FileMenu></FileMenu></MenuPanel>
   <PrimeDock :model="dockItems" position="left">
     <template #item="{ item }">
       <a href="#" class="p-dock-item" @click="item.command">

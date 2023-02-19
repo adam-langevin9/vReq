@@ -1,19 +1,19 @@
 import type { AxiosResponse } from "axios";
 import http from "../http-common";
-export interface VisualDTO {
-  id: number;
-  title: string;
-  start_year: number;
-  elements: JSON;
-}
-export async function createUser(id: string, pw: string): Promise<boolean> {
-  const response: AxiosResponse<boolean> = await http.get(`/user/create/${id}/${pw}`);
-  if (response?.data) return response?.data;
-  return false;
+import type { VisualDTO } from "./VisualDataService";
+export type UserDTO = {
+  id: string;
+  visuals: VisualDTO[];
+};
+
+export async function createUser(id: string, pw: string): Promise<UserDTO | undefined> {
+  const response: AxiosResponse<UserDTO> = await http.put("/user", { id, pw });
+  if (response.status >= 200 && response.status < 300) return response.data;
+  return;
 }
 
-export async function loginUser(id: string, pw: string): Promise<VisualDTO[] | undefined> {
-  const response: AxiosResponse<VisualDTO[]> = await http.get(`/user/login/${id}/${pw}`);
-  if (response?.data) return response?.data;
-  return undefined;
+export async function loginUser(id: string, pw: string): Promise<UserDTO | undefined> {
+  const response: AxiosResponse<UserDTO> = await http.post("/user", { id, pw });
+  if (response.status >= 200 && response.status < 300) return response.data;
+  return;
 }

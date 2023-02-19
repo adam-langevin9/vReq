@@ -47,7 +47,7 @@ watchEffect(() => {
       v-for="course in data.courses"
     >
       <PrimeButton
-        icon="pi pi-check"
+        :icon="self.node.data.complete ? 'pi pi-check-square' : 'pi pi-stop'"
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
         @click="
           () => {
@@ -61,7 +61,7 @@ watchEffect(() => {
         :complete="self.node.data.complete"
       />
       <PrimeButton
-        icon="pi pi-search"
+        icon="pi pi-info-circle"
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
         @click="() => courseFlow.searchLoaded(course)"
       />

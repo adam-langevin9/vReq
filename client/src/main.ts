@@ -38,6 +38,7 @@ import Skeleton from "primevue/skeleton";
 import Toast from "primevue/toast";
 import Dock from "primevue/dock";
 import Password from "primevue/password";
+import InputText from "primevue/inputtext";
 
 const app = createApp(App);
 
@@ -60,6 +61,7 @@ app
   .component("PrimeSkeleton", Skeleton)
   .component("PrimeToast", Toast)
   .component("PrimeDock", Dock)
-  .component("PrimePassword", Password);
+  .component("PrimePassword", Password)
+  .component("PrimeInputText", InputText).component;
 
 app.mount("#app");

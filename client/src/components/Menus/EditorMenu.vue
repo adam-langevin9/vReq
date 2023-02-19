@@ -3,43 +3,32 @@ import ManualNodeChips from "@/components/ManualNodeChips/ManualNodeChips.vue";
 import { useEditorMenu } from "@/stores/Menus/EditorMenu.store";
 import { useCourseFlow } from "@/stores/CourseFlow.store";
 const editorMenu = useEditorMenu();
-editorMenu.fillDegrees();
+if (!editorMenu.degrees) editorMenu.fillDegrees();
 const courseFlow = useCourseFlow();
 </script>
 <template>
   <PrimeDivider class="m-0" />
 
   <h3 class="flex justify-content-center m-0">Add Course(s)</h3>
-  <div class="flex justify-content-center gap-2 pt-4">
-    <div class="flex flex-grow-1">
-      <span class="p-float-label">
-        <PrimeInputMask
-          class="w-full keep-style"
-          id="subject"
-          v-model="courseFlow.input.subj"
-          mask="aaa?a"
-          slotChar=""
-          style="text-transform: uppercase"
-        />
-        <label for="subject">Course Subject</label>
-      </span>
-    </div>
-
-    <div class="">
-      <span class="p-float-label">
-        <PrimeInputMask id="number" class="w-full keep-style" v-model="courseFlow.input.num" mask="999" slotChar="" />
-        <label for="number">Course Number</label>
-      </span>
-    </div>
-
-    <div class="">
-      <PrimeButton
-        @click="courseFlow.retrieveCourse"
-        icon="pi pi-info-circle"
-        iconPos="right"
-        class="p-button-secondary"
+  <div class="p-inputgroup">
+    <span class="p-float-label">
+      <PrimeInputMask
+        class="w-full keep-style"
+        id="subject"
+        v-model="courseFlow.input.subj"
+        mask="aaa?a"
+        slotChar=""
+        style="text-transform: uppercase"
       />
-    </div>
+      <label for="subject">Course Subject</label>
+    </span>
+
+    <span class="p-float-label">
+      <PrimeInputMask id="number" v-model="courseFlow.input.num" mask="999" slotChar="" />
+      <label for="number">Course Number</label>
+    </span>
+
+    <PrimeButton @click="courseFlow.retrieveCourse" icon="pi pi-info-circle" class="p-button-secondary pl-4 pr-4" />
   </div>
 
   <PrimeCard v-if="courseFlow.searchResult">

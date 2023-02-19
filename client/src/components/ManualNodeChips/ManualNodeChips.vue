@@ -4,19 +4,9 @@ import { useCourseFlow } from "@/stores/CourseFlow.store";
 import ManualNodeChip from "./ManualNodeChip.vue";
 const courseFlow = useCourseFlow();
 </script>
-<script lang="ts">
-export default {
-  methods: {
-    forceUpdate() {
-      console.log("forcing update");
-      this.$forceUpdate();
-    },
-  },
-};
-</script>
 <template>
   <div class="flex flex-row flex-wrap m-2 align-items-center justify-content-center">
-    <div class="flex flex-row flex-wrap m-2 chips">
+    <div class="flex flex-row flex-wrap m-2 chips align-items-center justify-content-center">
       <ManualNodeChip
         v-for="node in courseFlow.getNodes
           .filter((node) => node.data.manual)

@@ -1,7 +1,7 @@
-import http from "../http-common";
 import type { AxiosResponse } from "axios";
 import { createNode, type CustomNode } from "@/classes/CustomNode";
 import { createEdge, type CustomEdge } from "@/classes/CustomEdge";
+import http from "../http-common";
 
 export interface ListingDataDTO {
   id: number;
@@ -79,11 +79,11 @@ export async function getDegreeFlow(
 }
 
 async function getCoreqFlowDTOsFor(subj: string, num: number, startYear: number): Promise<CoreqFlowDTO | undefined> {
-  const response: AxiosResponse<CoreqFlowDTO> = await http.get(`/flow/${subj}/${num}/${startYear}`);
-  return response?.data;
+  const response: AxiosResponse<CoreqFlowDTO> = await http.get("/flow", { params: { subj, num, startYear } });
+  return response.data;
 }
 
-async function getDegreeFlowDTOsFor(degree_id: number, startYear: number): Promise<FlowDTO | undefined> {
-  const response: AxiosResponse<FlowDTO> = await http.get(`/flow/${degree_id}/${startYear}`);
-  return response?.data;
+async function getDegreeFlowDTOsFor(degreeId: number, startYear: number): Promise<FlowDTO | undefined> {
+  const response: AxiosResponse<FlowDTO> = await http.get("/flow", { params: { degreeId, startYear } });
+  return response.data;
 }

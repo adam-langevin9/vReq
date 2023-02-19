@@ -6,6 +6,6 @@ export interface CourseDTO {
   hours: string;
 }
 export async function getCourseFor(subj: string, num: number): Promise<CourseDTO | undefined> {
-  const response: AxiosResponse<CourseDTO> = await http.get(`/course/${subj}/${num}`);
+  const response: AxiosResponse<CourseDTO> = await http.get("/course", { params: { subj, num } });
   return response?.data;
 }
