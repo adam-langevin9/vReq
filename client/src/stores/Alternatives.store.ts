@@ -3,9 +3,9 @@ import { getSelectedName } from "@/classes/CustomNode";
 import type { GraphEdge } from "@vue-flow/core";
 import { defineStore } from "pinia";
 import { type Ref, ref, computed, watch } from "vue";
-import { useCourseFlow } from "../CourseFlow.store";
+import { useCourseFlow } from "./CourseFlow.store";
 
-export const useAlternativesMenu = defineStore("AlternativesMenu", () => {
+export const useAlternatives = defineStore("Alternatives", () => {
   type Headers = {
     targetID: string;
     disabled: boolean;
@@ -36,9 +36,11 @@ export const useAlternativesMenu = defineStore("AlternativesMenu", () => {
     })
   );
 
-  const getAltReqsFor = (targetID: string) => allAltReqs.value.filter((altReq) => altReq.target === targetID);
+  function getAltReqsFor(targetID: string) {
+    return allAltReqs.value.filter((altReq) => altReq.target === targetID);
+  }
 
-  const shouldUpdateHeaders = (oldHeaders: Headers, newHeaders: Headers) => {
+  function shouldUpdateHeaders(oldHeaders: Headers, newHeaders: Headers) {
     if (oldHeaders.length !== newHeaders.length) {
       return true;
     }
@@ -51,7 +53,7 @@ export const useAlternativesMenu = defineStore("AlternativesMenu", () => {
       }
       return false;
     }
-  };
+  }
 
   watch(altReqHeaders, (newHeaders, oldHeaders) => {
     if (shouldUpdateHeaders(oldHeaders, newHeaders)) {

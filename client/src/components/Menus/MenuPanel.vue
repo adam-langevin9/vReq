@@ -3,6 +3,11 @@ import { Position } from "@vue-flow/core";
 import { ref, watch } from "vue";
 const props = defineProps<{
   title: string;
+  subtitle?: string;
+  buttonIcon?: string;
+  buttonAction?: () => void;
+  buttonStyle?: string;
+  buttonClass?: string;
   modelValue: boolean;
 }>();
 const emit = defineEmits(["update:modelValue"]);
@@ -28,7 +33,24 @@ watch(visible, (value) => {
     class="p-sidebar-third"
   >
     <template #header>
-      <h2 class="flex align-items-center justify-content-center flex-grow-1 m-0">{{ title }}</h2>
+      <div class="flex align-items-center justify-content-between flex-grow-1 m-0">
+        <div class="flex flex-column">
+          <PrimeButton
+            :icon="buttonIcon"
+            :disabled="!buttonIcon"
+            :class="
+              'p-button-rounded p-button-text p-button-plain p-sidebar-close p-sidebar-icon p-link ' +
+              (buttonClass ? buttonClass : '')
+            "
+            :style="buttonStyle"
+            @click="buttonAction"
+          />
+        </div>
+        <div class="flex flex-column flex-grow-1">
+          <h2 class="flex align-items-center justify-content-center flex-grow-1 m-0">{{ title }}</h2>
+          <h6 class="flex align-items-center justify-content-center flex-grow-1 m-0">{{ subtitle }}</h6>
+        </div>
+      </div>
     </template>
     <div class="flex justify-content-center flex-column gap-4 ml-4 mr-4">
       <slot></slot>

@@ -16,7 +16,7 @@ const selectedListings = computed(() => getSelectedName(props.node));
     aria-label="{{ selectedListings }}"
   >
     <div class="p-chip-text">{{ selectedListings }}</div>
-    <span tabindex="0" class="p-chip-remove-icon pi pi-times-circle" @click="removeNode"></span>
+    <span tabindex="0" class="p-chip-remove-icon pi pi-times-circle" @click="removeNode" style="cursor: pointer"></span>
   </div>
 </template>
 <style scoped></style>

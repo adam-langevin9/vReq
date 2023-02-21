@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import ManualNodeChips from "@/components/ManualNodeChips/ManualNodeChips.vue";
-import { useEditorMenu } from "@/stores/Menus/EditorMenu.store";
-import { useCourseFlow } from "@/stores/CourseFlow.store";
-const editorMenu = useEditorMenu();
-if (!editorMenu.degrees) editorMenu.fillDegrees();
-const courseFlow = useCourseFlow();
+import { useEditor } from "@/stores/Editor.store";
+const editor = useEditor();
+if (!editor.degrees) editor.fillDegrees();
 </script>
 <template>
   <PrimeDivider class="m-0" />
@@ -15,7 +13,7 @@ const courseFlow = useCourseFlow();
       <PrimeInputMask
         class="w-full keep-style"
         id="subject"
-        v-model="courseFlow.input.subj"
+        v-model="editor.courseInput.subj"
         mask="aaa?a"
         slotChar=""
         style="text-transform: uppercase"
@@ -24,40 +22,40 @@ const courseFlow = useCourseFlow();
     </span>
 
     <span class="p-float-label">
-      <PrimeInputMask id="number" v-model="courseFlow.input.num" mask="999" slotChar="" />
+      <PrimeInputMask id="number" v-model="editor.courseInput.num" mask="999" slotChar="" />
       <label for="number">Course Number</label>
     </span>
 
-    <PrimeButton @click="courseFlow.retrieveCourse" icon="pi pi-info-circle" class="p-button-secondary pl-4 pr-4" />
+    <PrimeButton @click="editor.retrieveCourse" icon="pi pi-info-circle" class="p-button-secondary pl-4 pr-4" />
   </div>
 
-  <PrimeCard v-if="courseFlow.searchResult">
+  <PrimeCard v-if="editor.searchResult">
     <template #title> </template>
-    <template #subtitle> {{ courseFlow.searchResult.title }}</template>
+    <template #subtitle> {{ editor.searchResult.title }}</template>
     <template #content>
-      {{ courseFlow.searchResult.descr }}
+      {{ editor.searchResult.descr }}
     </template>
     <template #footer>
-      <span v-if="courseFlow.searchResult.hours">Credit Hours:</span>
-      {{ courseFlow.searchResult.hours }}
+      <span v-if="editor.searchResult.hours">Credit Hours:</span>
+      {{ editor.searchResult.hours }}
     </template>
   </PrimeCard>
 
   <div class="flex justify-content-center">
-    <PrimeButton label="Add Course(s)" @click="courseFlow.addInputToFlow" />
+    <PrimeButton label="Add Course(s)" @click="editor.addCourseToFlow" />
   </div>
 
   <PrimeDivider />
 
   <PrimeDropdown
-    v-model="editorMenu.selectedDegree"
-    :options="editorMenu.degrees"
+    v-model="editor.selectedDegree"
+    :options="editor.degrees"
     optionLabel="title"
     placeholder="Select a Degree"
     class="keep-style flex align-content-center justify-items-center"
   />
   <div class="flex justify-content-center">
-    <PrimeButton label="Add Degree" @click="courseFlow.addDegreeToFlow(editorMenu.selectedDegree.id)" />
+    <PrimeButton label="Add Degree" @click="editor.addDegreeToFlow" />
   </div>
 
   <PrimeDivider />
@@ -67,7 +65,7 @@ const courseFlow = useCourseFlow();
   <ManualNodeChips class="flex" />
 
   <div class="flex justify-content-center">
-    <PrimeButton label="Remove All" @click="courseFlow.clear" />
+    <PrimeButton label="Remove All" @click="editor.clear" class="p-button-danger" />
   </div>
 </template>
 <style scoped>

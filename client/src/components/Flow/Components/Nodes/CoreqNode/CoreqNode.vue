@@ -4,6 +4,8 @@ import ListingSelect from "./Components/ListingSelect.vue";
 import type { CoreqNodeData } from "@/classes/CustomNode";
 import { computed, watchEffect } from "vue";
 import { useCourseFlow } from "@/stores/CourseFlow.store";
+import { useEditor } from "@/stores/Editor.store";
+import { useDock, MenuNames } from "@/stores/MenusDock.store";
 
 const props = defineProps<{
   id: string;
@@ -13,6 +15,8 @@ const props = defineProps<{
 
 const self = useNode();
 const courseFlow = useCourseFlow();
+const editor = useEditor();
+const dock = useDock();
 
 if (self.node.data.manual) {
 }
@@ -33,9 +37,15 @@ watchEffect(() => {
   } else if (shouldHideNode.value) {
     self.node.data.hidden = true;
     self.node.style = { pointerEvents: "none", opacity: "0" };
+    if (self.id === "c243") {
+      console.log("hide", self.node.data.hidden, self.node.style);
+    }
   } else {
     props.data.hidden = false;
     self.node.style = { pointerEvents: "all" };
+    if (self.id === "c243") {
+      console.log("show", self.node.data.hidden, self.node.style);
+    }
   }
 });
 </script>
@@ -46,6 +56,7 @@ watchEffect(() => {
       :class="data.courses.length > 1 ? 'inner node flex justify-content-between' : 'flex justify-content-between'"
       v-for="course in data.courses"
     >
+      <!-- {{ shouldHideNode }} -->
       <PrimeButton
         :icon="self.node.data.complete ? 'pi pi-check-square' : 'pi pi-stop'"
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
@@ -63,7 +74,12 @@ watchEffect(() => {
       <PrimeButton
         icon="pi pi-info-circle"
         class="p-button-secondary p-button-text flex align-items-center justify-content-center p-button-sm"
-        @click="() => courseFlow.searchLoaded(course)"
+        @click="
+          () => {
+            editor.searchLoaded(course);
+            dock.open(MenuNames.EDITOR);
+          }
+        "
       />
       <Handle id="target" type="target" :position="Position.Left" :connectable="connectable" />
       <Handle id="source" type="source" :position="Position.Right" :connectable="connectable" />

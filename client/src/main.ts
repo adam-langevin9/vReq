@@ -31,7 +31,6 @@ import RadioButton from "primevue/radiobutton";
 import Divider from "primevue/divider";
 import Sidebar from "primevue/sidebar";
 import SplitButton from "primevue/splitbutton";
-import Chip from "primevue/chip";
 import ProgressSpinner from "primevue/progressspinner";
 import DynamicDialog from "primevue/dynamicdialog";
 import Skeleton from "primevue/skeleton";
@@ -55,7 +54,6 @@ app
   .component("PrimeDivider", Divider)
   .component("PrimeSidebar", Sidebar)
   .component("PrimeSplitButton", SplitButton)
-  .component("PrimeChip", Chip)
   .component("PrimeSpinner", ProgressSpinner)
   .component("PrimeDynamicDialog", DynamicDialog)
   .component("PrimeSkeleton", Skeleton)

@@ -1,25 +1,36 @@
-import { defineStore } from "pinia";
-import type { Ref } from "vue";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 import { createUser, loginUser } from "@/services/UserDataService";
-import { useFileMenu } from "./Menus/FileMenu.store";
+import { useStorage, type RemovableRef } from "@vueuse/core";
+import { useVisual } from "./Visual.store";
+import { useEditor } from "./Editor.store";
 
 export const useUser = defineStore("User", () => {
-  const id: Ref<string | undefined> = ref("aml");
+  // stores
+  const visual = useVisual();
+  const editor = useEditor();
 
-  const login = async (username: string, password: string): Promise<void> => {
-    const response = await loginUser(username, password);
-    if (response !== undefined) {
-      id.value = response.id;
-      useFileMenu().visuals = response.visuals;
-    }
-  };
-  const create = async (username: string, password: string): Promise<void> => {
-    const wasCreated = await createUser(username, password);
-    if (wasCreated) {
-      id.value = username;
-    }
-  };
+  // state
+  const id: RemovableRef<string | undefined> = useStorage("user-id", "");
+  const startYear = ref(new Date().getFullYear());
 
-  return { id, login, create };
+  // actions
+  async function login(username: string, password: string): Promise<void> {
+    const user = await loginUser(username, password);
+    if (user !== undefined) {
+      id.value = user.id;
+      visual.loadTitles(id.value);
+    }
+  }
+  async function create(username: string, password: string): Promise<void> {
+    const user = await createUser(username, password);
+    if (user) id.value = username;
+  }
+  async function logout() {
+    visual.id = "";
+    editor.clear();
+    id.value = undefined;
+  }
+
+  return { id, startYear, create, login, logout };
 });

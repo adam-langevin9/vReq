@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import ManualNodeChips from "@/components/ManualNodeChips/ManualNodeChips.vue";
-import { useFileMenu } from "@/stores/Menus/FileMenu.store";
-import { useCourseFlow } from "@/stores/CourseFlow.store";
-import { ref } from "vue";
-const fileMenu = useFileMenu();
-const courseFlow = useCourseFlow();
-
-const title = ref();
-const editingTitle = ref(false);
-const selectedVisual = ref();
+import { useVisual } from "@/stores/Visual.store";
+import { computed, ref } from "vue";
+const visual = useVisual();
+const isEditingTitle = ref(false);
+const shouldDisableButtons = computed(() => isEditingTitle.value && !visual.isNewVisual);
 </script>
 <template>
+  <div class="flex justify-content-center">
+    <PrimeButton
+      icon="pi pi-plus"
+      label="New Visual"
+      @click="visual.createBlank"
+      class="p-button-secondary"
+      :disabled="shouldDisableButtons"
+    />
+  </div>
+
   <PrimeDivider class="m-0" />
 
   <h3 class="flex justify-content-center m-0">Save Visual</h3>
@@ -18,14 +23,14 @@ const selectedVisual = ref();
     <div class="flex justify-content-center">
       <div class="p-inputgroup">
         <span class="p-float-label">
-          <PrimeInputText id="title" v-model="title" :disabled="!editingTitle" />
+          <PrimeInputText id="title" v-model="visual.titleField" :disabled="!isEditingTitle && !visual.isNewVisual" />
           <label for="title">Add Title</label>
         </span>
         <PrimeButton
-          v-if="!editingTitle"
+          v-if="!isEditingTitle && visual.id"
           @click="
             () => {
-              editingTitle = true;
+              isEditingTitle = true;
             }
           "
           icon="pi pi-pencil"
@@ -33,11 +38,11 @@ const selectedVisual = ref();
           class="p-button-secondary p-button-outlined px-2"
         />
         <PrimeButton
-          v-if="editingTitle"
+          v-if="isEditingTitle && visual.id"
           @click="
             () => {
-              fileMenu.title = title;
-              editingTitle = false;
+              visual.updateTitle();
+              isEditingTitle = false;
             }
           "
           icon="pi pi-check"
@@ -45,11 +50,11 @@ const selectedVisual = ref();
           class="p-button-primary p-button-outlined px-2"
         />
         <PrimeButton
-          v-if="editingTitle"
+          v-if="isEditingTitle && visual.id"
           @click="
             () => {
-              title = fileMenu.title;
-              editingTitle = false;
+              visual.revertTitle();
+              isEditingTitle = false;
             }
           "
           icon="pi pi-times"
@@ -60,7 +65,7 @@ const selectedVisual = ref();
     </div>
 
     <div class="flex justify-content-center">
-      <PrimeButton icon="pi pi-save" label="Save" @click="courseFlow.addInputToFlow" :disabled="editingTitle" />
+      <PrimeButton icon="pi pi-save" label="Save" @click="visual.save" :disabled="shouldDisableButtons" />
     </div>
   </form>
 
@@ -69,28 +74,27 @@ const selectedVisual = ref();
   <h3 class="flex justify-content-center m-0">Open Visual</h3>
   <form class="flex flex-column gap-5">
     <PrimeDropdown
-      v-model="selectedVisual"
-      :options="fileMenu.visuals"
+      v-model="visual.selectedTitle"
+      :options="visual.titles"
       optionLabel="title"
       placeholder="Select a Visual"
       class="keep-style flex align-content-center justify-items-center ml-4 mr-4"
+      :disabled="shouldDisableButtons"
     />
     <div class="flex justify-content-center">
-      <PrimeButton icon="pi pi-folder-open" label="Open" @click="() => {}" />
+      <PrimeButton icon="pi pi-folder-open" label="Open" @click="visual.load" :disabled="shouldDisableButtons" />
     </div>
-
-    <PrimeDivider />
   </form>
-  <h3 class="flex justify-content-center m-0">Delete Visual</h3>
 
-  <ManualNodeChips class="flex" />
-  <div class="flex">
-    <PrimeChip
-      v-for="visual in fileMenu.visuals"
-      :key="visual.id"
-      :label="visual.title"
-      :removable="true"
-      class="align-items-center justify-content-center m-1"
+  <PrimeDivider />
+
+  <div class="flex justify-content-center">
+    <PrimeButton
+      icon="pi pi-trash"
+      label="Delete Visual"
+      @click="visual.remove"
+      class="p-button-danger"
+      :disabled="shouldDisableButtons || visual.isNewVisual"
     />
   </div>
 </template>

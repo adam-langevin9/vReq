@@ -1,45 +1,33 @@
 import { useVueFlow, Position, type VueFlowStore } from "@vue-flow/core";
 import dagre from "dagre";
-import { watch } from "vue";
+import { useCourseFlow } from "@/stores/CourseFlow.store";
 
 export class Layout {
   dagreGraph: dagre.graphlib.Graph<{}>;
-  vueFlow: VueFlowStore;
   direction: string;
+  courseFlow = useCourseFlow();
 
   constructor(direction: string = "LR") {
     this.dagreGraph = new dagre.graphlib.Graph();
     this.dagreGraph.setDefaultEdgeLabel(() => ({}));
-    this.vueFlow = useVueFlow({ id: "course-flow" });
     this.direction = direction;
-    watch(
-      [
-        this.vueFlow.getNodesInitialized,
-        this.vueFlow.getEdges,
-        () => this.vueFlow.getNodesInitialized.value.length,
-        () => this.vueFlow.getEdges.value.length,
-      ],
-      () => {
-        this.autoLayout();
-      }
-    );
   }
 
   autoLayout = (): void => {
     const isVertical = this.direction === "TB";
     this.dagreGraph.setGraph({ rankdir: this.direction });
 
-    this.vueFlow.getNodesInitialized.value.forEach((elm) => {
+    this.courseFlow.getNodesInitialized.forEach((elm) => {
       this.dagreGraph.setNode(elm.id, { width: elm.dimensions.width, height: elm.dimensions.height });
     });
 
-    this.vueFlow.getEdges.value.forEach((edge) => {
+    this.courseFlow.getEdges.forEach((edge) => {
       this.dagreGraph.setEdge(edge.source, edge.target);
     });
 
     dagre.layout(this.dagreGraph);
 
-    this.vueFlow.getNodesInitialized.value.forEach((elm) => {
+    this.courseFlow.getNodesInitialized.forEach((elm) => {
       const nodeWithPosition = this.dagreGraph.node(elm.id);
       const hasPredecessors = this.dagreGraph.predecessors(elm.id)?.length;
       elm.targetPosition = isVertical ? Position.Left : Position.Top;
@@ -51,6 +39,6 @@ export class Layout {
       };
     });
 
-    this.vueFlow.fitView();
+    this.courseFlow.fitView();
   };
 }

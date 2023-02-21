@@ -5,8 +5,7 @@ export default {
   create(req: Request, res: Response): void {
     const id = req.body.id;
     const pw = req.body.pw;
-    console.log(id);
-    console.log(req.body);
+
     // Validate request
     if (!id) {
       res.status(400).send({
@@ -52,9 +51,9 @@ export default {
       return;
     }
 
-    User.findByPk(id, { include: [{ model: Visual, as: "visuals" }] }).then((user) => {
+    User.findByPk(id).then((user) => {
       if (user) {
-        if (user.pw === pw) res.status(200).send({ id: user.id, visuals: user.visuals });
+        if (user.pw === pw) res.status(200).send({ id: user.id });
         else res.status(401).send({ message: "Invalid login, please check your password and try again." });
       } else {
         // User does not exist in the database
