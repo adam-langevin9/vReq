@@ -1,4 +1,4 @@
-import { defineStore, storeToRefs } from "pinia";
+import { defineStore } from "pinia";
 import { ref } from "vue";
 import { createUser, loginUser } from "@/services/UserDataService";
 import { useStorage, type RemovableRef } from "@vueuse/core";
@@ -29,6 +29,7 @@ export const useUser = defineStore("User", () => {
   async function logout() {
     visual.id = "";
     editor.clear();
+    visual.titles = [];
     id.value = undefined;
   }
 

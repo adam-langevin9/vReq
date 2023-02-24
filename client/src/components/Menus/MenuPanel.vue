@@ -59,8 +59,18 @@ watch(visible, (value) => {
 </template>
 
 <style>
+.p-sidebar-mask {
+  z-index: 1100 !important;
+}
+.p-sidebar {
+  box-shadow: none !important;
+}
 .p-sidebar-header {
   justify-content: space-between !important;
+}
+.p-sidebar .p-sidebar-header .p-sidebar-close:focus,
+.p-sidebar .p-sidebar-header .p-sidebar-icon:focus {
+  box-shadow: none !important;
 }
 .p-sidebar-header-content {
   display: flex !important;

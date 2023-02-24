@@ -32,7 +32,7 @@ export default {
     <h3>Requirement {{ reqIdx }}</h3>
   </div>
   <div class="flex justify-content-center align-items-start flex-wrap">
-    <div v-for="optionID in optionIDs" class="flex flex-column justify-content-center align-items-center px-7 py-3">
+    <div v-for="optionID in optionIDs" class="flex flex-column justify-content-center align-items-center px-5 py-3">
       <PrimeRadioButton
         :name="reqIdx.toString()"
         :value="optionID"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUser } from "@/stores/User.store";
 import { ref } from "vue";
+
 const user = useUser();
 
 const uname = ref("");
@@ -57,11 +58,12 @@ const submitCreate = () => {
     </div>
 
     <div class="flex justify-content-center">
-      <PrimeButton label="Login" @click="submitLogin" />
+      <PrimeButton label="Login" @click="submitLogin" class="p-button-outlined p-button-secondary" />
     </div>
   </form>
 
   <PrimeDivider />
+
   <form class="flex flex-column gap-5">
     <h3 class="flex justify-content-center m-0">Create an Account</h3>
 
@@ -108,7 +110,7 @@ const submitCreate = () => {
     </div>
 
     <div class="flex justify-content-center">
-      <PrimeButton label="Create" @click="submitCreate" />
+      <PrimeButton label="Create" @click="submitCreate" class="p-button-outlined" />
     </div>
   </form>
 </template>

@@ -5,7 +5,7 @@ type DetailedCourseProp = { listings: Array<ListingDataDTO>; selectedListing: nu
 
 const props = defineProps<{
   detailedCourse: DetailedCourseProp;
-  complete: boolean;
+  isDegreeReq: boolean;
 }>();
 const optionLabel = (option: ListingDataDTO) => option.subj.concat(" ").concat(option.num.toString());
 const optionValue = (option: ListingDataDTO) => props.detailedCourse.listings.indexOf(option);
@@ -18,11 +18,11 @@ const optionValue = (option: ListingDataDTO) => props.detailedCourse.listings.in
       :options="detailedCourse.listings"
       :optionLabel="optionLabel"
       :optionValue="optionValue"
-      class="crosslisting"
-      :inputStyle="complete ? 'text-decoration: line-through' : ''"
+      class="crosslisting p-button-secondary"
+      :inputStyle="isDegreeReq ? 'text-weight: bolder; ' : ''"
     />
   </div>
-  <div v-else class="single-listing justify-content-center" :style="complete ? 'text-decoration: line-through' : ''">
+  <div v-else class="single-listing justify-content-center" :style="isDegreeReq ? 'font-weight: 800; ' : ''">
     {{ optionLabel(detailedCourse.listings[detailedCourse.selectedListing]) }}
   </div>
 </template>
@@ -32,8 +32,11 @@ const optionValue = (option: ListingDataDTO) => props.detailedCourse.listings.in
   padding: 0.75rem;
   min-width: 6rem;
 }
+.crosslisting {
+  background: rgba(100, 116, 139, 0);
+}
 .crosslisting:hover {
-  background: rgba(100, 116, 139, 0.04);
+  background: rgba(100, 116, 139, 0.03);
 }
 .crosslisting:deep(.p-inputtext) {
   padding: 0.75rem 0.25rem 0.75rem 0.25rem !important;

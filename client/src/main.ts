@@ -5,10 +5,11 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 import PrimeVue from "primevue/config";
-import DialogService from "primevue/dialogservice";
+import ToastService from "primevue/toastservice";
 
 // Assets
-import "primevue/resources/themes/lara-light-teal/theme.css";
+//import "primevue/resources/themes/lara-light-teal/theme.css";
+import "primevue/resources/themes/saga-green/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
@@ -32,16 +33,18 @@ import Divider from "primevue/divider";
 import Sidebar from "primevue/sidebar";
 import SplitButton from "primevue/splitbutton";
 import ProgressSpinner from "primevue/progressspinner";
-import DynamicDialog from "primevue/dynamicdialog";
 import Skeleton from "primevue/skeleton";
 import Toast from "primevue/toast";
 import Dock from "primevue/dock";
 import Password from "primevue/password";
 import InputText from "primevue/inputtext";
+import BlockUI from "primevue/blockui";
+import InputSwitch from "primevue/inputswitch";
+import Badge from "primevue/badge";
 
 const app = createApp(App);
 
-app.use(createPinia()).use(router).use(PrimeVue).use(DialogService);
+app.use(createPinia()).use(router).use(PrimeVue).use(ToastService);
 app
   .component("PrimeButton", Button)
   .component("PrimeInputMask", InputMask)
@@ -55,11 +58,13 @@ app
   .component("PrimeSidebar", Sidebar)
   .component("PrimeSplitButton", SplitButton)
   .component("PrimeSpinner", ProgressSpinner)
-  .component("PrimeDynamicDialog", DynamicDialog)
   .component("PrimeSkeleton", Skeleton)
   .component("PrimeToast", Toast)
   .component("PrimeDock", Dock)
   .component("PrimePassword", Password)
-  .component("PrimeInputText", InputText).component;
+  .component("PrimeInputText", InputText)
+  .component("PrimeBlockUI", BlockUI)
+  .component("PrimeInputSwitch", InputSwitch)
+  .component("PrimeBadge", Badge);
 
 app.mount("#app");

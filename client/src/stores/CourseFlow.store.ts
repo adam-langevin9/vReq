@@ -1,8 +1,7 @@
-import { markRaw, ref, watch, type ComputedRef, type Ref } from "vue";
+import { computed, markRaw, ref, watch, type ComputedRef } from "vue";
 import { defineStore } from "pinia";
 import {
   useVueFlow,
-  getTransformForBounds,
   type EdgeComponent,
   type EdgeTypesObject,
   type FlowExportObject,
@@ -19,9 +18,13 @@ import DegreeNode from "@/components/Flow/Components/Nodes/DegreeNode.vue";
 import CoreqEdge from "@/components/Flow/Components/Edges/CoreqEdge.vue";
 import DegreeEdge from "@/components/Flow/Components/Edges/DegreeEdge.vue";
 import type { CustomEdgeData } from "@/classes/CustomEdge";
+import type { CourseDataDTO } from "@/services/FlowDataService";
+import { useVisual } from "./Visual.store";
 
 export const useCourseFlow = defineStore("CourseFlow", () => {
   // stores
+  const visual = useVisual();
+
   // node and edge types are needed for vueFlow store
   const nodeTypes: NodeTypesObject = {
     coreq: markRaw(CoreqNode) as NodeComponent,
@@ -32,9 +35,17 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     degree: markRaw(DegreeEdge) as EdgeComponent,
   };
   const {
+    getNodesInitialized,
     getNodes: _getNodes,
     getEdges: _getEdges,
-    getNodesInitialized,
+    nodesDraggable: _nodesDraggable,
+    nodesConnectable: _nodesConnectable,
+    elementsSelectable: _elementsSelectable,
+    zoomOnScroll: _zoomOnScroll,
+    zoomOnDoubleClick: _zoomOnDoubleClick,
+    zoomOnPinch: _zoomOnPinch,
+    panOnScroll: _panOnScroll,
+    panOnDrag: _panOnDrag,
     setNodes,
     setEdges,
     setTransform,
@@ -56,11 +67,33 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
   // computed
   const getEdges: ComputedRef<GraphEdge<CustomEdgeData, any>[]> = _getEdges;
   const getNodes: ComputedRef<GraphNode<CustomNodeData, any>[]> = _getNodes;
+  const getVisibleNodes: ComputedRef<GraphNode<CustomNodeData, any>[]> = computed(() =>
+    getNodesInitialized.value.filter((node) => !node.data.hidden)
+  );
+  const getVisibleSelectedListings: ComputedRef<{ listing: string; title: string; descr: string; hours: string }[]> =
+    computed(() =>
+      getVisibleNodes.value
+        .filter((node: GraphNode) => node.data?.courses?.length)
+        .map((node: GraphNode) => {
+          return node.data.courses.map((course: CourseDataDTO) => {
+            return {
+              listing: course.listings[course.selectedListing].subj
+                .concat(" ")
+                .concat(course.listings[course.selectedListing].num.toString()),
+              title: course.title,
+              descr: course.descr,
+              hours: course.hours,
+            };
+          });
+        })
+        .reduce((acc: any[], val: any) => acc.concat(val), [])
+        .sort((a: { listing: string }, b: { listing: string }) => a.listing.localeCompare(b.listing))
+    );
 
   // actions
   function fitView(options?: FitViewParams): void {
     return _fitView({
-      nodes: getNodesInitialized.value.filter((node) => !node.data.hidden).map((node) => node.id),
+      nodes: getVisibleNodes.value.map((node) => node.id),
       duration: 200,
       ...options,
     });
@@ -73,6 +106,7 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     setNodes(courseFlow.nodes);
     setEdges(courseFlow.edges);
     setTransform({ x, y, zoom: courseFlow.zoom || 1 });
+    setTimeout(() => (visual.isUpToDate = true));
   }
 
   // watchers
@@ -99,6 +133,8 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     getNodes,
     getEdges,
     getNodesInitialized,
+    getVisibleNodes,
+    getVisibleSelectedListings,
     addNodes,
     addEdges,
     setNodes,

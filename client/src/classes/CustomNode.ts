@@ -46,10 +46,17 @@ const getSelectedListing = (node: GraphNode<CoreqNodeData, any>): string => {
     .slice(0, -3);
 };
 
-export type CustomNodeData = (Omit<CoreqNodeDTO, "id"> | Omit<DegreeNodeDTO, "id">) & {
-  complete: boolean;
-  hidden: boolean;
-};
+export type CustomNodeData =
+  | (Omit<CoreqNodeDTO, "id"> & {
+      semiAvailable: boolean;
+      available: boolean;
+      complete: boolean;
+      hidden: boolean;
+    })
+  | (Omit<DegreeNodeDTO, "id"> & {
+      complete: boolean;
+      hidden: boolean;
+    });
 
 export type CoreqNodeData = Omit<CoreqNodeDTO, "id"> & CustomNodeData;
 
@@ -89,8 +96,8 @@ class CoreqNode implements ICoreqNode {
   readonly type = "coreq";
   readonly width: "175px" | "185px";
   readonly height: string;
-  draggable: boolean = true;
-  deletable: boolean = false;
+  draggable: boolean;
+  deletable: boolean;
   readonly hidden = false;
   readonly connectable = false;
   label?:
@@ -119,11 +126,15 @@ class CoreqNode implements ICoreqNode {
     this.data = {
       courses: nodeDTO.courses,
       manual: nodeDTO.manual,
+      semiAvailable: false,
+      available: false,
       complete: false,
       hidden: false,
     };
     this.width = nodeDTO.courses.length === 1 ? "175px" : "185px";
     this.height = nodeDTO.courses.length === 1 ? "45px" : (50 * nodeDTO.courses.length + 5).toString().concat("px");
+    this.draggable = true;
+    this.deletable = false;
   }
 }
 
@@ -134,7 +145,7 @@ class DegreeNode implements IDegreeNode {
   readonly type = "degree";
   readonly width = "175px";
   readonly height = "auto";
-  draggable = true;
+  readonly draggable = false;
   readonly deletable = true;
   readonly hidden = false;
   readonly connectable = false;
@@ -154,7 +165,7 @@ class DegreeNode implements IDegreeNode {
   expandParent?: boolean;
   parentNode?: string;
   class?: string | ClassFunc<GraphNode<any, any>>;
-  style?: Styles | StyleFunc<GraphNode<any, any>> = { pointerEvents: "none", opacity: "0" };
+  style?: Styles | StyleFunc<GraphNode<any, any>>;
   template?: NodeComponent;
   zIndex?: number;
   ariaLabel?: string;

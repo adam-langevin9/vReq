@@ -1,107 +1,157 @@
 <script lang="ts" setup>
-import { VueFlow } from "@vue-flow/core";
+import { VueFlow, type GraphNode } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
-import { Controls, ControlButton } from "@vue-flow/controls";
+import { Controls } from "@vue-flow/controls";
 import { MiniMap } from "@vue-flow/minimap";
 import { useEditor } from "@/stores/Editor.store";
 import { useCourseFlow } from "@/stores/CourseFlow.store";
-import { MenuNames, useDock } from "@/stores/MenusDock.store";
+import { useDock } from "@/stores/MenusDock.store";
+import { usePrinter } from "@/stores/Printer.store";
 
 const courseFlow = useCourseFlow();
 const editor = useEditor();
 const menusDock = useDock();
-
-const visualWidth = menusDock.isPrintSelected ? "8.5in" : "100%";
-const visualHeight = menusDock.isPrintSelected ? "10.5in" : "100%";
+const printer = usePrinter();
 
 function printFlowData() {
-  console.log("==========");
-  console.log("Flow Data");
-  console.log("----------");
+  //console.log("==========");
+  //console.log("Flow Data");
+  //console.log("----------");
   console.log(courseFlow.toObject());
-  console.log("==========");
-}
-function setLocalStorage() {
-  localStorage.setItem(
-    "course-flow",
-    '{"nodes":[{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":762.5,"y":185,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":6,"title":"3-D Computer Graphics Tools and Literacy","descr":"Project-based approach to learning fundamental principles of 3-D computer graphics using high-level software tools. Modeling of objects, geometrical transformations, surface algorithms, lighting and shading, alternative rendering techniques, and providing background skills necessary to create animated movies. ","hours":"3","listings":[{"id":251093,"subj":"ART","num":220},{"id":251504,"subj":"CSC","num":220},{"id":251926,"subj":"FST","num":220}],"selectedListing":1}],"manual":true,"complete":false,"hidden":false,"hasPredecessors":4},"events":{},"id":"c29","position":{"x":762.5,"y":185},"width":"175px","height":"45px","deletable":true,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"opacity":1,"width":"175px","height":"45px"}},{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":22.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":150,"title":"Introduction to Computer Programming","descr":"An introduction to programming in a high-level language. Algorithms, computer systems, data representation, survey of computer applications, elementary programming techniques, debugging and verification of programs. The language to be used will be specified in the schedule of classes. Recommended primarily for non computer science majors.","hours":"3","listings":[{"id":251500,"subj":"CSC","num":112}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":2},"events":{},"id":"c135","position":{"x":537.5,"y":22.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":32.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":255,"title":"College Algebra","descr":"A preparatory course for further mathematics courses. Equations and inequalities; polynomial, rational, exponential and logarithmic functions; graphs; systems of equations.","hours":"3","listings":[{"id":252327,"subj":"MAT","num":111}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":1},"events":{},"id":"c243","position":{"x":312.5,"y":32.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":87.5,"y":32.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":254,"title":"Mathematical Study Skills and Algebra Review","descr":"Designed for students not ready for MAT 111, this course prepares the student to be successful in college algebra and beyond. Topics include study, note-taking, and time management skills needed to be successful in mathematics and review of algebra. ","hours":"1","listings":[{"id":252326,"subj":"MAT","num":105}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":0},"events":{},"id":"c242","position":{"x":87.5,"y":32.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":127.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":258,"title":"Basic Precalculus","descr":"Study of fundamental concepts of algebra, functions using graphical and algebraic approaches, and applications that are essential to the study of basic calculus. Covers linear, quadratic, polynomial, rational, radical, piecewise, composite, inverse, exponential, and logarithmic functions. ","hours":"3","listings":[{"id":257161,"subj":"MAT","num":150}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":0},"events":{},"id":"c246","position":{"x":312.5,"y":127.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}},{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":137.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":152,"title":"Introduction to Computer Science","descr":"Problem solving methods and algorithms in a modern high-level programming language. Introduces one or more programming environments. Emphasis on a programming style and the design, coding, and testing of complete programs. Recommended primarily for computer science majors. ","hours":"4","listings":[{"id":253391,"subj":"CSC","num":131}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":2},"events":{},"id":"c137","position":{"x":537.5,"y":137.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}},{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":232.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":7,"title":"Introduction To Graphic Design","descr":"Basic principles of graphic design and communication. Projects focus on the graphic expression of form through two-dimensional composition to communicate information, concepts, and emotions, and combine development of computer software skills with off-line creative processes and production methods. ","hours":"3","listings":[{"id":251101,"subj":"ART","num":260}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":1},"events":{},"id":"c32","position":{"x":537.5,"y":232.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":280,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":4,"title":"Two-Dimensional Design","descr":"Study of the principles of two-dimensional design and introduction to color theory. ","hours":"3","listings":[{"id":251087,"subj":"ART","num":101}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":0},"events":{},"id":"c28","position":{"x":312.5,"y":280},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":327.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":8,"title":"Introduction to Digital Photography","descr":"Digital photography concepts and methods. Designing, processing, critiquing, and displaying of images created with digital cameras and printed with digital media.","hours":"3","listings":[{"id":251103,"subj":"ART","num":282}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":1},"events":{},"id":"c33","position":{"x":537.5,"y":327.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}}],"edges":[{"id":"c135-c29","source":"c135","target":"c29","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":false,"altCombo":{"comboID":53,"optionID":135,"selectedOptionID":135}},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":22.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":150,"title":"Introduction to Computer Programming","descr":"An introduction to programming in a high-level language. Algorithms, computer systems, data representation, survey of computer applications, elementary programming techniques, debugging and verification of programs. The language to be used will be specified in the schedule of classes. Recommended primarily for non computer science majors.","hours":"3","listings":[{"id":251500,"subj":"CSC","num":112}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":2},"events":{},"id":"c135","position":{"x":537.5,"y":22.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":762.5,"y":185,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":6,"title":"3-D Computer Graphics Tools and Literacy","descr":"Project-based approach to learning fundamental principles of 3-D computer graphics using high-level software tools. Modeling of objects, geometrical transformations, surface algorithms, lighting and shading, alternative rendering techniques, and providing background skills necessary to create animated movies. ","hours":"3","listings":[{"id":251093,"subj":"ART","num":220},{"id":251504,"subj":"CSC","num":220},{"id":251926,"subj":"FST","num":220}],"selectedListing":1}],"manual":true,"complete":false,"hidden":false,"hasPredecessors":4},"events":{},"id":"c29","position":{"x":762.5,"y":185},"width":"175px","height":"45px","deletable":true,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"opacity":1,"width":"175px","height":"45px"}}},{"id":"c137-c29","source":"c137","target":"c29","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":true,"altCombo":{"comboID":53,"optionID":137,"selectedOptionID":135}},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":137.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":152,"title":"Introduction to Computer Science","descr":"Problem solving methods and algorithms in a modern high-level programming language. Introduces one or more programming environments. Emphasis on a programming style and the design, coding, and testing of complete programs. Recommended primarily for computer science majors. ","hours":"4","listings":[{"id":253391,"subj":"CSC","num":131}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":2},"events":{},"id":"c137","position":{"x":537.5,"y":137.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":762.5,"y":185,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":6,"title":"3-D Computer Graphics Tools and Literacy","descr":"Project-based approach to learning fundamental principles of 3-D computer graphics using high-level software tools. Modeling of objects, geometrical transformations, surface algorithms, lighting and shading, alternative rendering techniques, and providing background skills necessary to create animated movies. ","hours":"3","listings":[{"id":251093,"subj":"ART","num":220},{"id":251504,"subj":"CSC","num":220},{"id":251926,"subj":"FST","num":220}],"selectedListing":1}],"manual":true,"complete":false,"hidden":false,"hasPredecessors":4},"events":{},"id":"c29","position":{"x":762.5,"y":185},"width":"175px","height":"45px","deletable":true,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"opacity":1,"width":"175px","height":"45px"}}},{"id":"c243-c135","source":"c243","target":"c135","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":false,"altCombo":{"comboID":88,"optionID":243,"selectedOptionID":243}},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":32.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":255,"title":"College Algebra","descr":"A preparatory course for further mathematics courses. Equations and inequalities; polynomial, rational, exponential and logarithmic functions; graphs; systems of equations.","hours":"3","listings":[{"id":252327,"subj":"MAT","num":111}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":1},"events":{},"id":"c243","position":{"x":312.5,"y":32.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":22.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":150,"title":"Introduction to Computer Programming","descr":"An introduction to programming in a high-level language. Algorithms, computer systems, data representation, survey of computer applications, elementary programming techniques, debugging and verification of programs. The language to be used will be specified in the schedule of classes. Recommended primarily for non computer science majors.","hours":"3","listings":[{"id":251500,"subj":"CSC","num":112}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":2},"events":{},"id":"c135","position":{"x":537.5,"y":22.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}}},{"id":"c246-c135","source":"c246","target":"c135","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":true,"altCombo":{"comboID":88,"optionID":246,"selectedOptionID":243}},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":127.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":258,"title":"Basic Precalculus","descr":"Study of fundamental concepts of algebra, functions using graphical and algebraic approaches, and applications that are essential to the study of basic calculus. Covers linear, quadratic, polynomial, rational, radical, piecewise, composite, inverse, exponential, and logarithmic functions. ","hours":"3","listings":[{"id":257161,"subj":"MAT","num":150}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":0},"events":{},"id":"c246","position":{"x":312.5,"y":127.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":22.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":150,"title":"Introduction to Computer Programming","descr":"An introduction to programming in a high-level language. Algorithms, computer systems, data representation, survey of computer applications, elementary programming techniques, debugging and verification of programs. The language to be used will be specified in the schedule of classes. Recommended primarily for non computer science majors.","hours":"3","listings":[{"id":251500,"subj":"CSC","num":112}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":2},"events":{},"id":"c135","position":{"x":537.5,"y":22.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}}},{"id":"c242-c243","source":"c242","target":"c243","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":false},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":87.5,"y":32.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":254,"title":"Mathematical Study Skills and Algebra Review","descr":"Designed for students not ready for MAT 111, this course prepares the student to be successful in college algebra and beyond. Topics include study, note-taking, and time management skills needed to be successful in mathematics and review of algebra. ","hours":"1","listings":[{"id":252326,"subj":"MAT","num":105}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":0},"events":{},"id":"c242","position":{"x":87.5,"y":32.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":32.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":255,"title":"College Algebra","descr":"A preparatory course for further mathematics courses. Equations and inequalities; polynomial, rational, exponential and logarithmic functions; graphs; systems of equations.","hours":"3","listings":[{"id":252327,"subj":"MAT","num":111}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":1},"events":{},"id":"c243","position":{"x":312.5,"y":32.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}}},{"id":"c243-c137","source":"c243","target":"c137","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":true,"altCombo":{"comboID":88,"optionID":243,"selectedOptionID":243}},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":32.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":255,"title":"College Algebra","descr":"A preparatory course for further mathematics courses. Equations and inequalities; polynomial, rational, exponential and logarithmic functions; graphs; systems of equations.","hours":"3","listings":[{"id":252327,"subj":"MAT","num":111}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":1},"events":{},"id":"c243","position":{"x":312.5,"y":32.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":137.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":152,"title":"Introduction to Computer Science","descr":"Problem solving methods and algorithms in a modern high-level programming language. Introduces one or more programming environments. Emphasis on a programming style and the design, coding, and testing of complete programs. Recommended primarily for computer science majors. ","hours":"4","listings":[{"id":253391,"subj":"CSC","num":131}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":2},"events":{},"id":"c137","position":{"x":537.5,"y":137.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}}},{"id":"c246-c137","source":"c246","target":"c137","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":true,"altCombo":{"comboID":88,"optionID":246,"selectedOptionID":243}},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":127.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":258,"title":"Basic Precalculus","descr":"Study of fundamental concepts of algebra, functions using graphical and algebraic approaches, and applications that are essential to the study of basic calculus. Covers linear, quadratic, polynomial, rational, radical, piecewise, composite, inverse, exponential, and logarithmic functions. ","hours":"3","listings":[{"id":257161,"subj":"MAT","num":150}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":0},"events":{},"id":"c246","position":{"x":312.5,"y":127.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":137.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":152,"title":"Introduction to Computer Science","descr":"Problem solving methods and algorithms in a modern high-level programming language. Introduces one or more programming environments. Emphasis on a programming style and the design, coding, and testing of complete programs. Recommended primarily for computer science majors. ","hours":"4","listings":[{"id":253391,"subj":"CSC","num":131}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":2},"events":{},"id":"c137","position":{"x":537.5,"y":137.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}}},{"id":"c32-c29","source":"c32","target":"c29","animated":true,"markerEnd":"arrow","selectable":false,"data":{"hidden":false,"altCombo":{"comboID":109,"optionID":32,"selectedOptionID":32}},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":232.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":7,"title":"Introduction To Graphic Design","descr":"Basic principles of graphic design and communication. Projects focus on the graphic expression of form through two-dimensional composition to communicate information, concepts, and emotions, and combine development of computer software skills with off-line creative processes and production methods. ","hours":"3","listings":[{"id":251101,"subj":"ART","num":260}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":1},"events":{},"id":"c32","position":{"x":537.5,"y":232.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":762.5,"y":185,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":6,"title":"3-D Computer Graphics Tools and Literacy","descr":"Project-based approach to learning fundamental principles of 3-D computer graphics using high-level software tools. Modeling of objects, geometrical transformations, surface algorithms, lighting and shading, alternative rendering techniques, and providing background skills necessary to create animated movies. ","hours":"3","listings":[{"id":251093,"subj":"ART","num":220},{"id":251504,"subj":"CSC","num":220},{"id":251926,"subj":"FST","num":220}],"selectedListing":1}],"manual":true,"complete":false,"hidden":false,"hasPredecessors":4},"events":{},"id":"c29","position":{"x":762.5,"y":185},"width":"175px","height":"45px","deletable":true,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"opacity":1,"width":"175px","height":"45px"}}},{"id":"c33-c29","source":"c33","target":"c29","animated":true,"markerEnd":"arrow","selectable":false,"data":{"hidden":true,"altCombo":{"comboID":109,"optionID":33,"selectedOptionID":32}},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":327.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":8,"title":"Introduction to Digital Photography","descr":"Digital photography concepts and methods. Designing, processing, critiquing, and displaying of images created with digital cameras and printed with digital media.","hours":"3","listings":[{"id":251103,"subj":"ART","num":282}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":1},"events":{},"id":"c33","position":{"x":537.5,"y":327.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":762.5,"y":185,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":6,"title":"3-D Computer Graphics Tools and Literacy","descr":"Project-based approach to learning fundamental principles of 3-D computer graphics using high-level software tools. Modeling of objects, geometrical transformations, surface algorithms, lighting and shading, alternative rendering techniques, and providing background skills necessary to create animated movies. ","hours":"3","listings":[{"id":251093,"subj":"ART","num":220},{"id":251504,"subj":"CSC","num":220},{"id":251926,"subj":"FST","num":220}],"selectedListing":1}],"manual":true,"complete":false,"hidden":false,"hasPredecessors":4},"events":{},"id":"c29","position":{"x":762.5,"y":185},"width":"175px","height":"45px","deletable":true,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"opacity":1,"width":"175px","height":"45px"}}},{"id":"c28-c32","source":"c28","target":"c32","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":false},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":280,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":4,"title":"Two-Dimensional Design","descr":"Study of the principles of two-dimensional design and introduction to color theory. ","hours":"3","listings":[{"id":251087,"subj":"ART","num":101}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":0},"events":{},"id":"c28","position":{"x":312.5,"y":280},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":232.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":7,"title":"Introduction To Graphic Design","descr":"Basic principles of graphic design and communication. Projects focus on the graphic expression of form through two-dimensional composition to communicate information, concepts, and emotions, and combine development of computer software skills with off-line creative processes and production methods. ","hours":"3","listings":[{"id":251101,"subj":"ART","num":260}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":1},"events":{},"id":"c32","position":{"x":537.5,"y":232.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}}},{"id":"c28-c33","source":"c28","target":"c33","animated":false,"markerEnd":"arrow","selectable":false,"data":{"hidden":true},"type":"coreq","events":{},"sourceNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":312.5,"y":280,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":4,"title":"Two-Dimensional Design","descr":"Study of the principles of two-dimensional design and introduction to color theory. ","hours":"3","listings":[{"id":251087,"subj":"ART","num":101}],"selectedListing":0}],"manual":false,"complete":false,"hidden":false,"hasPredecessors":0},"events":{},"id":"c28","position":{"x":312.5,"y":280},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"all","width":"175px","height":"45px"}},"targetNode":{"type":"coreq","dimensions":{"width":175,"height":45},"handleBounds":{"source":[{"id":"source","position":"right","x":172.99999230048223,"y":19.49999601676682,"width":6,"height":6}],"target":[{"id":"target","position":"left","x":-4.000011199843895,"y":19.49999601676682,"width":6,"height":6}]},"computedPosition":{"x":537.5,"y":327.5,"z":0},"draggable":true,"connectable":false,"selected":false,"dragging":false,"resizing":false,"initialized":true,"data":{"courses":[{"id":8,"title":"Introduction to Digital Photography","descr":"Digital photography concepts and methods. Designing, processing, critiquing, and displaying of images created with digital cameras and printed with digital media.","hours":"3","listings":[{"id":251103,"subj":"ART","num":282}],"selectedListing":0}],"manual":false,"complete":false,"hidden":true,"hasPredecessors":1},"events":{},"id":"c33","position":{"x":537.5,"y":327.5},"width":"175px","height":"45px","deletable":false,"hidden":false,"targetPosition":"top","sourcePosition":"bottom","style":{"pointerEvents":"none","opacity":"0","width":"175px","height":"45px"}}}],"position":[-18.385026737967905,349.0133689839572],"zoom":0.4085561497326203}'
-  );
-}
-
-function loadLocalStorage() {
-  console.log("==========");
-  console.log("Load Storage");
-  console.log("----------");
-  console.log(localStorage.getItem("course-flow"));
-  courseFlow.load(localStorage.getItem("course-flow")!);
-  console.log("==========");
+  //console.log("==========");
 }
 </script>
 
 <template>
-  <PrimeButton label="Flow Data" @click="printFlowData" style="position: fixed; top: 100px; left: 40px" />
+  <!-- <PrimeButton
+    label="Flow Data"
+    @click="printFlowData"
+    style="position: fixed; top: 100px; left: 40px; z-index: 2000"
+  />
   <PrimeButton label="Set Storage" @click="setLocalStorage" style="position: fixed; top: 200px; left: 40px" />
-  <PrimeButton label="Load Storage" @click="loadLocalStorage" style="position: fixed; top: 300px; left: 40px" />
-
-  <div class="flow-container flex justify-content-center flex-column">
-    <VueFlow
-      id="course-flow"
-      :class="
-        (menusDock.isPrintSelected ? 'print-size' : 'screen-size') +
-        ' flex justify-content-center align-items-center align-self-stretch flex-grow-1'
-      "
-      :node-types="courseFlow.nodeTypes"
-      :edge-types="courseFlow.edgeTypes"
-      :default-zoom="1.5"
-      :min-zoom="0.2"
-      :max-zoom="4"
-    >
-      <PrimeSpinner v-if="editor.isLoadingFlow" style="z-index: 10" />
-      <Background class="background" />
-      <MiniMap />
-      <Controls
-        :showInteractive="false"
-        :show-fit-view="false"
-        :show-zoom="false"
-        :fitViewParams="{ duration: 200 }"
-        style="border-radius: 2rem"
+  <PrimeButton label="Load Storage" @click="loadLocalStorage" style="position: fixed; top: 300px; left: 40px" /> -->
+  <PrimeBlockUI :blocked="menusDock.isPrintSelected">
+    <div class="flow-container flex justify-content-center flex-column">
+      <VueFlow
+        id="course-flow"
+        :class="
+          (menusDock.isPrintSelected ? 'print-size' : 'screen-size flex-grow-1') +
+          ' flex justify-content-center align-items-center align-self-stretch '
+        "
+        :node-types="courseFlow.nodeTypes"
+        :edge-types="courseFlow.edgeTypes"
+        :default-zoom="1.5"
+        :min-zoom="0.2"
+        :max-zoom="4"
       >
-        <div class="flex flex-column">
-          <PrimeButton
-            icon="pi pi-search-plus"
-            @click="courseFlow.zoomIn"
-            class="p-button-rounded p-button-text p-button-secondary"
-          />
-          <PrimeButton
-            icon="pi pi-search-minus"
-            @click="courseFlow.zoomOut"
-            class="p-button-rounded p-button-text p-button-secondary"
-          />
-          <PrimeButton
-            icon="pi pi-search"
-            @click="courseFlow.fitView"
-            class="p-button-rounded p-button-text p-button-secondary"
-          />
-        </div>
-      </Controls>
-    </VueFlow>
-  </div>
+        <PrimeSpinner v-if="editor.isLoadingFlow" style="z-index: 10" />
+        <Background class="background" />
+        <div class="vue-flow__panel top right node-key"></div>
+        <MiniMap style="box-shadow: 0px 10px 1px -7px rgb(0 0 0 / 20%), 0px 1px 3px 3px rgb(0 0 0 / 14%)" />
+        <Controls
+          :showInteractive="false"
+          :show-fit-view="false"
+          :show-zoom="false"
+          :fitViewParams="{ duration: 200 }"
+          style="border-radius: 2rem; box-shadow: 0px 10px 1px -7px rgb(0 0 0 / 20%), 0px 1px 3px 3px rgb(0 0 0 / 14%)"
+        >
+          <div class="flex flex-column">
+            <PrimeButton
+              icon="pi pi-search-plus"
+              @click="courseFlow.zoomIn"
+              class="p-button-rounded p-button-text p-button-secondary"
+            />
+            <PrimeButton
+              icon="pi pi-search-minus"
+              @click="courseFlow.zoomOut"
+              class="p-button-rounded p-button-text p-button-secondary"
+            />
+            <PrimeButton
+              icon="pi pi-search"
+              @click="courseFlow.fitView"
+              class="p-button-rounded p-button-text p-button-secondary"
+            />
+          </div>
+        </Controls>
+      </VueFlow>
+    </div>
+    <div v-if="printer.includeDescr" class="print-size course-descr">
+      <div v-for="course in courseFlow.getVisibleSelectedListings" class="inline-block" style="width: 100%">
+        <PrimeCard>
+          <template #title>{{ course.listing }}</template>
+          <template #subtitle> {{ course.title }}</template>
+          <template #content>
+            {{ course.descr }}
+          </template>
+          <template #footer>
+            <span v-if="course.hours">Credit Hours: {{ course.hours }} </span></template
+          >
+        </PrimeCard>
+        <PrimeDivider />
+      </div>
+    </div>
+  </PrimeBlockUI>
 </template>
 
 <style scoped>
 .flow-container {
   min-height: 100vh;
-  padding: 4vh 5vw 4vh 9vw;
+  padding: 0 0 0 3rem;
 }
 .screen-size {
   width: 100%;
   height: 100%;
 }
-.print-size {
-  width: 8.5in;
-  height: 10.5in;
-}
 .background {
   height: 100%;
+}
+:deep(.p-component-overlay) {
+  background-color: transparent !important;
+}
+:deep(.p-card) {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  width: 100%;
+}
+:deep(.p-card-content) {
+  font-size: small;
+}
+:deep(.p-card-footer) {
+  font-size: small;
+}
+.course-descr {
+  display: none;
+}
+.print-size {
+  width: 8in;
+  height: 10.5in;
+  border: 1px solid rgb(0 0 0 / 50%);
+  pointer-events: none;
+  box-shadow: 0px 10px 10px 0px rgb(0 0 0 / 20%), 3px 3px 3px 3px rgb(0 0 0 / 14%);
+}
+.print-size > .vue-flow__minimap,
+.print-size > .vue-flow__controls {
+  display: none;
+}
+.print-size:deep(.background) {
+  opacity: 0;
+}
+
+.flow-container:has(.print-size) {
+  padding: 3rem 3rem 3rem 6rem;
+}
+
+@media print {
+  .print-size {
+    width: 8in;
+    height: 10.5in;
+    border: none;
+    box-shadow: none;
+  }
+
+  .course-descr {
+    display: block;
+  }
 }
 </style>

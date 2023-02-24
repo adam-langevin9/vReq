@@ -1,9 +1,22 @@
 <script setup lang="ts">
 import { useVisual } from "@/stores/Visual.store";
 import { computed, ref } from "vue";
+import { useConfirmToast } from "@/stores/ConfirmToast.store";
+
 const visual = useVisual();
+const confirmToast = useConfirmToast();
+
 const isEditingTitle = ref(false);
 const shouldDisableButtons = computed(() => isEditingTitle.value && !visual.isNewVisual);
+
+const showConfirmDelete = () => {
+  confirmToast.open(
+    "error",
+    `Are you sure you want to delete '${visual.title}'?`,
+    "This action can not be undone",
+    visual.remove
+  );
+};
 </script>
 <template>
   <div class="flex justify-content-center">
@@ -11,7 +24,7 @@ const shouldDisableButtons = computed(() => isEditingTitle.value && !visual.isNe
       icon="pi pi-plus"
       label="New Visual"
       @click="visual.createBlank"
-      class="p-button-secondary"
+      class="p-button-primary p-button-outlined"
       :disabled="shouldDisableButtons"
     />
   </div>
@@ -65,7 +78,13 @@ const shouldDisableButtons = computed(() => isEditingTitle.value && !visual.isNe
     </div>
 
     <div class="flex justify-content-center">
-      <PrimeButton icon="pi pi-save" label="Save" @click="visual.save" :disabled="shouldDisableButtons" />
+      <PrimeButton @click="visual.save" :disabled="shouldDisableButtons" class="p-button-outlined p-button-secondary">
+        <div class="p-overlay-badge">
+          <i class="pi pi-save mr-2" />
+          <span>Save</span>
+          <PrimeBadge v-if="!visual.isUpToDate" severity="warning"></PrimeBadge>
+        </div>
+      </PrimeButton>
     </div>
   </form>
 
@@ -82,20 +101,32 @@ const shouldDisableButtons = computed(() => isEditingTitle.value && !visual.isNe
       :disabled="shouldDisableButtons"
     />
     <div class="flex justify-content-center">
-      <PrimeButton icon="pi pi-folder-open" label="Open" @click="visual.load" :disabled="shouldDisableButtons" />
+      <PrimeButton
+        icon="pi pi-folder-open"
+        label="Open"
+        @click="visual.load"
+        :disabled="shouldDisableButtons"
+        class="p-button-outlined p-button-secondary"
+      />
     </div>
   </form>
 
-  <PrimeDivider />
+  <PrimeDivider v-if="visual.title" />
 
-  <div class="flex justify-content-center">
+  <div v-if="visual.title" class="flex justify-content-center">
     <PrimeButton
       icon="pi pi-trash"
       label="Delete Visual"
-      @click="visual.remove"
-      class="p-button-danger"
-      :disabled="shouldDisableButtons || visual.isNewVisual"
+      @click="showConfirmDelete"
+      class="p-button-danger p-button-outlined"
+      :disabled="shouldDisableButtons"
     />
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+:deep(.p-button .p-badge) {
+  min-width: 0.5rem !important;
+  height: 0.5rem !important;
+  right: -0.5rem;
+}
+</style>

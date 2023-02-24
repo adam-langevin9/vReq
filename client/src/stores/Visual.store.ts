@@ -1,6 +1,6 @@
 import type { VisualTitleDTO } from "@/services/VisualDataService";
 import { defineStore } from "pinia";
-import { computed, ref, watchEffect, type Ref } from "vue";
+import { computed, ref, watch, watchEffect, type Ref } from "vue";
 import { useCourseFlow } from "./CourseFlow.store";
 import { createVisual, readVisual, readTitles, updateVisual, deleteVisual } from "@/services/VisualDataService";
 import { useUser } from "./User.store";
@@ -16,8 +16,9 @@ export const useVisual = defineStore("Visual", () => {
   // state
   const id: RemovableRef<string | number> = useStorage("visual-id", "");
   const titleField = useStorage("visual-title", "");
-  const titles: Ref<VisualTitleDTO[]> = ref([]);
+  const titles: RemovableRef<VisualTitleDTO[]> = useStorage("user-titles", []);
   const selectedTitle: Ref<VisualTitleDTO | undefined> = ref();
+  const isUpToDate = ref(true);
 
   // computed
   const title = computed(() => titles.value.find((visual) => visual.id === +id.value)?.title ?? "");
@@ -33,7 +34,6 @@ export const useVisual = defineStore("Visual", () => {
     titleField.value = "";
     editor.clear();
   }
-
   async function save(): Promise<void> {
     if (!user.id) throw Error("User not logged in.");
     if (_isDuplicateTitle.value) throw Error("Title already exists.");
@@ -61,6 +61,7 @@ export const useVisual = defineStore("Visual", () => {
         titles.value[index] = { ...titles.value[index], title: titleField.value };
       }
     }
+    setTimeout(() => (isUpToDate.value = true));
   }
   async function updateTitle() {
     if (isNewVisual.value) throw Error("Cannot update title of new visual.");
@@ -83,8 +84,10 @@ export const useVisual = defineStore("Visual", () => {
       const elements = response.elements;
       id.value = response.id;
       titleField.value = response.title;
-      courseFlow.load(elements);
+      editor.clear();
+      setTimeout(() => courseFlow.load(elements));
       selectedTitle.value = undefined;
+      setTimeout(() => (isUpToDate.value = true));
     }
   }
   async function loadTitles(userID: string): Promise<void> {
@@ -102,12 +105,20 @@ export const useVisual = defineStore("Visual", () => {
 
   // watchers
   watchEffect(() => titles.value.sort((a, b) => a.title.localeCompare(b.title)));
+  watch(
+    [() => courseFlow.getEdges, () => courseFlow.getNodes],
+    () => {
+      if (isUpToDate.value) isUpToDate.value = false;
+    },
+    { deep: true }
+  );
 
   return {
     id,
     titles,
     title,
     titleField,
+    isUpToDate,
     selectedTitle,
     isNewVisual,
     createBlank,

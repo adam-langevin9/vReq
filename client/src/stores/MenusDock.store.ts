@@ -29,9 +29,6 @@ export const useDock = defineStore("Dock", () => {
     },
     set(value: boolean) {
       menus[MenuNames.USER].value = value;
-      menus[MenuNames.EDITOR].value = false;
-      menus[MenuNames.ALTERNATIVES].value = false;
-      menus[MenuNames.PRINT].value = false;
     },
   });
   const isEditorSelected = computed({
@@ -39,10 +36,7 @@ export const useDock = defineStore("Dock", () => {
       return menus[MenuNames.EDITOR].value;
     },
     set(value: boolean) {
-      menus[MenuNames.USER].value = false;
       menus[MenuNames.EDITOR].value = value;
-      menus[MenuNames.ALTERNATIVES].value = false;
-      menus[MenuNames.PRINT].value = false;
     },
   });
   const isAlternativesSelected = computed({
@@ -50,10 +44,7 @@ export const useDock = defineStore("Dock", () => {
       return menus[MenuNames.ALTERNATIVES].value;
     },
     set(value: boolean) {
-      menus[MenuNames.USER].value = false;
-      menus[MenuNames.EDITOR].value = false;
       menus[MenuNames.ALTERNATIVES].value = value;
-      menus[MenuNames.PRINT].value = false;
     },
   });
   const isPrintSelected = computed({
@@ -61,9 +52,6 @@ export const useDock = defineStore("Dock", () => {
       return menus[MenuNames.PRINT].value;
     },
     set(value: boolean) {
-      menus[MenuNames.USER].value = false;
-      menus[MenuNames.EDITOR].value = false;
-      menus[MenuNames.ALTERNATIVES].value = false;
       menus[MenuNames.PRINT].value = value;
     },
   });
@@ -79,7 +67,7 @@ export const useDock = defineStore("Dock", () => {
   }
   function open(menuName: MenuName) {
     for (const key in menus) {
-      menus[key].value = menus[key].value === menus[menuName].value;
+      menus[key].value = key === menuName;
     }
   }
   function close(menuName: MenuName) {
