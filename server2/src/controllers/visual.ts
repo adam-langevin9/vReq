@@ -74,7 +74,7 @@ export default {
   },
 
   // Read a list of visual titles with a user_id
-  readNames(req: Request, res: Response): void {
+  readTitles(req: Request, res: Response): void {
     const user_id = req.body.user_id;
     if (!user_id) {
       res.status(400).send({

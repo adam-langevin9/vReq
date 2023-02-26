@@ -1,4 +1,4 @@
-import { useVueFlow, Position, type VueFlowStore } from "@vue-flow/core";
+import { Position } from "@vue-flow/core";
 import dagre from "dagre";
 import { useCourseFlow } from "@/stores/CourseFlow.store";
 

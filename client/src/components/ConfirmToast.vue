@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import { useToast } from "primevue/usetoast";
 import { useFocus } from "@vueuse/core";
-import { onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { useConfirmToast } from "@/stores/ConfirmToast.store";
 
 const confirmButton = ref();
-const { focused: confirmButtonFocus } = useFocus(confirmButton, { initialValue: true });
+useFocus(confirmButton, { initialValue: true });
 
 const confirmToast = useConfirmToast();
-const props = withDefaults(
+withDefaults(
   defineProps<{
     icon?: string;
     position?: string;
     group?: string;
     onReject?: () => void;
     onConfirm?: () => void;
-    confirmClass?: string;
-    rejectClass?: string;
   }>(),
   {
     icon: "pi pi-exclamation-triangle",
@@ -24,9 +21,18 @@ const props = withDefaults(
     group: "confirm",
     onReject: () => {},
     onConfirm: () => {},
-    confirmClass: "p-button-danger",
-    rejectClass: "p-button-secondary",
   }
+);
+const confirmClass = computed(() =>
+  confirmToast.severity === "error"
+    ? "p-button-danger"
+    : confirmToast.severity === "warn"
+    ? "p-button-warning"
+    : confirmToast.severity === "info"
+    ? "p-button-info"
+    : confirmToast.severity === "success"
+    ? "p-button-success"
+    : "p-button-secondary"
 );
 const reject = () => {
   confirmToast.reject();
@@ -48,7 +54,7 @@ const confirm = () => {
         </div>
         <div class="grid p-fluid">
           <div class="col-6">
-            <PrimeButton :class="rejectClass" label="No" @click="reject"></PrimeButton>
+            <PrimeButton class="p-button-secondary" label="No" @click="reject"></PrimeButton>
           </div>
           <div class="col-6">
             <PrimeButton ref="confirmButton" :class="confirmClass" label="Yes" @click="confirm"></PrimeButton>

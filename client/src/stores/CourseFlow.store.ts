@@ -12,14 +12,15 @@ import {
   type FitViewParams,
 } from "@vue-flow/core";
 import { Layout } from "@/utils/LayoutUtility";
-import type { CustomNodeData } from "@/classes/CustomNode";
+import type { CustomNode, CustomNodeData } from "@/classes/CustomNode";
 import CoreqNode from "@/components/Flow/Components/Nodes/CoreqNode/CoreqNode.vue";
 import DegreeNode from "@/components/Flow/Components/Nodes/DegreeNode.vue";
 import CoreqEdge from "@/components/Flow/Components/Edges/CoreqEdge.vue";
 import DegreeEdge from "@/components/Flow/Components/Edges/DegreeEdge.vue";
-import type { CustomEdgeData } from "@/classes/CustomEdge";
+import type { CustomEdge, CustomEdgeData } from "@/classes/CustomEdge";
 import type { CourseDataDTO } from "@/services/FlowDataService";
 import { useVisual } from "./Visual.store";
+import { invoke, until, useCounter } from "@vueuse/core";
 
 export const useCourseFlow = defineStore("CourseFlow", () => {
   // stores
@@ -54,17 +55,17 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     zoomOut,
     findNode,
     findEdge,
-    addNodes,
-    addEdges,
+    addNodes: _addNodes,
+    addEdges: _addEdges,
     removeNodes,
     toObject,
   } = useVueFlow({ id: "course-flow", edgeTypes, nodeTypes });
-  // Add types to getEdges and getNodes to make stricter typing
 
   // state
   const layout = ref();
 
   // computed
+  // Add types to getEdges and getNodes to make stricter typing
   const getEdges: ComputedRef<GraphEdge<CustomEdgeData, any>[]> = _getEdges;
   const getNodes: ComputedRef<GraphNode<CustomNodeData, any>[]> = _getNodes;
   const getVisibleNodes: ComputedRef<GraphNode<CustomNodeData, any>[]> = computed(() =>
@@ -89,15 +90,11 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
         .reduce((acc: any[], val: any) => acc.concat(val), [])
         .sort((a: { listing: string }, b: { listing: string }) => a.listing.localeCompare(b.listing))
     );
-
+  const getManualNodes: ComputedRef<GraphNode<CustomNodeData, any>[]> = computed(() =>
+    getNodes.value.filter((node) => node.data.manual)
+  );
   // actions
-  function fitView(options?: FitViewParams): void {
-    return _fitView({
-      nodes: getVisibleNodes.value.map((node) => node.id),
-      duration: 200,
-      ...options,
-    });
-  }
+
   function load(courseFlow: string): void;
   function load(courseFlow: FlowExportObject): void;
   function load(courseFlow: string | FlowExportObject): void {
@@ -106,14 +103,57 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     setNodes(courseFlow.nodes);
     setEdges(courseFlow.edges);
     setTransform({ x, y, zoom: courseFlow.zoom || 1 });
-    setTimeout(() => (visual.isUpToDate = true));
+    fitView();
+  }
+  function newNodes(nodes: CustomNode[]): CustomNode[] {
+    return nodes.filter((node) => !findNode(node.id));
   }
 
-  // watchers
-  watch([getNodesInitialized, getEdges, () => getNodesInitialized.value.length, () => getEdges.value.length], () => {
+  function newEdges(edges: CustomEdge[]): CustomEdge[] {
+    return edges.filter((edge) => !findEdge(edge.id));
+  }
+  function addNodes(nodes: CustomNode[], shouldAutoLayout: boolean = true) {
+    if (shouldAutoLayout && newNodes(nodes).length > 0) {
+      const nodeCount = getNodesInitialized.value.length + newNodes(nodes).length;
+      const unwatch = watch(
+        () => getNodesInitialized.value.length,
+        () => autoLayout()
+      );
+      _addNodes(nodes);
+      invoke(async () => {
+        await until(getNodesInitialized).toMatch((nodes) => nodes.length === nodeCount);
+        unwatch();
+      });
+    } else {
+      _addNodes(nodes);
+    }
+  }
+  function addEdges(edges: CustomEdge[], shouldAutoLayout: boolean = true): void {
+    if (shouldAutoLayout && newEdges(edges).length > 0) {
+      const edgeCount = getEdges.value.length + newEdges(edges).length;
+      const unwatch = watch(
+        () => getEdges.value.length,
+        () => autoLayout()
+      );
+      _addEdges(edges);
+      invoke(async () => {
+        await until(getEdges).toMatch((edges) => edges.length === edgeCount);
+        unwatch();
+      });
+    } else _addEdges(edges);
+  }
+
+  function fitView(options?: FitViewParams): void {
+    return _fitView({
+      nodes: getVisibleNodes.value.map((node) => node.id),
+      duration: 200,
+      ...options,
+    });
+  }
+  function autoLayout(): void {
     layout.value = new Layout();
     layout.value.autoLayout();
-  });
+  }
 
   // local storage
   const storedCourseFlow = localStorage.getItem("course-flow");
@@ -135,6 +175,8 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     getNodesInitialized,
     getVisibleNodes,
     getVisibleSelectedListings,
+    getManualNodes,
+    newNodes,
     addNodes,
     addEdges,
     setNodes,
@@ -148,5 +190,6 @@ export const useCourseFlow = defineStore("CourseFlow", () => {
     removeNodes,
     toObject,
     load,
+    autoLayout,
   };
 });

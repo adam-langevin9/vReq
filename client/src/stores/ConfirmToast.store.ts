@@ -10,6 +10,9 @@ export const useConfirmToast = defineStore("ConfirmToast", () => {
   const _onConfirm = ref<() => void>();
   const isOpen = computed(() => _isOpen.value);
 
+  const _severity = ref<"success" | "info" | "warn" | "error">("error");
+  const severity = computed(() => _severity.value);
+
   function open(
     severity: "success" | "info" | "warn" | "error",
     summary: string,
@@ -18,6 +21,7 @@ export const useConfirmToast = defineStore("ConfirmToast", () => {
     onReject: () => void = () => {}
   ) {
     close();
+    _severity.value = severity;
     _onConfirm.value = onConfirm;
     _onReject.value = onReject;
     toast.add({
@@ -40,5 +44,5 @@ export const useConfirmToast = defineStore("ConfirmToast", () => {
     _isOpen.value = false;
   }
 
-  return { isOpen, open, confirm, reject };
+  return { isOpen, severity, open, confirm, reject };
 });

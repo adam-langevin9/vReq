@@ -5,6 +5,7 @@ import flowRoute from "./routes/flow";
 import degreeRoute from "./routes/degree";
 import userRoute from "./routes/user";
 import visualRoute from "./routes/visual";
+import listingRoute from "./routes/listing";
 
 import db from "./models";
 import * as dotenv from "dotenv";
@@ -35,6 +36,7 @@ flowRoute(app);
 degreeRoute(app);
 userRoute(app);
 visualRoute(app);
+listingRoute(app);
 
 dotenv.config();
 const port = process.env.OUT_PORT ?? 3000;

@@ -1,94 +1,189 @@
-import type { VisualTitleDTO } from "@/services/VisualDataService";
-import { defineStore } from "pinia";
+import type { VisualDTO, VisualTitleDTO } from "@/services/VisualDataService";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch, watchEffect, type Ref } from "vue";
 import { useCourseFlow } from "./CourseFlow.store";
 import { createVisual, readVisual, readTitles, updateVisual, deleteVisual } from "@/services/VisualDataService";
 import { useUser } from "./User.store";
 import { useStorage, type RemovableRef } from "@vueuse/core";
 import { useEditor } from "./Editor.store";
+import type { FlowExportObject } from "@vue-flow/core";
+import { useToast } from "primevue/usetoast";
 
 export const useVisual = defineStore("Visual", () => {
   // stores
   const courseFlow = useCourseFlow();
   const user = useUser();
+  const { titles } = storeToRefs(user);
   const editor = useEditor();
+  const toast = useToast();
+
+  // computed used in state
+  const title = computed(() => titles.value.find((visual) => visual.id === +id.value)?.title ?? "");
 
   // state
-  const id: RemovableRef<string | number> = useStorage("visual-id", "");
-  const titleField = useStorage("visual-title", "");
-  const titles: RemovableRef<VisualTitleDTO[]> = useStorage("user-titles", []);
-  const selectedTitle: Ref<VisualTitleDTO | undefined> = ref();
-  const isUpToDate = ref(true);
+  const id: RemovableRef<number> = useStorage("visual-id", 0);
+  const saveInput = ref({ title: title.value ?? "" });
+  const isEditingTitle = ref(false);
+  const loadInput: Ref<VisualTitleDTO> = ref({ id, title: "" });
+  const loadedVisual: RemovableRef<string> = useStorage("loaded-visual", "");
+  const startYear = useStorage("start-year", new Date().getFullYear());
 
   // computed
-  const title = computed(() => titles.value.find((visual) => visual.id === +id.value)?.title ?? "");
-  const _isNewTitle = computed(() => titleField.value && title.value !== titleField.value);
+  const _isNewTitle = computed(() => saveInput.value.title && title.value !== saveInput.value.title);
   const _isDuplicateTitle = computed(
-    () => _isNewTitle.value && titles.value.map((visual) => visual.title).includes(titleField.value)
+    () => _isNewTitle.value && titles.value.map((visual) => visual.title).includes(saveInput.value.title)
   );
   const isNewVisual = computed(() => !id.value);
+  const isUpToDate = computed(() => {
+    if (courseFlow.toObject().nodes.length === 0) return true;
+    else if (loadedVisual.value) {
+      const flowExportObject = courseFlow.toObject();
+      const curr = _prepareLoadForStorage(flowExportObject);
+      const prev = JSON.stringify(JSON.parse(loadedVisual.value));
+      return curr === prev;
+    } else return false;
+  });
+
+  // toast actions
+  function _showCreateSuccess() {
+    toast.add({
+      severity: "success",
+      summary: "New Visual Created",
+      life: 3000,
+    });
+  }
+  function _showSaveSuccess() {
+    toast.add({
+      severity: "success",
+      summary: `Visual Saved`,
+      detail: title.value,
+      life: 3000,
+    });
+  }
+  function _showUpToDate() {
+    toast.add({
+      severity: "info",
+      summary: `Visual up to date`,
+      life: 3000,
+    });
+  }
+  function _showSaveFail() {
+    toast.add({
+      severity: "error",
+      summary: `Save Failed`,
+      detail: `Your visual could not be saved at this time. Please try again later.`,
+      life: 3000,
+    });
+  }
+  function _showOpenSuccess() {
+    toast.add({
+      severity: "success",
+      summary: `Opened Visual`,
+      detail: title.value,
+      life: 3000,
+    });
+  }
+  function _showOpenFail() {
+    toast.add({
+      severity: "error",
+      summary: `Open Failed`,
+      detail: `The selected visual could not be opened at this time. Please try again later.`,
+      life: 3000,
+    });
+  }
+  function _showDeleteSuccess() {
+    toast.add({
+      severity: "success",
+      summary: `Deleted Visual`,
+      detail: title.value,
+      life: 3000,
+    });
+  }
+  function _showDeleteFail() {
+    toast.add({
+      severity: "error",
+      summary: `Open Failed`,
+      detail: `${title.value} could not be deleted at this time. Please try again later.`,
+      life: 3000,
+    });
+  }
 
   // actions
-  async function createBlank() {
-    id.value = "";
-    titleField.value = "";
+  function createBlank(notify = true) {
+    id.value = 0;
+    saveInput.value.title = "";
     editor.clear();
+    if (notify) _showCreateSuccess();
+  }
+  function _prepareLoadForStorage(visual: FlowExportObject): string {
+    const nodes = visual.nodes.map(({ id, data, position }) => ({ id, data, position }));
+    nodes.sort();
+    const edges = visual.edges.map(({ id, data }) => ({ id, data }));
+    edges.sort();
+    return JSON.stringify({ id: id.value, nodes, edges });
   }
   async function save(): Promise<void> {
     if (!user.id) throw Error("User not logged in.");
     if (_isDuplicateTitle.value) throw Error("Title already exists.");
+    let response = null;
     if (isNewVisual.value) {
-      const response = await createVisual({
-        title: titleField.value,
+      response = await createVisual({
+        title: saveInput.value.title,
         user_id: user.id,
-        start_year: user.startYear,
+        start_year: startYear.value,
         elements: JSON.parse(JSON.stringify(courseFlow.toObject())),
       });
       if (response) {
         id.value = response.id;
-        titles.value.push(response);
+        titles.value.push({ id: response.id, title: response.title });
+        loadedVisual.value = _prepareLoadForStorage(courseFlow.toObject());
+        _showSaveSuccess();
       }
     } else {
-      const response = await updateVisual({
+      response = await updateVisual({
         id: +id.value!,
         title: title.value,
         user_id: user.id,
-        start_year: user.startYear,
+        start_year: startYear.value,
         elements: JSON.parse(JSON.stringify(courseFlow.toObject())),
       });
       if (response) {
         const index = titles.value.findIndex((visual) => visual.id === +id.value);
-        titles.value[index] = { ...titles.value[index], title: titleField.value };
-      }
+        titles.value[index] = { ...titles.value[index], title: saveInput.value.title };
+        loadedVisual.value = _prepareLoadForStorage(courseFlow.toObject());
+        _showSaveSuccess();
+      } else if (response === 0) _showUpToDate();
+      else _showSaveFail();
     }
-    setTimeout(() => (isUpToDate.value = true));
   }
   async function updateTitle() {
+    if (!user.id) throw Error("User not logged in.");
     if (isNewVisual.value) throw Error("Cannot update title of new visual.");
     if (_isDuplicateTitle.value) throw Error("Title already exists.");
     if (_isNewTitle.value) {
-      const response = await updateVisual({ id: +id.value!, title: titleField.value });
+      const response = await updateVisual({ id: +id.value!, title: saveInput.value.title });
       if (response) {
         const index = titles.value.findIndex((visual) => visual.id === +id.value);
-        titles.value[index].title = titleField.value;
+        titles.value[index].title = saveInput.value.title;
       }
     }
   }
   function revertTitle() {
-    titleField.value = title.value;
+    saveInput.value.title = title.value;
   }
   async function load(): Promise<void> {
-    if (!selectedTitle.value) throw Error("No visual selected.");
-    const response = await readVisual(selectedTitle.value.id);
+    if (!loadInput.value) throw Error("No visual selected.");
+    const response = await readVisual(loadInput.value.id);
     if (response) {
       const elements = response.elements;
       id.value = response.id;
-      titleField.value = response.title;
+      saveInput.value.title = response.title;
       editor.clear();
       setTimeout(() => courseFlow.load(elements));
-      selectedTitle.value = undefined;
-      setTimeout(() => (isUpToDate.value = true));
-    }
+      loadInput.value = { title: "", id: 0 };
+      setTimeout(() => (loadedVisual.value = _prepareLoadForStorage(courseFlow.toObject())));
+      _showOpenSuccess();
+    } else _showOpenFail();
   }
   async function loadTitles(userID: string): Promise<void> {
     const response = await readTitles(userID);
@@ -98,28 +193,23 @@ export const useVisual = defineStore("Visual", () => {
     if (isNewVisual.value) throw Error("Cannot remove an unsaved visual.");
     const response = await deleteVisual(+id.value!);
     if (response) {
+      _showDeleteSuccess();
       titles.value = titles.value.filter((title) => title.id !== +id.value);
-      createBlank();
-    }
+      createBlank(false);
+    } else _showDeleteFail();
   }
 
   // watchers
   watchEffect(() => titles.value.sort((a, b) => a.title.localeCompare(b.title)));
-  watch(
-    [() => courseFlow.getEdges, () => courseFlow.getNodes],
-    () => {
-      if (isUpToDate.value) isUpToDate.value = false;
-    },
-    { deep: true }
-  );
 
   return {
     id,
     titles,
     title,
-    titleField,
+    saveInput,
+    isEditingTitle,
     isUpToDate,
-    selectedTitle,
+    loadInput,
     isNewVisual,
     createBlank,
     save,

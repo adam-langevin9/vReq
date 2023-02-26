@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { useConfirmToast } from "./stores/ConfirmToast.store";
-const confirmToast = useConfirmToast();
 </script>
 
 <template>
-  <PrimeBlockUI :blocked="confirmToast.isOpen" style="z-index: 1100">
-    <RouterView />
-  </PrimeBlockUI>
+  <RouterView />
 </template>
 
 <style>

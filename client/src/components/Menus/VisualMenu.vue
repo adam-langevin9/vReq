@@ -2,13 +2,74 @@
 import { useVisual } from "@/stores/Visual.store";
 import { computed, ref } from "vue";
 import { useConfirmToast } from "@/stores/ConfirmToast.store";
+import { helpers, required } from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
+import { storeToRefs } from "pinia";
 
+// stores
 const visual = useVisual();
+const { saveInput, loadInput } = storeToRefs(visual);
 const confirmToast = useConfirmToast();
 
-const isEditingTitle = ref(false);
-const shouldDisableButtons = computed(() => isEditingTitle.value && !visual.isNewVisual);
+// state
+const shouldDisableButtons = computed(() => visual.isEditingTitle && !visual.isNewVisual);
+const saveSubmitted = ref(false);
+const loadSubmitted = ref(false);
 
+// validation
+const saveInputRules = computed(() => ({
+  title: {
+    required,
+  },
+}));
+const saveInputV$ = useVuelidate(saveInputRules, saveInput);
+const loadInputRules = computed(() => ({
+  id: {
+    required,
+    notZero: helpers.withMessage("Please select a visual", (id: number) => id !== 0),
+  },
+  title: {
+    required,
+  },
+}));
+const loadInputV$ = useVuelidate(loadInputRules, loadInput);
+
+// submit handlers
+function submitSave(action: () => void) {
+  saveSubmitted.value = true;
+  if (saveInputV$.value.$invalid) return;
+  action();
+  visual.isEditingTitle = false;
+  saveSubmitted.value = false;
+}
+function submitLoad(action: () => void) {
+  loadSubmitted.value = true;
+  if (loadInputV$.value.$invalid) return;
+  action();
+  loadSubmitted.value = false;
+}
+
+// toast actions
+const showConfirmCreate = () => {
+  if (visual.isUpToDate) visual.createBlank();
+  else
+    confirmToast.open(
+      "warn",
+      `Are you sure you want to create a blank visual?`,
+      "You have unsaved changes that will be lost",
+      visual.createBlank
+    );
+};
+const showConfirmOpen = () => {
+  if (visual.isUpToDate) visual.load();
+  else
+    confirmToast.open(
+      "warn",
+      `Are you sure you want to open '${loadInput.value.title}'?`,
+      "You have unsaved changes that will be lost",
+      visual.load
+    );
+};
 const showConfirmDelete = () => {
   confirmToast.open(
     "error",
@@ -23,7 +84,7 @@ const showConfirmDelete = () => {
     <PrimeButton
       icon="pi pi-plus"
       label="New Visual"
-      @click="visual.createBlank"
+      @click="showConfirmCreate"
       class="p-button-primary p-button-outlined"
       :disabled="shouldDisableButtons"
     />
@@ -33,52 +94,65 @@ const showConfirmDelete = () => {
 
   <h3 class="flex justify-content-center m-0">Save Visual</h3>
   <form class="flex flex-column gap-5">
-    <div class="flex justify-content-center">
-      <div class="p-inputgroup">
-        <span class="p-float-label">
-          <PrimeInputText id="title" v-model="visual.titleField" :disabled="!isEditingTitle && !visual.isNewVisual" />
-          <label for="title">Add Title</label>
-        </span>
-        <PrimeButton
-          v-if="!isEditingTitle && visual.id"
-          @click="
-            () => {
-              isEditingTitle = true;
-            }
-          "
-          icon="pi pi-pencil"
-          iconPos="right"
-          class="p-button-secondary p-button-outlined px-2"
-        />
-        <PrimeButton
-          v-if="isEditingTitle && visual.id"
-          @click="
-            () => {
-              visual.updateTitle();
-              isEditingTitle = false;
-            }
-          "
-          icon="pi pi-check"
-          iconPos="right"
-          class="p-button-primary p-button-outlined px-2"
-        />
-        <PrimeButton
-          v-if="isEditingTitle && visual.id"
-          @click="
-            () => {
-              visual.revertTitle();
-              isEditingTitle = false;
-            }
-          "
-          icon="pi pi-times"
-          iconPos="right"
-          class="p-button-danger p-button-outlined px-2"
-        />
+    <div>
+      <div class="flex justify-content-center">
+        <div class="p-inputgroup">
+          <span class="p-float-label">
+            <PrimeInputText
+              id="title"
+              v-model="saveInput.title"
+              :disabled="!visual.isEditingTitle && !visual.isNewVisual"
+              :class="{ 'p-invalid': saveInputV$.title.$invalid && saveSubmitted }"
+            />
+            <label for="title">Add Title</label>
+          </span>
+          <PrimeButton
+            v-if="!visual.isEditingTitle && visual.id"
+            @click="
+              () => {
+                visual.isEditingTitle = true;
+              }
+            "
+            icon="pi pi-pencil"
+            iconPos="right"
+            class="p-button-secondary p-button-outlined px-2"
+          />
+          <PrimeButton
+            v-if="visual.isEditingTitle && visual.id"
+            @click="
+              () => {
+                submitSave(visual.updateTitle);
+              }
+            "
+            icon="pi pi-check"
+            iconPos="right"
+            class="p-button-primary p-button-outlined px-2"
+          />
+          <PrimeButton
+            v-if="visual.isEditingTitle && visual.id"
+            @click="
+              () => {
+                visual.revertTitle();
+                visual.isEditingTitle = false;
+              }
+            "
+            icon="pi pi-times"
+            iconPos="right"
+            class="p-button-danger p-button-outlined px-2"
+          />
+        </div>
       </div>
+      <small v-if="saveInputV$.title.required.$invalid && saveSubmitted" class="p-error">{{
+        saveInputV$.title.required.$message
+      }}</small>
     </div>
 
     <div class="flex justify-content-center">
-      <PrimeButton @click="visual.save" :disabled="shouldDisableButtons" class="p-button-outlined p-button-secondary">
+      <PrimeButton
+        @click="submitSave(visual.save)"
+        :disabled="shouldDisableButtons"
+        class="p-button-outlined p-button-secondary"
+      >
         <div class="p-overlay-badge">
           <i class="pi pi-save mr-2" />
           <span>Save</span>
@@ -92,19 +166,27 @@ const showConfirmDelete = () => {
 
   <h3 class="flex justify-content-center m-0">Open Visual</h3>
   <form class="flex flex-column gap-5">
-    <PrimeDropdown
-      v-model="visual.selectedTitle"
-      :options="visual.titles"
-      optionLabel="title"
-      placeholder="Select a Visual"
-      class="keep-style flex align-content-center justify-items-center ml-4 mr-4"
-      :disabled="shouldDisableButtons"
-    />
+    <div>
+      <PrimeDropdown
+        v-model="loadInput.title"
+        :options="visual.titles"
+        optionLabel="title"
+        placeholder="Select a Visual"
+        :disabled="shouldDisableButtons"
+        :class="{
+          'keep-style flex align-content-center justify-items-center': true,
+          'p-invalid': loadInputV$.title.$invalid && loadSubmitted,
+        }"
+      />
+      <small v-if="loadInputV$.title.required.$invalid && loadSubmitted" class="p-error">{{
+        loadInputV$.title.required.$message
+      }}</small>
+    </div>
     <div class="flex justify-content-center">
       <PrimeButton
         icon="pi pi-folder-open"
         label="Open"
-        @click="visual.load"
+        @click="submitLoad(showConfirmOpen)"
         :disabled="shouldDisableButtons"
         class="p-button-outlined p-button-secondary"
       />
@@ -125,8 +207,9 @@ const showConfirmDelete = () => {
 </template>
 <style scoped>
 :deep(.p-button .p-badge) {
-  min-width: 0.5rem !important;
-  height: 0.5rem !important;
-  right: -0.5rem;
+  min-width: 1rem !important;
+  height: 1rem !important;
+  right: -0.85rem;
+  top: -0.35rem;
 }
 </style>

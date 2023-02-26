@@ -20,7 +20,8 @@ const confirmToast = useConfirmToast();
   <main :class="dock.isAnySelected ? 'condense' : ''">
     <Flow />
   </main>
-  <ConfirmToast position="bottom-left" :onConfirm="() => {}" />
+  <ConfirmToast position="bottom-left" />
+  <PrimeToast position="bottom-left" />
 </template>
 
 <style>

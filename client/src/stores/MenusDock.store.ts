@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { computed, ref, type Ref } from "vue";
+import { computed } from "vue";
+import { useStorage, type RemovableRef } from "@vueuse/core";
 
 export type MenuName = "user" | "editor" | "alternatives" | "print" | "save";
 
@@ -12,11 +13,11 @@ export enum MenuNames {
 
 export const useDock = defineStore("Dock", () => {
   // states
-  const menus: { [index: string]: Ref<boolean> } = {
-    [MenuNames.USER]: ref(false),
-    [MenuNames.EDITOR]: ref(false),
-    [MenuNames.ALTERNATIVES]: ref(false),
-    [MenuNames.PRINT]: ref(false),
+  const menus: { [index: string]: RemovableRef<boolean> } = {
+    [MenuNames.USER]: useStorage("users-open", false, sessionStorage),
+    [MenuNames.EDITOR]: useStorage("editor-open", true, sessionStorage),
+    [MenuNames.ALTERNATIVES]: useStorage("alternatives-open", false, sessionStorage),
+    [MenuNames.PRINT]: useStorage("print-open", false, sessionStorage),
   };
 
   // computed

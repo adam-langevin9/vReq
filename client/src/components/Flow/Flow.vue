@@ -12,24 +12,9 @@ const courseFlow = useCourseFlow();
 const editor = useEditor();
 const menusDock = useDock();
 const printer = usePrinter();
-
-function printFlowData() {
-  //console.log("==========");
-  //console.log("Flow Data");
-  //console.log("----------");
-  console.log(courseFlow.toObject());
-  //console.log("==========");
-}
 </script>
 
 <template>
-  <!-- <PrimeButton
-    label="Flow Data"
-    @click="printFlowData"
-    style="position: fixed; top: 100px; left: 40px; z-index: 2000"
-  />
-  <PrimeButton label="Set Storage" @click="setLocalStorage" style="position: fixed; top: 200px; left: 40px" />
-  <PrimeButton label="Load Storage" @click="loadLocalStorage" style="position: fixed; top: 300px; left: 40px" /> -->
   <PrimeBlockUI :blocked="menusDock.isPrintSelected">
     <div class="flow-container flex justify-content-center flex-column">
       <VueFlow

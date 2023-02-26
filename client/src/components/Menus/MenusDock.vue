@@ -46,13 +46,12 @@ const dockItems = ref([
 </script>
 
 <template>
-  <!-- Not actually an error, v-model works properly -->
   <MenuPanel
     title="User"
     :subtitle="user.id?.toUpperCase()"
     buttonStyle="transform: rotate(180deg)"
     :buttonIcon="user.id ? 'pi pi-sign-out' : ''"
-    :buttonAction="user.logout"
+    :buttonAction="user.showConfirmLogout"
     v-model="dock.isUserSelected"
     ><UserMenu></UserMenu
   ></MenuPanel>

@@ -129,7 +129,7 @@ class CoreqNode implements ICoreqNode {
       semiAvailable: false,
       available: false,
       complete: false,
-      hidden: false,
+      hidden: !nodeDTO.manual,
     };
     this.width = nodeDTO.courses.length === 1 ? "175px" : "185px";
     this.height = nodeDTO.courses.length === 1 ? "45px" : (50 * nodeDTO.courses.length + 5).toString().concat("px");
@@ -176,7 +176,7 @@ class DegreeNode implements IDegreeNode {
       title: degreeNodeDTO.title,
       otherReqs: degreeNodeDTO.otherReqs,
       complete: false,
-      hidden: false,
+      hidden: false, // While theses nodes are always hidden, this is marked false so that its requirements are not hidden
       manual: true,
     };
   }

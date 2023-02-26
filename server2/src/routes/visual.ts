@@ -9,7 +9,7 @@ export default async (app: Express): Promise<void> => {
 
   // Read visual(s)
   router.post("/", visual.read);
-  router.post("/titles", visual.readNames);
+  router.post("/titles", visual.readTitles);
 
   // Update a visual
   router.patch("/", visual.update);

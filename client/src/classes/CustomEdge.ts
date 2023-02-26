@@ -33,7 +33,7 @@ class CoreqEdge implements CustomEdge {
     this.source = edgeDTO.source;
     this.target = edgeDTO.target;
     this.animated = edgeDTO.animated;
-    this.data = { hidden: false, altCombo: edgeDTO.altCombo };
+    this.data = { hidden: true, altCombo: edgeDTO.altCombo };
   }
 }
 
@@ -52,6 +52,6 @@ class DegreeEdge implements CustomEdge {
     this.source = edgeDTO.source;
     this.target = edgeDTO.target;
     this.animated = edgeDTO.animated;
-    this.data = { hidden: false, altCombo: edgeDTO.altCombo };
+    this.data = { hidden: true, altCombo: edgeDTO.altCombo };
   }
 }
