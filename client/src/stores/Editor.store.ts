@@ -95,16 +95,16 @@ export const useEditor = defineStore("Editor", () => {
     } else _showAddCourseFailure();
     isLoadingFlow.value = false;
   }
-  async function addDegreeToFlow(degree: { id: number; title: string }): Promise<void> {
+  async function addDegreeToFlow(id: number, title: string): Promise<void> {
     isLoadingFlow.value = true;
-    const flow = await getDegreeFlow(degree.id);
+    const flow = await getDegreeFlow(id);
     if (flow) {
       const prevManualNodeCount = courseFlow.getManualNodes.length;
       upsertNodes(flow.nodes);
       upsertEdges(flow.edges);
       if (courseFlow.newNodes(flow.nodes).length > 0 || courseFlow.getManualNodes.length > prevManualNodeCount)
-        _showAddDegreeSuccess(degree.title);
-      else _showAddDegreePresent(degree.title);
+        _showAddDegreeSuccess(title);
+      else _showAddDegreePresent(title);
     } else _showAddDegreeFailure();
     isLoadingFlow.value = false;
   }

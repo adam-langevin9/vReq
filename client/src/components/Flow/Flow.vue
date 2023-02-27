@@ -32,29 +32,48 @@ const printer = usePrinter();
         <PrimeSpinner v-if="editor.isLoadingFlow" style="z-index: 10" />
         <Background class="background" />
         <div class="vue-flow__panel top right node-key"></div>
-        <MiniMap style="box-shadow: 0px 10px 1px -7px rgb(0 0 0 / 20%), 0px 1px 3px 3px rgb(0 0 0 / 14%)" />
+        <MiniMap class="shadow-4 border-round-sm" />
         <Controls
           :showInteractive="false"
           :show-fit-view="false"
           :show-zoom="false"
           :fitViewParams="{ duration: 200 }"
-          style="border-radius: 2rem; box-shadow: 0px 10px 1px -7px rgb(0 0 0 / 20%), 0px 1px 3px 3px rgb(0 0 0 / 14%)"
+          class="shadow-4 border-round-3xl rearrange"
+        >
+          <div>
+            <PrimeButton
+              icon="pi pi-th-large"
+              @click="courseFlow.autoLayout"
+              class="p-button-rounded p-button-text p-button-secondary"
+              v-tooltip="'Rearrange'"
+            />
+          </div>
+        </Controls>
+        <Controls
+          :showInteractive="false"
+          :show-fit-view="false"
+          :show-zoom="false"
+          :fitViewParams="{ duration: 200 }"
+          class="shadow-4 border-round-3xl"
         >
           <div class="flex flex-column">
             <PrimeButton
               icon="pi pi-search-plus"
               @click="courseFlow.zoomIn"
               class="p-button-rounded p-button-text p-button-secondary"
+              v-tooltip="'Zoom In'"
             />
             <PrimeButton
               icon="pi pi-search-minus"
               @click="courseFlow.zoomOut"
               class="p-button-rounded p-button-text p-button-secondary"
+              v-tooltip="'Zoom Out'"
             />
             <PrimeButton
               icon="pi pi-search"
               @click="courseFlow.fitView"
               class="p-button-rounded p-button-text p-button-secondary"
+              v-tooltip="'Zoom Fit'"
             />
           </div>
         </Controls>
@@ -89,6 +108,10 @@ const printer = usePrinter();
 }
 .background {
   height: 100%;
+}
+.rearrange {
+  position: absolute;
+  left: 3rem !important;
 }
 :deep(.p-component-overlay) {
   background-color: transparent !important;

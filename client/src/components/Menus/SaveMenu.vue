@@ -2,8 +2,6 @@
 import { useVisual } from "@/stores/Visual.store";
 import { computed, ref } from "vue";
 import { useConfirmToast } from "@/stores/ConfirmToast.store";
-import { helpers, required } from "@vuelidate/validators";
-import useVuelidate from "@vuelidate/core";
 import { storeToRefs } from "pinia";
 import UserMenu from "./UserMenu.vue";
 import { useUser } from "@/stores/User.store";
@@ -16,41 +14,6 @@ const user = useUser();
 
 // state
 const shouldDisableButtons = computed(() => visual.isEditingTitle && !visual.isNewVisual);
-const saveSubmitted = ref(false);
-const loadSubmitted = ref(false);
-
-// validation
-const saveInputRules = computed(() => ({
-  title: {
-    required,
-  },
-}));
-const saveInputV$ = useVuelidate(saveInputRules, saveInput);
-const loadInputRules = computed(() => ({
-  id: {
-    required,
-    notZero: helpers.withMessage("Please select a visual", (id: number) => id !== 0),
-  },
-  title: {
-    required,
-  },
-}));
-const loadInputV$ = useVuelidate(loadInputRules, loadInput);
-
-// submit handlers
-function submitSave(action: () => void) {
-  saveSubmitted.value = true;
-  if (saveInputV$.value.$invalid) return;
-  action();
-  visual.isEditingTitle = false;
-  saveSubmitted.value = false;
-}
-function submitLoad(action: () => void) {
-  loadSubmitted.value = true;
-  if (loadInputV$.value.$invalid) return;
-  action();
-  loadSubmitted.value = false;
-}
 
 // toast actions
 const showConfirmCreate = () => {
@@ -107,7 +70,7 @@ const showConfirmDelete = () => {
                 id="title"
                 v-model="saveInput.title"
                 :disabled="!visual.isEditingTitle && !visual.isNewVisual"
-                :class="{ 'p-invalid': saveInputV$.title.$invalid && saveSubmitted }"
+                :class="{ 'p-invalid': visual.isInvalidSave }"
               />
               <label for="title">Add Title</label>
             </span>
@@ -126,7 +89,7 @@ const showConfirmDelete = () => {
               v-if="visual.isEditingTitle && visual.id"
               @click="
                 () => {
-                  submitSave(visual.updateTitle);
+                  visual.submitSave(visual.updateTitle);
                 }
               "
               icon="pi pi-check"
@@ -147,14 +110,12 @@ const showConfirmDelete = () => {
             />
           </div>
         </div>
-        <small v-if="saveInputV$.title.required.$invalid && saveSubmitted" class="p-error">{{
-          saveInputV$.title.required.$message
-        }}</small>
+        <small v-if="visual.isInvalidSave" class="p-error">Invalid Title</small>
       </div>
 
       <div class="flex justify-content-center">
         <PrimeButton
-          @click="submitSave(visual.save)"
+          @click="visual.submitSave(visual.save)"
           :disabled="shouldDisableButtons"
           class="p-button-outlined p-button-secondary"
         >
@@ -173,25 +134,27 @@ const showConfirmDelete = () => {
     <form class="flex flex-column gap-5">
       <div>
         <PrimeDropdown
-          v-model="loadInput.title"
+          v-model="loadInput"
           :options="visual.titles"
           optionLabel="title"
           placeholder="Select a Visual"
           :disabled="shouldDisableButtons"
           :class="{
             'keep-style flex align-content-center justify-items-center': true,
-            'p-invalid': loadInputV$.title.$invalid && loadSubmitted,
+            'p-invalid': visual.isInvalidLoad,
           }"
         />
-        <small v-if="loadInputV$.title.required.$invalid && loadSubmitted" class="p-error">{{
-          loadInputV$.title.required.$message
-        }}</small>
+        <small v-if="visual.isInvalidLoad" class="p-error">Pick a Visual</small>
       </div>
       <div class="flex justify-content-center">
         <PrimeButton
           icon="pi pi-folder-open"
           label="Open"
-          @click="submitLoad(showConfirmOpen)"
+          @click="
+            () => {
+              visual.submitLoad(showConfirmOpen);
+            }
+          "
           :disabled="shouldDisableButtons"
           class="p-button-outlined p-button-secondary"
         />

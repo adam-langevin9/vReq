@@ -1,6 +1,6 @@
-import type { VisualDTO, VisualTitleDTO } from "@/services/VisualDataService";
+import type { VisualTitleDTO } from "@/services/VisualDataService";
 import { defineStore, storeToRefs } from "pinia";
-import { computed, ref, watch, watchEffect, type Ref } from "vue";
+import { computed, ref, watchEffect, type Ref } from "vue";
 import { useCourseFlow } from "./CourseFlow.store";
 import { createVisual, readVisual, readTitles, updateVisual, deleteVisual } from "@/services/VisualDataService";
 import { useUser } from "./User.store";
@@ -22,11 +22,36 @@ export const useVisual = defineStore("Visual", () => {
 
   // state
   const id: RemovableRef<number> = useStorage("visual-id", 0);
-  const saveInput = ref({ title: title.value ?? "" });
+  const saveInput = ref({ title: title.value ?? "", valid: false, submitted: false });
   const isEditingTitle = ref(false);
   const loadInput: Ref<VisualTitleDTO> = ref({ id, title: "" });
+  const loadInputValidation = ref({ valid: false, submitted: false });
   const loadedVisual: RemovableRef<string> = useStorage("loaded-visual", "");
   const startYear = useStorage("start-year", new Date().getFullYear());
+
+  // validation
+  const isInvalidSave = computed(() => saveInput.value.submitted && !saveInput.value.valid);
+  function setSaveValid() {
+    return !!saveInput.value.title && !_isDuplicateTitle.value;
+  }
+  const isInvalidLoad = computed(() => loadInputValidation.value.submitted && !loadInputValidation.value.valid);
+  function setLoadValid() {
+    return !!loadInput.value.id;
+  }
+
+  // submit handlers
+  async function submitSave(action: () => Promise<void>) {
+    saveInput.value.valid = setSaveValid();
+    saveInput.value.submitted = true;
+    if (!saveInput.value.valid) return;
+    await action();
+  }
+  function submitLoad(action: () => void) {
+    loadInputValidation.value.valid = setLoadValid();
+    loadInputValidation.value.submitted = true;
+    if (!loadInputValidation.value.valid) return;
+    action();
+  }
 
   // computed
   const _isNewTitle = computed(() => saveInput.value.title && title.value !== saveInput.value.title);
@@ -112,7 +137,7 @@ export const useVisual = defineStore("Visual", () => {
   function createBlank(notify = true) {
     id.value = 0;
     saveInput.value.title = "";
-    editor.clear();
+    editor.clear(notify);
     if (notify) _showCreateSuccess();
   }
   function _prepareLoadForStorage(visual: FlowExportObject): string {
@@ -165,7 +190,9 @@ export const useVisual = defineStore("Visual", () => {
       if (response) {
         const index = titles.value.findIndex((visual) => visual.id === +id.value);
         titles.value[index].title = saveInput.value.title;
-      }
+        isEditingTitle.value = false;
+        _showSaveSuccess();
+      } else _showSaveFail();
     }
   }
   function revertTitle() {
@@ -178,7 +205,7 @@ export const useVisual = defineStore("Visual", () => {
       const elements = response.elements;
       id.value = response.id;
       saveInput.value.title = response.title;
-      editor.clear();
+      editor.clear(false);
       setTimeout(() => courseFlow.load(elements));
       loadInput.value = { title: "", id: 0 };
       setTimeout(() => (loadedVisual.value = _prepareLoadForStorage(courseFlow.toObject())));
@@ -199,9 +226,6 @@ export const useVisual = defineStore("Visual", () => {
     } else _showDeleteFail();
   }
 
-  // watchers
-  watchEffect(() => titles.value.sort((a, b) => a.title.localeCompare(b.title)));
-
   return {
     id,
     titles,
@@ -211,6 +235,12 @@ export const useVisual = defineStore("Visual", () => {
     isUpToDate,
     loadInput,
     isNewVisual,
+    isInvalidSave,
+    isInvalidLoad,
+    setSaveValid,
+    setLoadValid,
+    submitSave,
+    submitLoad,
     createBlank,
     save,
     updateTitle,

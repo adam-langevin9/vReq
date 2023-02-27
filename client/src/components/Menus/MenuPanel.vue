@@ -45,7 +45,6 @@ watch(visible, (value) => {
             "
             :style="buttonStyle"
             @click="buttonAction"
-            v-tooltip="{ value: buttonTooltip, position: 'right' }"
           />
         </div>
         <div class="flex flex-column flex-grow-1">

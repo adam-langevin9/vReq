@@ -53,7 +53,7 @@ const dockItems = ref([
   {
     menuName: MenuNames.ALTERNATIVES,
     label: "Alts",
-    icon: "pi pi-sitemap",
+    icon: "pi pi-share-alt",
     command: () => dock.toggle(MenuNames.ALTERNATIVES),
   },
   {
@@ -84,7 +84,6 @@ const dockItems = ref([
     buttonStyle="transform: rotate(180deg)"
     :buttonIcon="user.id ? 'pi pi-sign-out' : ''"
     :buttonAction="user.showConfirmLogout"
-    :buttonTooltip="user.id ? 'Logout' : 'Login'"
     v-model="dock.isUserSelected"
     ><UserMenu></UserMenu
   ></MenuPanel>
@@ -246,5 +245,11 @@ a.p-dock-item.open {
 .p-dock-item-second-next {
   transform: none !important;
   margin: inherit !important;
+}
+.pi.pi-sitemap {
+  transform: rotate(90deg);
+}
+.pi.pi-share-alt {
+  transform: rotate(180deg);
 }
 </style>

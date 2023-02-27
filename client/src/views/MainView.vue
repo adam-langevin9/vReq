@@ -21,7 +21,7 @@ const confirmToast = useConfirmToast();
     <Flow />
   </main>
   <ConfirmToast position="bottom-left" />
-  <PrimeToast position="bottom-left" />
+  <PrimeToast position="top-right" />
   <PrimeToast position="bottom-left" group="loginToLoad" />
 </template>
 
@@ -52,7 +52,8 @@ main.condense {
   .p-dock,
   .vue-flow__minimap,
   .vue-flow__controls,
-  .p-sidebar-mask {
+  .p-sidebar-mask,
+  .p-toast-message {
     display: none !important;
   }
   .flow-container {

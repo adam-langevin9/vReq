@@ -33,6 +33,34 @@ export default {
       });
   },
 
+  // Verify a User's id
+  isAvailable(req: Request, res: Response): void {
+    const id = req.body.id;
+    if (!id) {
+      return;
+    }
+    User.findByPk(id).then((user) => {
+      if (user) res.status(200).send({ message: "Username already exists.", isAvailable: false });
+      else res.status(200).send({ message: "Username is available.", isAvailable: true });
+    });
+  },
+
+  // Verify a User's pw
+  verify(req: Request, res: Response): void {
+    const id = req.body.id;
+    const pw = req.body.pw;
+    if (!id) {
+      return;
+    }
+    if (!pw) {
+      return;
+    }
+    User.findByPk(id).then((user) => {
+      if (user?.pw === pw) res.status(200).send({ verified: true });
+      else res.status(200).send({ verified: false });
+    });
+  },
+
   // Log a single User in with an id and pw
   login(req: Request, res: Response): void {
     const id = req.body.id;

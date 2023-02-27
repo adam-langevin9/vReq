@@ -4,8 +4,6 @@ import { useConfirmToast } from "@/stores/ConfirmToast.store";
 import { useCourseFlow } from "@/stores/CourseFlow.store";
 import { useEditor } from "@/stores/Editor.store";
 import { computed, ref } from "vue";
-import { useVuelidate } from "@vuelidate/core";
-import { helpers, required } from "@vuelidate/validators";
 import { validListing } from "@/services/ListingDataService";
 
 // stores
@@ -17,48 +15,43 @@ const courseFlow = useCourseFlow();
 if (!editor.degrees) editor.fillDegrees();
 
 // state
-const courseInput = ref({ subj: "", num: "" });
-const courseSubmitted = ref(false);
-const degreeInput = ref({ id: 0, title: "" });
-const degreeSubmitted = ref(false);
+const courseInput = ref({ subj: "", num: "", valid: false, submitted: false });
+const degreeInput = ref({ id: 0, title: "", valid: false, submitted: false });
 
 // validation
-const courseInputRules = computed(() => ({
-  subj: {
-    required,
-    exists: helpers.withMessage(
-      "Invalid Course",
-      helpers.withAsync(async (subj: string) => await validListing(subj, courseInput.value.num), courseInput)
-    ),
-  },
-  num: {
-    required,
-  },
-}));
-const courseInputV$ = useVuelidate(courseInputRules, courseInput);
-const degreeInputRules = computed(() => ({
-  id: {
-    required,
-    notZero: helpers.withMessage("Please select a degree", (id: number) => id !== 0),
-  },
-  title: {
-    required,
-  },
-}));
-const degreeInputV$ = useVuelidate(degreeInputRules, degreeInput);
+const isInvalidCourse = computed(() => courseInput.value.submitted && !courseInput.value.valid);
+async function setCourseValid() {
+  return (
+    !!courseInput.value.subj &&
+    !!courseInput.value.num &&
+    !!(await validListing(courseInput.value.subj, courseInput.value.num))
+  );
+}
+const isInvalidDegree = computed(() => degreeInput.value.submitted && !degreeInput.value.valid);
+function setDegreeValid() {
+  return !!degreeInput.value.id && !!degreeInput.value.title;
+}
 
 // submit handlers
-function submitCourse(action: (subj: string, num: number) => void) {
-  courseSubmitted.value = true;
-  if (courseInputV$.value.$invalid) return;
-  action(courseInput.value.subj, +courseInput.value.num);
-  courseSubmitted.value = false;
+async function submitCourse(action: (subj: string, num: number) => Promise<void>) {
+  courseInput.value.valid = await setCourseValid();
+  courseInput.value.submitted = true;
+  if (!courseInput.value.valid) return;
+  await action(courseInput.value.subj, +courseInput.value.num);
+  // courseInput.value.subj = "";
+  // courseInput.value.num = "";
+  courseInput.value.submitted = false;
+  courseInput.value.valid = false;
 }
-function submitDegree(action: (degree: { id: number; title: string }) => void) {
-  degreeSubmitted.value = true;
-  if (degreeInputV$.value.$invalid) return;
-  action(degreeInput.value);
-  degreeSubmitted.value = false;
+async function submitDegree(action: (id: number, title: string) => Promise<void>) {
+  degreeInput.value.valid = setDegreeValid();
+  degreeInput.value.submitted = true;
+  if (!degreeInput.value.valid) return;
+  await action(degreeInput.value.id, degreeInput.value.title);
+  //degreeInput.value.id = 0;
+  //degreeInput.value.title = "";
+  degreeInput.value.submitted = false;
+  degreeInput.value.valid = false;
 }
 
 // toast actions
@@ -84,24 +77,17 @@ function showConfirmRemoveAll() {
       <div>
         <span class="p-float-label">
           <PrimeInputMask
-            :class="{ 'w-full keep-style': true, 'p-invalid': courseInputV$.subj.$invalid && courseSubmitted }"
+            :class="{ 'w-full keep-style': true, 'p-invalid': isInvalidCourse }"
             id="subject"
-            v-model="courseInputV$.subj.$model"
+            v-model="courseInput.subj"
             mask="aaa?a"
             slotChar=""
             style="text-transform: uppercase"
           />
-          <label for="subject" :class="{ 'p-invalid': courseInputV$.subj.$invalid && courseSubmitted }"
-            >Course Subject</label
-          >
+          <label for="subject" :class="{ 'p-invalid': isInvalidCourse }">Course Subject</label>
         </span>
       </div>
-      <small v-if="courseInputV$.subj.required.$invalid && courseSubmitted" class="p-error">{{
-        courseInputV$.subj.required.$message
-      }}</small>
-      <small v-if="courseInputV$.subj.exists.$invalid && courseSubmitted" class="p-error">{{
-        courseInputV$.subj.exists.$message
-      }}</small>
+      <small v-if="isInvalidCourse" class="p-error">Invalid Course</small>
     </div>
 
     <div>
@@ -110,19 +96,16 @@ function showConfirmRemoveAll() {
           <PrimeInputMask
             :class="{
               'w-full keep-style': true,
-              'p-invalid': (courseInputV$.num.$invalid || courseInputV$.subj.exists.$invalid) && courseSubmitted,
+              'p-invalid': isInvalidCourse,
             }"
             id="number"
-            v-model="courseInputV$.num.$model"
+            v-model="courseInput.num"
             mask="999"
             slotChar=""
           />
           <label for="number">Course Number</label>
         </span>
       </div>
-      <small v-if="courseInputV$.num.$invalid && courseSubmitted" class="p-error">{{
-        courseInputV$.num.required.$message
-      }}</small>
     </div>
 
     <div>
@@ -169,12 +152,10 @@ function showConfirmRemoveAll() {
       placeholder="Select a Degree"
       :class="{
         'keep-style flex align-content-center justify-items-center': true,
-        'p-invalid': degreeInputV$.$invalid && degreeSubmitted,
+        'p-invalid': isInvalidDegree,
       }"
     />
-    <small v-if="degreeInputV$.$invalid && degreeSubmitted" class="p-error">{{
-      degreeInputV$.id.notZero.$message
-    }}</small>
+    <small v-if="isInvalidDegree" class="p-error">Pick a Degree</small>
   </div>
   <div class="flex justify-content-center">
     <PrimeButton label="Add Degree" @click="submitDegree(editor.addDegreeToFlow)" class="p-button-outlined" />

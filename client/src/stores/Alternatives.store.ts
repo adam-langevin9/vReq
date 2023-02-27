@@ -36,11 +36,9 @@ export const useAlternatives = defineStore("Alternatives", () => {
     })
   );
 
-  function getAltReqsFor(targetID: string) {
-    return allAltReqs.value.filter((altReq) => altReq.target === targetID);
-  }
+  const getAltReqsFor = (targetID: string) => allAltReqs.value.filter((altReq) => altReq.target === targetID);
 
-  function shouldUpdateHeaders(oldHeaders: Headers, newHeaders: Headers) {
+  const shouldUpdateHeaders = (oldHeaders: Headers, newHeaders: Headers) => {
     if (oldHeaders.length !== newHeaders.length) {
       return true;
     }
@@ -53,7 +51,7 @@ export const useAlternatives = defineStore("Alternatives", () => {
       }
       return false;
     }
-  }
+  };
 
   watch(altReqHeaders, (newHeaders, oldHeaders) => {
     if (shouldUpdateHeaders(oldHeaders, newHeaders)) {
