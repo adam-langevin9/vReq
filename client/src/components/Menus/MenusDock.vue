@@ -9,17 +9,40 @@ import UserMenu from "./UserMenu.vue";
 import { useUser } from "@/stores/User.store";
 import { useCourseFlow } from "@/stores/CourseFlow.store";
 import PrinterMenu from "./PrinterMenu.vue";
+import KeyMenu from "./KeyMenu.vue";
+import SaveMenu from "./SaveMenu.vue";
+import { useToast } from "primevue/usetoast";
 
+// stores
 const dock = useDock();
 const alternatives = useAlternatives();
 const user = useUser();
 const courseFlow = useCourseFlow();
+const toast = useToast();
+
+// toast actions
+function showLoginToSave() {
+  toast.add({
+    group: "loginToLoad",
+    severity: "info",
+    summary: "Login to Save Your Visual",
+    closable: false,
+  });
+}
+
+// state
 const dockItems = ref([
   {
     menuName: MenuNames.USER,
     label: "User",
     icon: "pi pi-user",
     command: () => dock.toggle(MenuNames.USER),
+  },
+  {
+    menuName: MenuNames.KEY,
+    label: "Key",
+    icon: "pi pi-key",
+    command: () => dock.toggle(MenuNames.KEY),
   },
   {
     menuName: MenuNames.EDITOR,
@@ -32,6 +55,15 @@ const dockItems = ref([
     label: "Alts",
     icon: "pi pi-sitemap",
     command: () => dock.toggle(MenuNames.ALTERNATIVES),
+  },
+  {
+    menuName: MenuNames.SAVE,
+    label: "Save",
+    icon: "pi pi-save",
+    command: () => {
+      dock.toggle(MenuNames.SAVE);
+      if (!user.id) showLoginToSave();
+    },
   },
   {
     menuName: MenuNames.PRINT,
@@ -52,9 +84,11 @@ const dockItems = ref([
     buttonStyle="transform: rotate(180deg)"
     :buttonIcon="user.id ? 'pi pi-sign-out' : ''"
     :buttonAction="user.showConfirmLogout"
+    :buttonTooltip="user.id ? 'Logout' : 'Login'"
     v-model="dock.isUserSelected"
     ><UserMenu></UserMenu
   ></MenuPanel>
+  <MenuPanel title="Key" v-model="dock.isKeySelected"><KeyMenu></KeyMenu></MenuPanel>
   <MenuPanel title="Editor" v-model="dock.isEditorSelected"><CourseSearch></CourseSearch></MenuPanel>
   <MenuPanel title="Alternatives" v-model="dock.isAlternativesSelected">
     <PrimeDivider class="m-0" />
@@ -73,15 +107,46 @@ const dockItems = ref([
       </PrimeAccordionTab>
     </PrimeAccordion>
   </MenuPanel>
+  <MenuPanel title="Save" v-model="dock.isSaveSelected"><SaveMenu></SaveMenu></MenuPanel>
+
   <MenuPanel title="Print" v-model="dock.isPrintSelected"><PrinterMenu></PrinterMenu></MenuPanel>
   <PrimeDock :model="dockItems" position="left">
     <template #item="{ item }">
-      <a href="#" :class="dock.menus[item.menuName] ? 'p-dock-item open' : 'p-dock-item'" @click="item.command">
-        <div class="flex flex-column align-items-center justify-content-center">
+      <a
+        v-if="user.id"
+        href="#"
+        :class="{ 'p-dock-item': true, open: dock.menus[item.menuName] }"
+        @click="item.command"
+      >
+        <div class="flex flex-column align-items-center max-w-3rem">
           <div>
             <i :class="item.icon"></i>
           </div>
-          <div style="font-size: x-small">{{ item.label }}</div>
+          <div
+            style="font-size: x-small"
+            class="max-w-3rem white-space-nowrap overflow-hidden text-overflow-ellipsis px-1"
+          >
+            {{ item.label }}
+          </div>
+        </div>
+      </a>
+      <a
+        v-else
+        href="#"
+        :class="{ 'p-dock-item': true, open: dock.menus[item.menuName] }"
+        @click="item.command"
+        @focus="() => toast.removeGroup('loginToLoad')"
+      >
+        <div class="flex flex-column align-items-center max-w-3rem">
+          <div>
+            <i :class="item.icon"></i>
+          </div>
+          <div
+            style="font-size: x-small"
+            class="max-w-3rem white-space-nowrap overflow-hidden text-overflow-ellipsis px-1"
+          >
+            {{ item.label }}
+          </div>
         </div>
       </a>
     </template>
@@ -92,19 +157,6 @@ const dockItems = ref([
 .disabled {
   pointer-events: none;
   opacity: 0.5;
-}
-.p-dock-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 3rem;
-  background-color: #f0f0f0;
-  transition: left 0.3s;
-  z-index: 1100;
-}
-.p-dock-container.condense {
-  left: 30rem;
 }
 .p-dock {
   position: fixed;
@@ -121,10 +173,26 @@ const dockItems = ref([
   box-shadow: 0px 10px 1px -7px rgb(0 0 0 / 20%), 0px 1px 5px 3px rgb(0 0 0 / 14%), 0px 1px 8px 3px rgb(0 0 0 / 14%);
   clip-path: inset(-10px -10px -10px 0px);
 }
-.p-dock .p-dock-list-container {
-  overflow-y: initial !important;
+.p-dock-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3rem;
+  background-color: #f0f0f0;
+  transition: left 0.3s;
+  z-index: 1100;
+}
+.p-dock-container.condense {
+  left: 30rem;
+}
+
+.p-dock-list-container {
+  overflow-y: clip !important;
   border: none !important;
   background: none !important;
+  height: 100%;
+  padding-top: 0 !important;
 }
 .p-dock-list {
   display: flex;
@@ -137,7 +205,9 @@ const dockItems = ref([
   padding: 0;
   margin: 0;
 }
-.p-dock-item {
+
+.p-dock-item,
+.p-dock-item:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -148,8 +218,19 @@ const dockItems = ref([
   font-size: 1rem;
   text-decoration: none;
   border-radius: 0 50% 50% 0 !important;
+  text-overflow: ellipsis;
 }
-.p-dock-item:hover:not(.open) {
+li.p-dock-item:first-child {
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+}
+li.p-dock-item:nth-child(2) {
+  position: absolute;
+  top: 4rem;
+  left: 0;
+}
+a.p-dock-item:hover:not(.open) {
   background-color: #6c8997;
 }
 a.p-dock-item.open {
@@ -158,22 +239,10 @@ a.p-dock-item.open {
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
   box-shadow: 0px 10px 1px -7px rgb(0 0 0 / 20%), 0px 1px 3px 3px rgb(0 0 0 / 14%);
 }
-.p-dock-item-second-prev {
-  transform: none !important;
-  margin: inherit !important;
-}
-.p-dock-item-prev {
-  transform: none !important;
-  margin: inherit !important;
-}
-.p-dock-item-current {
-  transform: none !important;
-  margin: inherit !important;
-}
-.p-dock-item-next {
-  transform: none !important;
-  margin: inherit !important;
-}
+.p-dock-item-second-prev,
+.p-dock-item-prev,
+.p-dock-item-current,
+.p-dock-item-next,
 .p-dock-item-second-next {
   transform: none !important;
   margin: inherit !important;

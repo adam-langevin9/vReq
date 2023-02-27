@@ -41,10 +41,12 @@ import InputText from "primevue/inputtext";
 import BlockUI from "primevue/blockui";
 import InputSwitch from "primevue/inputswitch";
 import Badge from "primevue/badge";
+import Tooltip from "primevue/tooltip";
 
 const app = createApp(App);
 
 app.use(createPinia()).use(router).use(PrimeVue).use(ToastService);
+app.directive("tooltip", Tooltip);
 app
   .component("PrimeButton", Button)
   .component("PrimeInputMask", InputMask)

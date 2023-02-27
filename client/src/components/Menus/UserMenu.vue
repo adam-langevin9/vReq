@@ -1,16 +1,121 @@
 <script setup lang="ts">
 import { useUser } from "@/stores/User.store";
-import LoginMenu from "./LoginMenu.vue";
-import SaveMenu from "./VisualMenu.vue";
+import { ref } from "vue";
+
 const user = useUser();
+
+const uname = ref("");
+const pwd = ref("");
+const newUname = ref("");
+const newPwd = ref("");
+const newPwdConfirm = ref("");
+
+const submitLogin = () => {
+  user.login(uname.value, pwd.value);
+  uname.value = "";
+  pwd.value = "";
+};
+const submitCreate = () => {
+  user.create(newUname.value, newPwd.value);
+  newUname.value = "";
+  newPwd.value = "";
+  newPwdConfirm.value = "";
+};
 </script>
 <template>
   <PrimeDivider class="m-0" />
-  <div v-if="!user.id" class="flex flex-column gap-5">
-    <LoginMenu />
+  <div v-if="user.id">
+    <div class="flex justify-content-center">
+      <PrimeButton label="Logout" @click="user.showConfirmLogout" class="p-button-outlined p-button-danger" />
+    </div>
   </div>
   <div v-else class="flex flex-column gap-5">
-    <SaveMenu />
+    <form class="flex flex-column gap-5">
+      <h3 class="flex justify-content-center m-0">Login</h3>
+      <div class="flex justify-content-center flex-grow-1">
+        <span class="p-float-label">
+          <PrimeInputMask
+            class="w-full keep-style"
+            id="uname"
+            v-model="uname"
+            mask="*?************************"
+            slotChar=""
+            autocomplete="username"
+          />
+          <label for="uname">Username</label>
+        </span>
+      </div>
+
+      <div class="flex justify-content-center flex-grow-1">
+        <span class="p-float-label">
+          <PrimePassword
+            id="pwd"
+            class="w-full keep-style"
+            v-model="pwd"
+            :toggleMask="true"
+            :feedback="false"
+            autocomplete="current-password"
+          />
+          <label for="pwd">Password</label>
+        </span>
+      </div>
+
+      <div class="flex justify-content-center">
+        <PrimeButton label="Login" @click="submitLogin" class="p-button-outlined p-button-secondary" />
+      </div>
+    </form>
+
+    <PrimeDivider />
+
+    <form class="flex flex-column gap-5">
+      <h3 class="flex justify-content-center m-0">Create an Account</h3>
+
+      <div class="flex justify-content-center flex-grow-1">
+        <span class="p-float-label">
+          <PrimeInputMask
+            class="w-full keep-style"
+            id="new-uname"
+            v-model="newUname"
+            mask="*?************************"
+            slotChar=""
+            autocomplete="username"
+          />
+          <label for="new-uname">Username</label>
+        </span>
+      </div>
+
+      <div class="flex justify-content-center flex-grow-1">
+        <span class="p-float-label">
+          <PrimePassword
+            id="new-pwd"
+            class="w-full keep-style"
+            v-model="newPwd"
+            :toggleMask="true"
+            :feedback="false"
+            autocomplete="new-password"
+          />
+          <label for="new-pwd">Password</label>
+        </span>
+      </div>
+
+      <div class="flex justify-content-center flex-grow-1">
+        <span class="p-float-label">
+          <PrimePassword
+            id="confirm-pwd"
+            class="w-full keep-style"
+            v-model="newPwdConfirm"
+            :toggleMask="true"
+            :feedback="false"
+            autocomplete="new-password"
+          />
+          <label for="confirm-pwd">Confirm Password</label>
+        </span>
+      </div>
+
+      <div class="flex justify-content-center">
+        <PrimeButton label="Create" @click="submitCreate" class="p-button-outlined" />
+      </div>
+    </form>
   </div>
 </template>
 <style scoped></style>

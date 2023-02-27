@@ -22,6 +22,7 @@ const confirmToast = useConfirmToast();
   </main>
   <ConfirmToast position="bottom-left" />
   <PrimeToast position="bottom-left" />
+  <PrimeToast position="bottom-left" group="loginToLoad" />
 </template>
 
 <style>

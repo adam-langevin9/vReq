@@ -79,13 +79,11 @@ export const useEditor = defineStore("Editor", () => {
   async function fillDegrees(): Promise<void> {
     degrees.value = await getDegrees();
   }
-  // todo: add validation
   async function retrieveCourse(subj: string, num: number): Promise<void> {
     searchResult.value = await getCourseFor(subj, num);
   }
   async function addCourseToFlow(subj: string, num: number): Promise<void> {
     isLoadingFlow.value = true;
-    // todo: validate courseInput
     const flow = await getCoreqFlow(subj, num);
     if (flow) {
       const prevManualNodeCount = courseFlow.getManualNodes.length;
@@ -99,7 +97,6 @@ export const useEditor = defineStore("Editor", () => {
   }
   async function addDegreeToFlow(degree: { id: number; title: string }): Promise<void> {
     isLoadingFlow.value = true;
-    // todo: validate selectedDegree
     const flow = await getDegreeFlow(degree.id);
     if (flow) {
       const prevManualNodeCount = courseFlow.getManualNodes.length;
@@ -137,10 +134,10 @@ export const useEditor = defineStore("Editor", () => {
     });
     courseFlow.addEdges(uniqueEdges);
   }
-  function clear(): void {
+  function clear(notify: boolean = true): void {
     courseFlow.setEdges([]);
     courseFlow.setNodes([]);
-    _showRemoveAllSuccess();
+    if (notify) _showRemoveAllSuccess();
   }
   return {
     degrees,

@@ -17,7 +17,6 @@ const courseFlow = useCourseFlow();
 if (!editor.degrees) editor.fillDegrees();
 
 // state
-
 const courseInput = ref({ subj: "", num: "" });
 const courseSubmitted = ref(false);
 const degreeInput = ref({ id: 0, title: "" });
@@ -188,7 +187,7 @@ function showConfirmRemoveAll() {
       <h3 class="m-0 text-center">Remove Course(s)</h3>
     </div>
     <p class="m-0 mt-1 text-center text-xs">
-      When you remove a course that you added, all of it requirements will also be removed.
+      When you remove a course that you added, all of it requirements will be removed as well.
     </p>
   </div>
 

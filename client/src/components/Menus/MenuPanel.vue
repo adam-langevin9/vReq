@@ -8,6 +8,7 @@ const props = defineProps<{
   buttonAction?: () => void;
   buttonStyle?: string;
   buttonClass?: string;
+  buttonTooltip?: string;
   modelValue: boolean;
 }>();
 const emit = defineEmits(["update:modelValue"]);
@@ -44,6 +45,7 @@ watch(visible, (value) => {
             "
             :style="buttonStyle"
             @click="buttonAction"
+            v-tooltip="{ value: buttonTooltip, position: 'right' }"
           />
         </div>
         <div class="flex flex-column flex-grow-1">
