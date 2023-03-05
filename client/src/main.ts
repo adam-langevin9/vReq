@@ -3,7 +3,6 @@ import { createPinia } from "pinia";
 
 // Plugins
 import App from "./App.vue";
-import router from "./router";
 import PrimeVue from "primevue/config";
 import ToastService from "primevue/toastservice";
 
@@ -45,7 +44,7 @@ import Tooltip from "primevue/tooltip";
 
 const app = createApp(App);
 
-app.use(createPinia()).use(router).use(PrimeVue).use(ToastService);
+app.use(createPinia()).use(PrimeVue).use(ToastService);
 app.directive("tooltip", Tooltip);
 app
   .component("PrimeButton", Button)
