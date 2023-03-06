@@ -1,4 +1,4 @@
-import bodyParser from "body-parser";
+//import bodyParser from "body-parser";
 import cors from "cors";
 import courseRoute from "./routes/course";
 import flowRoute from "./routes/flow";
@@ -19,10 +19,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json({ limit: "200kb" }));
+app.use(express.json({ limit: "200kb" }));
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(function (_req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // update to match the domain you will make the request from
