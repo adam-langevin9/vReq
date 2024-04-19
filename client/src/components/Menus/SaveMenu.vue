@@ -21,7 +21,7 @@ const showConfirmCreate = () => {
   else
     confirmToast.open(
       "warn",
-      `Are you sure you want to create a blank visual?`,
+      `Are you sure you want to create a blank flow?`,
       "You have unsaved changes that will be lost",
       visual.createBlank
     );
@@ -51,7 +51,7 @@ const showConfirmDelete = () => {
     <div class="flex justify-content-center">
       <PrimeButton
         icon="pi pi-plus"
-        label="New Visual"
+        label="New Flow"
         @click="showConfirmCreate"
         class="p-button-primary p-button-outlined"
         :disabled="shouldDisableButtons"
@@ -60,7 +60,7 @@ const showConfirmDelete = () => {
 
     <PrimeDivider class="m-0" />
 
-    <h3 class="flex justify-content-center m-0">Save Visual</h3>
+    <h3 class="flex justify-content-center m-0">Save Flow</h3>
     <form class="flex flex-column gap-5">
       <div>
         <div class="flex justify-content-center">
@@ -130,21 +130,21 @@ const showConfirmDelete = () => {
 
     <PrimeDivider />
 
-    <h3 class="flex justify-content-center m-0">Open Visual</h3>
+    <h3 class="flex justify-content-center m-0">Open Flow</h3>
     <form class="flex flex-column gap-5">
       <div>
         <PrimeDropdown
           v-model="loadInput"
           :options="visual.titles"
           optionLabel="title"
-          placeholder="Select a Visual"
+          placeholder="Select a Flow"
           :disabled="shouldDisableButtons"
           :class="{
             'keep-style flex align-content-center justify-items-center': true,
             'p-invalid': visual.isInvalidLoad,
           }"
         />
-        <small v-if="visual.isInvalidLoad" class="p-error">Pick a Visual</small>
+        <small v-if="visual.isInvalidLoad" class="p-error">Pick a Flow</small>
       </div>
       <div class="flex justify-content-center">
         <PrimeButton
@@ -166,7 +166,7 @@ const showConfirmDelete = () => {
     <div v-if="visual.title" class="flex justify-content-center">
       <PrimeButton
         icon="pi pi-trash"
-        label="Delete Visual"
+        label="Delete Flow"
         @click="showConfirmDelete"
         class="p-button-danger p-button-outlined"
         :disabled="shouldDisableButtons"
