@@ -165,10 +165,10 @@ function showConfirmRemoveAll() {
 
   <div class="m-0">
     <div>
-      <h3 class="m-0 text-center">Remove Course(s)</h3>
+      <h3 class="m-0 text-center">Remove</h3>
     </div>
     <p class="m-0 mt-1 text-center text-xs">
-      When you remove a course that you added, all of it requirements will be removed as well.
+      When you remove a course/degree that you added, all of it requirements will be removed as well.
     </p>
   </div>
 
