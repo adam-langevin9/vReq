@@ -73,14 +73,14 @@ export const useVisual = defineStore("Visual", () => {
   function _showCreateSuccess() {
     toast.add({
       severity: "success",
-      summary: "New Visual Created",
+      summary: "New Flow Created",
       life: 3000,
     });
   }
   function _showSaveSuccess() {
     toast.add({
       severity: "success",
-      summary: `Visual Saved`,
+      summary: `Flow Saved`,
       detail: title.value,
       life: 3000,
     });
@@ -88,7 +88,7 @@ export const useVisual = defineStore("Visual", () => {
   function _showUpToDate() {
     toast.add({
       severity: "info",
-      summary: `Visual up to date`,
+      summary: `Flow is up to date`,
       life: 3000,
     });
   }
@@ -96,14 +96,14 @@ export const useVisual = defineStore("Visual", () => {
     toast.add({
       severity: "error",
       summary: `Save Failed`,
-      detail: `Your visual could not be saved at this time. Please try again later.`,
+      detail: `Your flow could not be saved at this time. Please try again later.`,
       life: 3000,
     });
   }
   function _showOpenSuccess() {
     toast.add({
       severity: "success",
-      summary: `Opened Visual`,
+      summary: `Opened FLow`,
       detail: title.value,
       life: 3000,
     });
@@ -112,14 +112,14 @@ export const useVisual = defineStore("Visual", () => {
     toast.add({
       severity: "error",
       summary: `Open Failed`,
-      detail: `The selected visual could not be opened at this time. Please try again later.`,
+      detail: `The selected flow could not be opened at this time. Please try again later.`,
       life: 3000,
     });
   }
   function _showDeleteSuccess() {
     toast.add({
       severity: "success",
-      summary: `Deleted Visual`,
+      summary: `Deleted Flow`,
       detail: title.value,
       life: 3000,
     });
@@ -137,7 +137,7 @@ export const useVisual = defineStore("Visual", () => {
   function createBlank(notify = true) {
     id.value = 0;
     saveInput.value.title = "";
-    editor.clear(notify);
+    editor.clear(false);
     if (notify) _showCreateSuccess();
   }
   function _prepareLoadForStorage(visual: FlowExportObject): string {
